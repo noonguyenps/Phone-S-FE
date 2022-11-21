@@ -59,6 +59,24 @@ const apiProduct = {
     deleteProductById : async (id) =>{
         const res = await axiosClientWithToken.delete(`admin/product/delete/${id}`);
         return res.data;
+    },
+    getCategoryFilterById: async (id) => {
+        const res = await axiosClient.get(`/category/${id}`)
+        return res.data;
+    },
+
+    getProductsBySearch: async (params) => {
+        const res = await axiosClient.get('/products' + params)
+        return res.data
+    },
+    getProductByCategory: async (params) => {
+        const res = await axiosClient.get('/product/byCategory', {params})
+        return res.data
+    },
+    getCategoryChild: async (params) => {
+        const res = await axiosClient.get('/category/child', {params})
+        return res.data
     }
+
 }
 export default apiProduct;
