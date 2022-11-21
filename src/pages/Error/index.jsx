@@ -28,21 +28,11 @@ import SportsBasketballOutlinedIcon from '@mui/icons-material/SportsBasketballOu
 function Error() {
     return (
         <Box>
-            <Stack >
-                <Box sx={{ backgroundColor: "#3fc6f5" }} height="230px">
-                    <img alt="" src="https://salt.tikicdn.com/desktop/img/404/city-cloud.png" width="100%" />
-                </Box>
-                <Box sx={{ backgroundColor: "#fdba13" }} height="120px" px={2} position="relative" >
-                    <Stack direction="row" alignItems="center" justifyContent="center" pt={2} spacing={3}>
-                        <img alt="" src="https://salt.tikicdn.com/assets/img/404/404.png"></img>
-                        <Typography sx={{ fontSize: "22px", color: "#FFFFFF", fontWeight: 550 }} width="405.5px">Xin lỗi, trang của bạn đang tìm kiếm không tồn tại!</Typography>
-                    </Stack>
-                    <img src="https://salt.tikicdn.com/assets/img/404/super.png" alt="" style={{ position: "absolute", bottom: 0, left: "220px" }} />
-                </Box>
-            </Stack>
-            <Stack sx={{ backgroundColor: "#FFFFF", height: "80px" }} px={2} justifyContent="flex-end" alignItems="center" mb={0.2}>
-                <Typography sx={{ fontSize: "14px", fontWeight: 550 }}>Bạn có thể thử những liên kết sau</Typography>
-            </Stack>
+            <center>
+                <img src="https://th.bing.com/th/id/R.b1c62a6bf5e51001d4d973e603b6fab9?rik=DIhrbTziOV1FCg&riu=http%3a%2f%2fwww.isbn-us.com%2fwp-content%2fthemes%2fisnbus%2fimages%2f404error.jpg&ehk=5vAZg0c25hpLXfEpOaUqfjygXQcnVfuOaV5t9EmZmJg%3d&risl=&pid=ImgRaw&r=0" alt="centered image" />
+                <Typography fontSize={"30"}>Đường dẫn không tồn tại</Typography>
+                <Typography fontSize={"30"}>Bạn có thể thử những liên kết sau</Typography>
+            </center>
             <Stack sx={{ backgroundColor: "#FFFFF", height: "230px" }} px={2} justifyContent="space-between" alignItems="center" mb={0.2} spacing={4}>
                 <Stack direction="row" justifyContent="center" alignItems="flex-start" spacing={1}>
                     {errorIcon.map(item =>
@@ -65,7 +55,7 @@ function Error() {
             </Stack>
             <Stack px={2} sx={{ backgroundColor: "#f7f7f7", height: "100px" }} direction="row" justifyContent="center" alignItems="center" mb={0.2}>
                 <Stack px={2}>
-                    <Typography sx={{ fontSize: "16px", color: "#4e5052", fontWeight: 550 }}>Đăng ký nhận bản tin Tiki</Typography>
+                    <Typography sx={{ fontSize: "16px", color: "#4e5052", fontWeight: 550 }}>Đăng ký nhận bản tin S-Phone</Typography>
                     <Typography sx={{ fontSize: "13px", color: "#4e5052", fontWeight: 550 }}>Đừng bỏ lỡ hàng ngàn sản phẩm và chương trình siêu hấp dẫn</Typography>
                 </Stack>
                 <Stack direction="row" spacing={2} >
@@ -82,84 +72,29 @@ function Error() {
 }
 const errorIcon = [
     {
-        id: 1,
-        icon: LibraryBooksOutlinedIcon,
-        text: 'Sách',
-        link: '/customer/account/edit',
-    },
-    {
-        id: 2,
-        icon: AutoFixHighOutlinedIcon,
-        text: 'Làm Đẹp-Sức Khỏe',
-        link: '/customer/notification'
-    },
-    {
-        id: 3,
-        icon: AccessibleForwardOutlinedIcon,
-        text: 'Thời Trang',
-        link: '/sale/order/history'
-    },
-    {
-        id: 4,
-        icon: TableRestaurantOutlinedIcon,
-        text: 'Nhà cửa đời sống',
-        link: '/customer/address'
-    },
-    {
-        id: 5,
-        icon: BlenderOutlinedIcon,
-        text: 'Điện gia dụng',
-        link: '/customer/paymentcard'
-    },
-    {
         id: 6,
         icon: HeadsetMicOutlinedIcon,
         text: 'Phụ kiện thiết bị số',
-        link: '/nhan-xet-san-pham-ban-da-mua'
+        link: '/filter/15addfab-b507-47d7-a59c-1eb8415b29bd'
     },
     {
         id: 7,
         icon: AddAPhotoOutlinedIcon,
-        text: 'Máy ảnh-Quay phim',
-        link: '/customer/wishlist'
+        text: 'Đồ chơi công nghệ',
+        link: '/filter/dbe0ba5e-769d-4603-8df2-34e5f6c5c1ee'
     },
     {
         id: 8,
         icon: PhoneAndroidOutlinedIcon,
-        text: 'Điện thoại-Laptop-Tablet',
-        link: '/customer/review'
+        text: 'Điện thoại',
+        link: '/filter/cfc30bb7-d806-4912-a4cf-cfc1ccfce29c'
     },
     {
         id: 9,
         icon: DesktopWindowsOutlinedIcon,
         text: 'Tivi',
-        link: '/customer/coupons'
+        link: '/filter/aade8eeb-5672-4628-83d4-814d9d50bfab'
     },
-    {
-        id: 10,
-        icon: SmartToyOutlinedIcon,
-        text: 'đồ chơi',
-        link: '/customer/coupons'
-    },
-    {
-        id: 11,
-        icon: LiquorOutlinedIcon,
-        text: 'Mẹ & bé',
-        link: '/customer/coupons'
-    },
-    {
-        id: 12,
-        icon: DriveFileRenameOutlineOutlinedIcon,
-        text: 'văn phòng phẩm',
-        link: '/customer/coupons'
-    },
-    {
-        id: 13,
-        icon: SportsBasketballOutlinedIcon,
-        text: 'Thể thao-dã ngoại',
-        link: '/customer/coupons'
-    },
-
 ]
 
 export default Error
