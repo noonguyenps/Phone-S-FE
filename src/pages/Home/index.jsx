@@ -99,7 +99,7 @@ function Home() {
           <SlideKhuyenMai />
         </Box>
         <Box id="section3">
-          <Box width="25%">
+          <Box width="24%">
             <img
               style={{ maxHeight: "160px" }}
               src="https://cdn.hoanghamobile.com/i/home/Uploads/2022/08/11/chuyen-trang-samssung-11.png"
@@ -133,21 +133,21 @@ function Home() {
         </Box>
 
         <Box id="section3">
-          <Box width="16.45%">
+          <Box width="20%">
             <img
               style={{ maxHeight: "200px" }}
               src="https://cdn.tgdd.vn/2022/11/banner/380-x-200--1--380x200.png"
               alt=""
             />
           </Box>
-          <Box width="64.52%">
+          <Box width="59%">
             <img
               style={{ maxHeight: "200px" }}
               src="https://cdn.tgdd.vn/2022/10/banner/720-220-720x220-250.png"
               alt=""
             />
           </Box>
-          <Box width="16.45%">
+          <Box width="20%">
             <img
               style={{ maxHeight: "200px" }}
               src="https://cdn.tgdd.vn/2022/11/banner/VNPay-Apple-Watch-380x200-1.png"

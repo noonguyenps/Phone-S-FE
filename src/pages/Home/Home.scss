@@ -37,7 +37,7 @@
 
 #section3 {
     width: 100%;
-    max-height: 400px;
+    max-height: 600px;
     display: flex;
     margin-top: 1rem;
     justify-content: space-between;
@@ -51,19 +51,19 @@
         justify-content: space-between;
         gap: 10px;
         &>* {
+            &:nth-child(1),
             &:nth-child(2) {
                 width: 100%;
                 order: 1;
             }
-            &:nth-child(1),
-            &:nth-child(3) {
+            &:nth-child(3),
+            &:nth-child(4) {
                 order: 2;
                 flex: 1
             }
         }
     }
 }
-
 #section6 {
     padding: 0 12px 16px 12px;
 }

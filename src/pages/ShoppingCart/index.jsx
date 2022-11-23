@@ -17,13 +17,13 @@ import {toast} from 'react-toastify'
 import { clearCoupon } from '../../slices/paymentSlice';
 import AddressVN from '../../components/AddressVN';
 import apiCart from '../../apis/apiCart';
+import el from 'date-fns/esm/locale/el/index.js'
 
 function ShoppingCart() {
   const [open, setOpen] = useState(false);
   const [openAddress, setOpenAddress] = useState(false);
   const [dialogDelete, setDialogDelete] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [checkAll, setCheckAll] = useState(false)
   const [couponValue, setCouponValue] = useState(0)
   const CartItems = useSelector(state => state.cart.items)
   const dispatch = useDispatch()
@@ -32,43 +32,30 @@ function ShoppingCart() {
   const coupon = useSelector(state => state.payment.coupon)
   const addressShip = useSelector(state => state.payment.address)
 
-  useEffect(() => {
+  useEffect(async () => {
     if(user==null){
       const calcPrice = () => {
         const total = CartItems.reduce((t, num) => num.choose ? t + num.price * num.quantity : t, 0)
         setTotalPrice(total)
       }
-      const checkChooseAll = () => {
-        if (CartItems.every(item => item.choose))
-          setCheckAll(true)
-        else
-          setCheckAll(false)
-      }
       calcPrice()
-      checkChooseAll()
     }else{
-      //userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
-      apiCart.getUserCart()
-      .then((res)=>{
-        setListCart(res.data.listCart);
-        console.log(listCart);
-      }).catch((err)=>{
-        toast.warning("Có lỗi xảy ra" + err);
-      })
-      const calcPrice = () => {
-        const total = listCart.reduce((t, num) => num.choose ? t + num.price * num.quantity : t, 0)
-        setTotalPrice(total)
+      async function fetchData() {
+        const response = await apiCart.getUserCart()
+          .then((res)=>{
+            setListCart(res.data.listCart);
+            for(let a in res.data.listCart){
+              if(res.data.listCart[a].choose){
+                setTotalPrice(totalPrice+res.data.listCart[a].price*res.data.listCart[a].quantity)
+              }
+            }
+          }).catch((err)=>{
+            toast.warning("Có lỗi xảy ra" + err);
+          })
       }
-      const checkChooseAll = () => {
-        if (listCart.every(item => item.choose))
-          setCheckAll(true)
-        else
-          setCheckAll(false)
-      }
-      calcPrice()
-      checkChooseAll()
+      fetchData();
     }
-  }, [CartItems])
+  }, [CartItems], [listCart])
 
   useEffect(()=>{
     const loadTitle = ()=>{
@@ -93,38 +80,35 @@ function ShoppingCart() {
     handle()
   },[coupon,totalPrice])
 
-  const handleChooseAll = () => {
-    if(user){
-      if(checkAll){
-        setCheckAll(false)
-        apiCart.setAllStatus(false)
-      }
-      else{
-        setCheckAll(true)
-        apiCart.setAllStatus(true)
-      }
-    }else
-    {
-      if (checkAll) {
-        setCheckAll(false)
-        dispatch(unchooseAll({}))
-      }
-      else {
-        setCheckAll(true)
-        dispatch(chooseAll({}))
-      }
-    }
-  }
-
   const handleDeleteAll = () => {
     if(user){
-      apiCart.deleteAll();
-      setListCart((prev)=>[...prev]);
+      apiCart.deleteAll()
+      .then((res)=>{
+        if(res.status === 200){
+          setListCart([]);
+        }
+      });
     }
     else{
       dispatch(deleteAll())
     }
     closeDialogDeleteAll()
+  }
+  const handleChangeCartData = (id, quantity, choose) =>{
+    const a = listCart.findIndex((item)=>(item.id === id))
+    listCart[a].quantity = quantity;
+    listCart[a].choose = choose
+    setListCart((prev)=>[...prev]);
+    for(let a in listCart){
+      if(listCart[a].choose){
+        setTotalPrice(totalPrice+listCart[a].price*listCart[a].quantity)
+      }
+    }
+  }
+  const handleDeleteCart = async (id)=>{
+    const a = listCart.findIndex((item)=>(item.id === id))
+    listCart.splice(a,1);
+    setListCart((prev)=>[...prev]);
   }
   const openDialogDeleteAll = () => {
     setDialogDelete(true)
@@ -149,11 +133,16 @@ function ShoppingCart() {
   }
 const navigate = useNavigate()
   const handleBuy = ()=>{
-    if(CartItems.filter(item=>item.choose).length===0){
-      toast.warning("Vui lòng chọn ít nhất một món hàng")
+    if(user){
+      if(listCart.filter(item=>item.choose).length===0){
+        toast.warning("Vui lòng chọn ít nhất một món hàng")
+      }
+      else{
+        navigate('/payment')
+      }
     }
     else{
-      navigate('/payment')
+      toast.warning("Bạn cần đăng nhập để thực hiện chức năng này")
     }
   }
   const finalPrice = () => {
@@ -162,8 +151,8 @@ const navigate = useNavigate()
   }
   return (<>
     <Box className="container" >
-      <Grid container spacing={2} style={{ marginTop: "24px" }}>
-        <Grid item lg={9} md={12} sm={12} xs={12}>
+      <Grid container spacing={2} style={{ marginTop: "5px" }}>
+        <Grid item lg={12} md={12} sm={12} xs={12}>
           <Box>
             <Typography className="cart__title" gutterBottom variant="h5" component="div" >
               GIỎ HÀNG
@@ -171,7 +160,6 @@ const navigate = useNavigate()
 
             <Box className="cart__heading cart">
               <Stack direction="row">
-                <Checkbox checked={checkAll} onChange={handleChooseAll} className="cart__checkbox" />
                 {user?`Tất cả (${listCart.length} sản phẩm)`:`Tất cả (${CartItems.length} sản phẩm)`}
               </Stack>
               <Stack>Đơn giá</Stack>
@@ -184,58 +172,12 @@ const navigate = useNavigate()
             <Stack className="cart__list">
               {
                 user?(
-                  listCart.map(item => <CartItemUser key={item.id+' '+item.price} data={item} />)
+                  listCart?.map(item => <CartItemUser key={item.id+' '+item.price} data={item} handleChangeCartData={(id,quantity,choose)=>{handleChangeCartData(id,quantity,choose)}} handleDeleteCart={(id)=>{handleDeleteCart(id)}}/>)
                 ):(
                 CartItems.map(item => <CartItem key={item.id+' '+item.price} data={item} />))
               }
             </Stack>
           </Box>
-        </Grid>
-        <Grid item lg={3} md={12} sm={12} xs={12}>
-          <Box className='cart__address'>
-            <Stack direction="row" mb={1.5} justifyContent="space-between">
-              <Typography style={{ fontSize: "16px", fontWeight: 500, color: "#888" }}>Giao tới</Typography>
-              <Typography onClick={handleOpenAddress} color="#1890ff" sx={{ cursor: "pointer" }}>Thay đổi</Typography>
-            </Stack>
-            {user?
-              addressShip && <>
-                <Typography mb={0.25} fontWeight={500}>{addressShip.name}&nbsp;&nbsp;&nbsp;{addressShip.phone}</Typography>
-                <Typography color="#888">{addressShip.addressDetail}<AddressVN province={addressShip.province} district={addressShip.district} commune={addressShip.commune}></AddressVN></Typography></>
-            :<Typography mb={0.25} fontWeight={500}>Vui lòng đăng nhập để chọn địa chỉ</Typography>
-            }
-          </Box>
-          <Box className='cart-coupon'>
-            <Box className="cart-coupon__title">
-              Phone-S Khuyến mãi
-            </Box>
-            { 
-              coupon &&
-              <Box className="cart-coupon__item">
-                <svg className="cart-coupon__bg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 286 60"><g fill="none" fillRule="evenodd"><g stroke="#017FFF"><g><g><g><g><g><path fill="#E5F2FF" d="M 278 0.5 c 2.071 0 3.946 0.84 5.303 2.197 c 1.358 1.357 2.197 3.232 2.197 5.303 h 0 v 44 c 0 2.071 -0.84 3.946 -2.197 5.303 c -1.357 1.358 -3.232 2.197 -5.303 2.197 h 0 H 64.973 c -0.116 -1.043 -0.587 -1.978 -1.291 -2.682 c -0.814 -0.814 -1.94 -1.318 -3.182 -1.318 c -1.243 0 -2.368 0.504 -3.182 1.318 c -0.704 0.704 -1.175 1.64 -1.29 2.682 h 0 h -48.028 c -2.071 0 -3.946 -0.84 -5.303 -2.197 c -1.358 -1.357 -2.197 -3.232 -2.197 -5.303 h 0 V 8 c 0 -2.071 0.84 -3.946 2.197 -5.303 c 1.357 -1.358 3.232 -2.197 5.303 -2.197 h 48.027 c 0.116 1.043 0.587 1.978 1.291 2.682 c 0.814 0.814 1.94 1.318 3.182 1.318 c 1.243 0 2.368 -0.504 3.182 -1.318 c 0.704 -0.704 1.175 -1.64 1.29 -2.682 H 64.972 z" transform="translate(-1024 -2912) translate(80 2252) translate(0 460) translate(464) translate(480) translate(0 200)"></path><g strokeDasharray="2 4" strokeLinecap="square"><path d="M0.5 0L0.5 48" transform="translate(-1024 -2912) translate(80 2252) translate(0 460) translate(464) translate(480) translate(0 200) translate(60 8)"></path></g></g></g></g></g></g></g></g></svg>
-                <Box className="cart-coupon__content">
-                  <Box p={1}>
-                    <img src={coupon.img} alt="" />
-                  </Box>
-                  <Box className="cart-coupon__right">
-                    <Typography fontSize="13px" fontWeight= "500">
-                      {`Giảm ${couponValue}K`}</Typography>
-                    <Box>
-                      <InfoIcon sx={{ color: "#1890ff" }} />
-                      <Button onClick={unchooseCoupon} className="cart-coupon__unchoose" variant="contained">Bỏ chọn</Button>
-                    </Box>
-                  </Box>
-                </Box>
-              </Box>
-            }
-            {user?(
-              <Box onClick={handleOpen} className="cart-coupon__showmore">
-              <DiscountIcon sx={{ height: "18px", color: "#0b74e5" }} /> Chọn hoặc nhập Mã Khuyến Mãi khác
-              </Box>
-            ):(
-              <Typography fontSize="15px" fontWeight= "500">Đăng nhập để nhận nhiều ưu đãi bạn nhé</Typography>
-            )}
-          </Box>
-
           <Box>
             <Box className="cart-summary">
               <Box className="cart-summary__price">
@@ -246,32 +188,21 @@ const navigate = useNavigate()
               </Box>
               <Box className="cart-summary__price">
                 <span>
-                  Giảm giá
-                </span>
-                <span>{numWithCommas(coupon?.value||0)} ₫</span>
-              </Box>
-              <Box className="cart-summary__divider"></Box>
-              <Box className="cart-summary__price">
-                <span>
                   Tổng tiền
                 </span>
                 <Box className="cart-summary__valueprice">
                   <span>{numWithCommas(finalPrice())} ₫</span>
-                  <span>(Đã bao gồm VAT nếu có)</span>
                 </Box>
               </Box>
             </Box>
               <Button variant="contained" onClick={handleBuy}
                 sx={{ width: "100%", height: "42px", backgroundColor: "#ff424e", "&:hover": { opacity: 0.8, backgroundColor: "#ff424e" } }}>
-                Mua hàng ({CartItems.filter(item=>item.choose).length})
+                Mua hàng
               </Button>
-
           </Box>
         </Grid>
-      </Grid>
+        </Grid>
     </Box>
-    <ChooseCoupon handleOpen={handleOpen} handleClose={handleClose}  open={open} />
-    {user&&<ChooseAddress handleOpen={handleOpenAddress} handleClose={handleCloseAddress} open={openAddress} />}
     {dialogDelete &&
       <Dialog onClose={closeDialogDeleteAll} open={dialogDelete}>
         <Box className="dialog-removecart">
@@ -299,7 +230,6 @@ const navigate = useNavigate()
           </Box>
         </Box>
       </Dialog>}
-
   </>
   )
 }

@@ -52,6 +52,10 @@ const apiCart = {
     setAllStatus : async (status) =>{
         const res = await axiosClientWithToken.put(`/user/cart/choose/all?status=${status}`);
         return res.data;
+    },
+    deleteCartById : async (id) =>{
+        const res = await axiosClientWithToken.delete(`/user/cart/delete/${id}`);
+        return res.data;
     }
     
 }
