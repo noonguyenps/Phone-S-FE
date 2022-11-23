@@ -32,6 +32,7 @@ function Payment() {
   const [expandDetail, setExpandDetail] = useState(false)
   const [couponValue, setCouponValue] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [listCart, setListCart] = useState([])
   const CartItems = useSelector(state => state.cart.items)
   const coupon = useSelector(state => state.payment.coupon)
   const addressShip = useSelector(state => state.payment.address)
@@ -41,13 +42,26 @@ function Payment() {
   const feeShip = ship === 'shipping1' ? 40000 : 23000
   const discountFeeShip = 10000
 
-  // useEffect(() => {
-  //   const calcPrice = () => {
-  //     const total = CartItems.reduce((t, num) => num.choose ? t + num.price * num.quantity : t, 0)
-  //     setTotalPrice(Math.round(total))
-  //   }
-  //   calcPrice()
-  // }, [CartItems])
+  useEffect(() => {
+    if(user!=null){
+      async function fetchData() {
+        await apiCart.getUserCart()
+          .then((res)=>{
+            setListCart(res.data.listCart);
+            let totalTemp = 0;
+            for(let a in res.data.listCart){
+              if(res.data.listCart[a].choose){
+                totalTemp+=res.data.listCart[a].price*res.data.listCart[a].quantity;
+              }
+            }
+            setTotalPrice(totalTemp)
+          }).catch((err)=>{
+            toast.warning("Có lỗi xảy ra" + err);
+          })
+      }
+      fetchData();
+    }
+  },[])
 
   useEffect(() => {
     const getAddresses = () => {
@@ -70,22 +84,22 @@ function Payment() {
     // // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useEffect(() => {
-    const handle = () => {
-      if (coupon) {
-        let value = 0
-        if (coupon.unit === 'đ') {
-          value = coupon.value
-        }
-        else {
-          if (totalPrice > 0)
-            value = (coupon.value * totalPrice / 100)
-        }
-        setCouponValue(value)
-      }
-    }
-    handle()
-  }, [coupon, totalPrice])
+  // useEffect(() => {
+  //   const handle = () => {
+  //     if (coupon) {
+  //       let value = 0
+  //       if (coupon.unit === 'đ') {
+  //         value = coupon.value
+  //       }
+  //       else {
+  //         if (totalPrice > 0)
+  //           value = (coupon.value * totalPrice / 100)
+  //       }
+  //       setCouponValue(value)
+  //     }
+  //   }
+  //   handle()
+  // }, [coupon, totalPrice])
 
   useEffect(() => {
     const loadTitle = () => {
@@ -224,7 +238,7 @@ function Payment() {
   return (<>
     <Box className="container" >
       <Grid container spacing={2} mt="24px">
-        <Grid item lg={8} md={12} sm={12} xs={12}>
+        <Grid item lg={12} md={12} sm={12} xs={12}>
           <Box bgcolor="#fff" p={2}>
             <Box mb={2}>
               <Typography className="payment__title" gutterBottom variant="h5" component="div" >
@@ -232,22 +246,22 @@ function Payment() {
               </Typography>
               <Stack className='payment__listItem' >
                 {
-                  CartItems.filter(item => item.choose).map(item =>
-                    <Stack key={item.id} direction="row" className="orderDetail__item" p={1}>
+                  listCart.filter(item => item.choose).map(item =>
+                    <Stack key={1} direction="row" className="orderDetail__item" p={1}>
                       <Box mr={1.875}>
                         <img height="60px" width="60px" src={item.image} alt="" />
                       </Box>
                       <Stack spacing={1.5} width='100%'>
-                        <Link to={"/"}><Typography sx={{ fontSize: "14px" }}>{item.name}</Typography></Link>
+                        <Link to={`/product/${item.productId}`}><Typography sx={{ fontSize: "14px" }}>{item.name}</Typography></Link>
                         <Stack direction={'row'} justifyContent={'space-between'} >
-                          <Typography fontSize='14px' color='#888'>SL:{item.quantity}</Typography>
+                          <Typography fontSize='14px' color='#888'>{item.option}</Typography>
+                          <Typography fontSize='14px' color='#888'>Số Lượng: {item.quantity}</Typography>
                           <Typography fontSize='14px' color='#888'>{numWithCommas(item.quantity * item.price || 0)} ₫</Typography>
                         </Stack>
                       </Stack>
                     </Stack>
                   )
                 }
-
               </Stack>
             </Box>
             <Box mb={2}>
@@ -291,9 +305,7 @@ function Payment() {
               </RadioGroup>
             </Box>
           </Box>
-        </Grid>
-        <Grid item lg={4} md={12} sm={12} xs={12}>
-        <Box className='cart__address'>
+          <Box className='payment__address'>
             <Stack direction="row" mb={1.5} justifyContent="space-between">
               <Typography style={{ fontSize: "16px", fontWeight: 500, color: "#888" }}>Giao tới</Typography>
               <Typography onClick={handleOpenAddress} color="#1890ff" sx={{ cursor: "pointer" }}>Thay đổi</Typography>
@@ -305,68 +317,46 @@ function Payment() {
             :<Typography mb={0.25} fontWeight={500}>Vui lòng đăng nhập để chọn địa chỉ</Typography>
             }
           </Box>
-          <Box className='cart-coupon'>
-            <Box className="cart-coupon__title">
+          <Box className='payment-coupon'>
+            <Box className="payment-coupon__title">
               Phone-S Khuyến mãi
             </Box>
             { 
               coupon &&
-              <Box className="cart-coupon__item">
-                <svg className="cart-coupon__bg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 286 60"><g fill="none" fillRule="evenodd"><g stroke="#017FFF"><g><g><g><g><g><path fill="#E5F2FF" d="M 278 0.5 c 2.071 0 3.946 0.84 5.303 2.197 c 1.358 1.357 2.197 3.232 2.197 5.303 h 0 v 44 c 0 2.071 -0.84 3.946 -2.197 5.303 c -1.357 1.358 -3.232 2.197 -5.303 2.197 h 0 H 64.973 c -0.116 -1.043 -0.587 -1.978 -1.291 -2.682 c -0.814 -0.814 -1.94 -1.318 -3.182 -1.318 c -1.243 0 -2.368 0.504 -3.182 1.318 c -0.704 0.704 -1.175 1.64 -1.29 2.682 h 0 h -48.028 c -2.071 0 -3.946 -0.84 -5.303 -2.197 c -1.358 -1.357 -2.197 -3.232 -2.197 -5.303 h 0 V 8 c 0 -2.071 0.84 -3.946 2.197 -5.303 c 1.357 -1.358 3.232 -2.197 5.303 -2.197 h 48.027 c 0.116 1.043 0.587 1.978 1.291 2.682 c 0.814 0.814 1.94 1.318 3.182 1.318 c 1.243 0 2.368 -0.504 3.182 -1.318 c 0.704 -0.704 1.175 -1.64 1.29 -2.682 H 64.972 z" transform="translate(-1024 -2912) translate(80 2252) translate(0 460) translate(464) translate(480) translate(0 200)"></path><g strokeDasharray="2 4" strokeLinecap="square"><path d="M0.5 0L0.5 48" transform="translate(-1024 -2912) translate(80 2252) translate(0 460) translate(464) translate(480) translate(0 200) translate(60 8)"></path></g></g></g></g></g></g></g></g></svg>
-                <Box className="cart-coupon__content">
+              <Box className="payment-coupon__item">
+                <svg className="payment-coupon__bg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 286 60"><g fill="none" fillRule="evenodd"><g stroke="#017FFF"><g><g><g><g><g><path fill="#E5F2FF" d="M 278 0.5 c 2.071 0 3.946 0.84 5.303 2.197 c 1.358 1.357 2.197 3.232 2.197 5.303 h 0 v 44 c 0 2.071 -0.84 3.946 -2.197 5.303 c -1.357 1.358 -3.232 2.197 -5.303 2.197 h 0 H 64.973 c -0.116 -1.043 -0.587 -1.978 -1.291 -2.682 c -0.814 -0.814 -1.94 -1.318 -3.182 -1.318 c -1.243 0 -2.368 0.504 -3.182 1.318 c -0.704 0.704 -1.175 1.64 -1.29 2.682 h 0 h -48.028 c -2.071 0 -3.946 -0.84 -5.303 -2.197 c -1.358 -1.357 -2.197 -3.232 -2.197 -5.303 h 0 V 8 c 0 -2.071 0.84 -3.946 2.197 -5.303 c 1.357 -1.358 3.232 -2.197 5.303 -2.197 h 48.027 c 0.116 1.043 0.587 1.978 1.291 2.682 c 0.814 0.814 1.94 1.318 3.182 1.318 c 1.243 0 2.368 -0.504 3.182 -1.318 c 0.704 -0.704 1.175 -1.64 1.29 -2.682 H 64.972 z" transform="translate(-1024 -2912) translate(80 2252) translate(0 460) translate(464) translate(480) translate(0 200)"></path><g strokeDasharray="2 4" strokeLinecap="square"><path d="M0.5 0L0.5 48" transform="translate(-1024 -2912) translate(80 2252) translate(0 460) translate(464) translate(480) translate(0 200) translate(60 8)"></path></g></g></g></g></g></g></g></g></svg>
+                <Box className="payment-coupon__content">
                   <Box p={1}>
                     <img src={coupon.img} alt="" />
                   </Box>
-                  <Box className="cart-coupon__right">
+                  <Box className="payment-coupon__right">
                     <Typography fontSize="13px" fontWeight= "500">
                       {`Giảm ${couponValue}K`}</Typography>
                     <Box>
                       <InfoIcon sx={{ color: "#1890ff" }} />
-                      <Button onClick={unchooseCoupon} className="cart-coupon__unchoose" variant="contained">Bỏ chọn</Button>
+                      <Button onClick={unchooseCoupon} className="payment-coupon__unchoose" variant="contained">Bỏ chọn</Button>
                     </Box>
                   </Box>
                 </Box>
               </Box>
             }
             {user?(
-              <Box onClick={handleOpen} className="cart-coupon__showmore">
+              <Box onClick={handleOpen} className="payment-coupon__showmore">
               <DiscountIcon sx={{ height: "18px", color: "#0b74e5" }} /> Chọn hoặc nhập Mã Khuyến Mãi khác
               </Box>
             ):(
               <Typography fontSize="15px" fontWeight= "500">Đăng nhập để nhận nhiều ưu đãi bạn nhé</Typography>
             )}
           </Box>
+        </Grid>
+        <Grid item lg={12} md={12} sm={12} xs={12}>
           <Box>
             <Box className="cart-summary">
               <Box mb={2}>
                 <Stack direction="row" justifyContent="space-between">
-                  <Typography style={{ fontWeight: 500, color: "#333" }}>Đơn hàng</Typography>
-                  <Typography sx={{ color: "#1890ff", fontSize: "14px", cursor: 'pointer' }}>Thay đổi</Typography>
+                  <Typography style={{ fontWeight: 600, color: "#333" }}>Thông tin đơn hàng</Typography>
                 </Stack>
-                <Stack direction="row" alignItems={"baseline"} spacing={1} >
-                  <Typography sx={{ fontSize: "14px", color: "#888" }}>1 sản phẩm</Typography>
-                  {expandDetail ? <span onClick={handleExpand} className="payment__btn-detail"
-                  >Thu gọn<KeyboardArrowDownIcon sx={{ fontSize: "16px" }} /> </span>
-                    :
-                    <span onClick={handleExpand} className="payment__btn-detail"
-                    >Xem thông tin<KeyboardArrowUpIcon sx={{ fontSize: "16px" }} /> </span>
-                  }
-                </Stack>
-              </Box>
-              {
-                expandDetail ?
-                  <Box>
-                    <Stack direction="row" spacing={1} py={1}>
-                      <div style={{ width: "30px" }}>1x</div>
-                      <Typography className="payment__name-detail">
-                        Kem Dưỡng Thể 2% BHA Paula’s Choice Resist Weightless Body Treatment With 2% BHA  60ml - MFullSize_210ml
-                      </Typography>
-                      <span>{numWithCommas(23000)} ₫</span>
-                    </Stack>
-                  </Box> : <></>
-              }
-              <Box py={1}>
-
+                <br></br>
                 <Box className="cart-summary__price">
                   <span>Tạm tính</span>
                   <span>{numWithCommas(totalPrice)} ₫</span>

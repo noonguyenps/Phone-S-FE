@@ -88,7 +88,7 @@ function CartItemUser(props) {
           <Checkbox checked={choose} onChange={handleChangeChoose} className="cart__checkbox" />
           <img src={data?.image} alt="" />
           <Stack className="cart-item__content">
-            <Link to={data?.id?`/product/${data.id}`:''}>
+            <Link to={data?.productId?`/product/${data.productId}`:''}>
               <Typography fontSize="16px" className="text-overflow-2-lines" variant="h5">
                 {data?.name}
               </Typography>

@@ -43,12 +43,6 @@ export const sidebar = [
         link: '/admin/brand'
     },
     {
-        id: 6,
-        text: 'Trung tâm phát triển',
-        icon: PieChartOutlinedIcon,
-        link: '/admin/develop'
-    },
-    {
         id: 7,
         text: 'Công cụ khuyến mãi',
         icon: LoyaltyOutlinedIcon,

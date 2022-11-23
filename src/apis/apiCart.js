@@ -56,6 +56,10 @@ const apiCart = {
     deleteCartById : async (id) =>{
         const res = await axiosClientWithToken.delete(`/user/cart/delete/${id}`);
         return res.data;
+    },
+    updateCart : async(params) =>{
+        const res = await axiosClientWithToken.put(`/user/cart/update/${params.id}`,params);
+        return res.data;
     }
     
 }

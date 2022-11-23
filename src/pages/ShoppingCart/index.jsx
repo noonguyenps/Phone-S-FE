@@ -1,21 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
 import './ShoppingCart.scss'
-import { Grid, Typography, Checkbox, Button, Stack, Box, Dialog } from '@mui/material'
+import { Grid, Typography, Button, Stack, Box, Dialog } from '@mui/material'
 import CartItem from '../../components/CartItem'
 import CartItemUser from '../../components/CartItemUser'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-// import { CartItems } from "../../constraints/Cart"
-import InfoIcon from '@mui/icons-material/Info';
-import DiscountIcon from '@mui/icons-material/Discount';
 import { numWithCommas } from "../../constraints/Util"
 import { useSelector, useDispatch } from 'react-redux'
-import ChooseCoupon from '../../components/ChooseCoupon';
 import { unchooseAll, chooseAll, deleteAll } from '../../slices/cartSlice'
 import { useNavigate } from "react-router-dom"
 import ChooseAddress from '../../components/ChooseAddress';
 import {toast} from 'react-toastify'
 import { clearCoupon } from '../../slices/paymentSlice';
-import AddressVN from '../../components/AddressVN';
 import apiCart from '../../apis/apiCart';
 import el from 'date-fns/esm/locale/el/index.js'
 
@@ -32,7 +27,7 @@ function ShoppingCart() {
   const coupon = useSelector(state => state.payment.coupon)
   const addressShip = useSelector(state => state.payment.address)
 
-  useEffect(async () => {
+  useEffect(() => {
     if(user==null){
       const calcPrice = () => {
         const total = CartItems.reduce((t, num) => num.choose ? t + num.price * num.quantity : t, 0)
@@ -41,21 +36,23 @@ function ShoppingCart() {
       calcPrice()
     }else{
       async function fetchData() {
-        const response = await apiCart.getUserCart()
+          await apiCart.getUserCart()
           .then((res)=>{
             setListCart(res.data.listCart);
+            let totalTemp = 0;
             for(let a in res.data.listCart){
               if(res.data.listCart[a].choose){
-                setTotalPrice(totalPrice+res.data.listCart[a].price*res.data.listCart[a].quantity)
+                totalTemp+=res.data.listCart[a].price*res.data.listCart[a].quantity;
               }
             }
+            setTotalPrice(totalTemp)
           }).catch((err)=>{
             toast.warning("Có lỗi xảy ra" + err);
           })
       }
       fetchData();
     }
-  }, [CartItems], [listCart])
+  }, [])
 
   useEffect(()=>{
     const loadTitle = ()=>{
@@ -138,6 +135,14 @@ const navigate = useNavigate()
         toast.warning("Vui lòng chọn ít nhất một món hàng")
       }
       else{
+        for(let a in listCart){
+          let params = {
+            id: listCart[a].id,
+            quantity: listCart[a].quantity,
+            status: listCart[a].choose
+          }
+          apiCart.updateCart(params)
+        }
         navigate('/payment')
       }
     }

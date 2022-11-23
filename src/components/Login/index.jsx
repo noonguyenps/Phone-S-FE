@@ -30,7 +30,7 @@ import { deleteAll } from "../../slices/cartSlice";
 
 function Login(props) {
   const dispatch = useDispatch();
-  const client_url = "https://tiki-web.vercel.app/"
+  const client_url = "https://phone-s-fe.vercel.app/"
 
   const {
     register,
@@ -188,7 +188,7 @@ function Login(props) {
           alignItems="center"
           spacing={2}
         >
-          <a href={`https://nhom3-tiki.herokuapp.com/oauth2/authorization/facebook?redirect_uri=${client_url}oauth2/redirect`} className="hre">
+          <a href={`https://phone-s.herokuapp.com/oauth2/authorization/facebook?redirect_uri=${client_url}oauth2/redirect`} className="hre">
             <FacebookRoundedIcon
               sx={{
                 cursor: 'pointer',
@@ -197,7 +197,7 @@ function Login(props) {
               }} />
           </a>
 
-          <a href={`https://nhom3-tiki.herokuapp.com/oauth2/authorization/google?redirect_uri=${client_url}oauth2/redirect`} className="hre">
+          <a href={`https://phone-s.herokuapp.com/oauth2/authorization/google?redirect_uri=${client_url}oauth2/redirect`} className="hre">
             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
               width="48" height="48"
               viewBox="0 0 48 48"
