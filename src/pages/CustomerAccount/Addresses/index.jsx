@@ -70,8 +70,7 @@ function Addresses() {
                 <Stack className="info">
                   <Typography className="name">{item.fullName}</Typography>
                   <Typography className="name">{item.companyName}</Typography>
-                  <Typography className="address">Địa chỉ: {`${item.addressDetail}`}</Typography>
-                  <AddressVN province={Number(item.province)} district={item.district} commune={item.commune}></AddressVN>
+                  <Typography className="address">Địa chỉ: {`${item.addressDetail}`}<AddressVN province={Number(item.province)} district={item.district} commune={item.commune}></AddressVN></Typography>
                   <Typography className="number">Điện thoại: {item.phoneNumber}</Typography>
                 </Stack>
 
