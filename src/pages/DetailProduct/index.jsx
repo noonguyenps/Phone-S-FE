@@ -324,6 +324,8 @@ function DetailProduct() {
                 <Skeleton variant="rectangular" width="100%" height="100%" />
               )}
               <img
+                width="280" 
+                height="520"
                 onLoad={() => setLoading(false)}
                 src={product?.img[indexImg]}
                 alt=""

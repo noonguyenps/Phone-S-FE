@@ -64,6 +64,10 @@ const apiMain = {
     getOptions: async (params) =>{
         const myOptions = await axiosClient.get('', params)
         return myOptions.data;
+    },
+    getShipType: async () =>{
+        const res = await axiosClient.get('/ship')
+        return res.data;
     }
 }
     

@@ -2,7 +2,7 @@
 //import { axiosClient, axiosInstance } from "./axiosClient";
 import axios from 'axios';
 import queryString from 'query-string';
-const baseURL = 'https://nhom3-tiki.herokuapp.com/oauth2/'
+const baseURL = 'https://phone-s.herokuapp.com/oauth2/'
 export const axiosClient = axios.create({
     baseURL: baseURL,
     headers: {

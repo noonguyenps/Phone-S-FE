@@ -42,7 +42,7 @@ function SliderImage(props) {
                         images.map((item) =>
                             <SwiperSlide>
                                 <Stack height="100%" justifyContent="center" alignItems="center" >
-                                <img alt='' height="500px" src={item} />
+                                <img alt='' height="400px" src={item} />
                                 </Stack>
                             </SwiperSlide>
                         )

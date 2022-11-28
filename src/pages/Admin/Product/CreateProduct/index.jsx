@@ -85,27 +85,26 @@ export default function CreateProduct() {
     setListAddNewAttribute(prev =>[...prev,{index:index,attribute:{id:"0",name:"",values:["1","2"],}}]);
     setIndexAttr(index+1);
   };
-  function uploadListImageBE(){
+  function uploadListImageBE(index){
     return new Promise((resolve, reject)=>{
-      for(var a in listImage){
-        apiProduct.uploadImgProduct(listImage[a]).then((res)=>{
-          listUrl[a] = res.data.url;
-          setListUrl(prev =>[...prev]);
-        })
-        .catch((err)=>{
-          console.log(err);
-          reject(err);
-        })
-        .finally(()=>{
+      apiProduct.uploadImgProduct(listImage[index]).then((res)=>{
+      listUrl[index] = res.data.url;
+      setListUrl(prev =>[...prev]);
+      console.log(listUrl);
+      })
+      .catch((err)=>{
+        console.log(err);
+        reject(err);
+      })
+      .finally(()=>{
           resolve();
-        }
-        )
-      }
-    }
+      })}
     )
-  }
+  };
   async function saveProduct(){
-    await uploadListImageBE();
+    for(var index in listImage){
+      await uploadListImageBE(index);
+    }
     let params = {
       name:name,
       attribute:listAttributeInsert,
