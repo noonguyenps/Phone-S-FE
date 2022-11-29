@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
-import apiNotify from "../../../apis/apiNotify";
+import apiMain from "../../../apis/apiMain"
+import apiNotify from "../../../apis/apiNotify"
+import { Link, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "./Notify.scss";
 import PropTypes from "prop-types";
+import { toast } from "react-toastify";
 import {
   Stack,
   Tabs,
@@ -14,7 +17,6 @@ import {
   MenuItem,
   Badge,
   Button,
-  Pagination,
 } from "@mui/material";
 
 import EmptyNotify from "../../../components/EmptyNotify";
@@ -23,6 +25,30 @@ import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import UpdateIcon from "@mui/icons-material/Update";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+
+function sayHello(id) {
+  toast.success("say oh yeah" +id);
+}
+
+function seenNotification(id) {
+  let params = {
+    id : id
+  }
+  const response = apiNotify.updateNotification(params)
+  if(response){
+    toast.success("Đã đọc");
+  }
+}
+
+function deleteNotification(id) {
+  let params = {
+    id : id
+  }
+  const response = apiNotify.deleteNotification(params)
+  if(response){
+    toast.success("Đã xóa");
+  }
+}
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -35,7 +61,11 @@ function TabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 0 }}>{children}</Box>}
+      {value === index && (
+        <Box sx={{ p: 0 }}>
+         {children}
+        </Box>
+      )}
     </div>
   );
 }
@@ -53,96 +83,40 @@ function a11yProps(index) {
   };
 }
 
+const options = ["Đánh dấu đọc tất cả", "Xóa tất cả thông báo"];
 const ITEM_HEIGHT = 48;
 
-function Notify(props) {
-  const userId = useSelector((state) => state.auth.user).id;
+function Notify() {
+  const userId= useSelector(state => state.auth.user).id
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const [notification, setNotification] = useState([[], [], [], []]);
-  const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
-  const [badgeHome, setBadgeHome] = useState("");
-  const [badgeDiscount, setBadgeDiscount] = useState("");
-  const [badgeOrder, setBadgeOrder] = useState("");
-  const [badgeSystem, setBadgeSystem] = useState("");
-  const size = 6;
-
-  const checkPropOfFilter = (a) => {
-    if (a > 0) {
-      return "dot";
-    } else if (a <= 0) {
-      return "none";
-    }
-  };
-
-  const getData = async () => {
-    let countAll = 0,
-      countDiscount = 0,
-      countOrder = 0,
-      countSystem = 0;
-
-    let param = {
-      _page: page,
-      _limit: size,
-      _sort: "createdAt",
-      _order: "desc",
-      userId: userId,
-    };
-
-    const response = await apiNotify.getNotification(param);
-
-    setTotalPage(Math.ceil(response.pagination._totalRows / size));
-
-    if (response) {
-      let data = response.data.map((item) => {
-        return { ...item, icon: getIconByType(item.type) };
-      });
-
-      const ty = [
-        data,
-        data.filter((item) => item.type === "discount"),
-        data.filter((item) => item.type === "order"),
-        data.filter((item) => item.type === "system"),
-      ];
-      setNotification(ty);
-
-      ty[0].forEach((item) => {
-        if (item.seen === false) {
-          countAll++;
-        }
-      });
-      setBadgeHome(checkPropOfFilter(countAll));
-
-      ty[1].forEach((item) => {
-        if (item.seen === false) {
-          countDiscount++;
-        }
-      });
-      setBadgeDiscount(checkPropOfFilter(countDiscount));
-
-      ty[2].forEach((item) => {
-        if (item.seen === false) {
-          countOrder++;
-        }
-      });
-      setBadgeOrder(checkPropOfFilter(countOrder));
-
-      ty[3].forEach((item) => {
-        if (item.seen === false) {
-          countSystem++;
-        }
-      });
-      setBadgeSystem(checkPropOfFilter(countSystem));
-    }
-  };
+  const [notification, setNotification] = useState([[], [], [], []])
+  const [page, setPage] = useState(0);
+  const size = 50;
 
   useEffect(() => {
-    getData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [notification]);
+    const getData = async () => {
+      let param = {
+        page: page,
+        size: size,
+        type: "order"
+      }
+      const response = await apiNotify.getNotification(param)
+      if (response) {
+        let data = response.data.listNotifications.map(item=>{return {...item,icon:getIconByType(item.type)}})
+        const ty = [
+          data,
+          data.filter(item => item.type === "discount"),
+          data.filter(item => item.type === "order"),
+          data.filter(item => item.type === "system"),
+        ]
+        setNotification(ty) 
+      }
+    }
+    getData()
+  }, [])
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -153,75 +127,11 @@ function Notify(props) {
     setAnchorEl(null);
   };
   const handleDate = (timestamp) => {
-    let date = new Intl.DateTimeFormat("en-GB").format(timestamp);
-    return date;
-  };
-  const handleChangePage = (event, newValue) => {
-    setPage(newValue);
-  };
-  const handleSeenProp = (e) => {
-    let params = {
-      seen: true,
-    };
-    apiNotify
-      .changeSeenProp(params, e.target.id)
-      .then((res) => {
-        getData();
-        props.getData();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+    let date = new Intl.DateTimeFormat('en-GB').format(timestamp);
+    return date ;
+}
 
-  const handleDeleteNotify = (e) => {
-    apiNotify
-      .deleteNotifyById({ id: e.target.id })
-      .then((res) => {
-        getData();
-        props.getData();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const handleChangeSeenPropAll = async () => {
-    let params = {
-      userId: userId,
-    };
-    const response = await apiNotify.getNotification(params);
-    response.forEach((item) => {
-      let param = {
-        seen: true,
-      };
-      apiNotify
-        .changeSeenProp(param, item.id)
-        .then((res) => {})
-        .catch((err) => {
-          console.log(err);
-        });
-    });
-    props.getData();
-  };
-
-  const handleDeleteNotifyAll = async () => {
-    let params = {
-      userId: userId,
-    };
-    const response = await apiNotify.getNotification(params);
-    response.forEach((item) => {
-      apiNotify
-        .deleteNotifyById({ id: item.id })
-        .then((res) => {})
-        .catch((err) => {
-          console.log(err);
-        });
-    });
-    props.getData();
-  };
-
-  return (
+  return (  
     <Box sx={{ width: "100%", top: "0" }}>
       <Typography variant="h6">Thông báo của tôi</Typography>
 
@@ -242,7 +152,7 @@ function Notify(props) {
           >
             <Tab
               icon={
-                <Badge variant={badgeHome} color="error">
+                <Badge variant="dot" color="error">
                   <HomeIcon color="action" />
                 </Badge>
               }
@@ -252,7 +162,7 @@ function Notify(props) {
             />
             <Tab
               icon={
-                <Badge variant={badgeDiscount} color="error">
+                <Badge variant="dot" color="error">
                   <CardGiftcardIcon color="action" />
                 </Badge>
               }
@@ -260,23 +170,11 @@ function Notify(props) {
               {...a11yProps(1)}
             />
             <Tab
-              icon={
-                <Badge variant={badgeOrder} color="error">
-                  <ReceiptIcon />
-                </Badge>
-              }
+              icon={<ReceiptIcon />}
               aria-label="Receipt"
               {...a11yProps(2)}
             />
-            <Tab
-              icon={
-                <Badge variant={badgeSystem} color="error">
-                  <UpdateIcon />
-                </Badge>
-              }
-              aria-label="Update"
-              {...a11yProps(3)}
-            />
+            <Tab icon={<UpdateIcon />} aria-label="Update" {...a11yProps(3)} />
           </Tabs>
           <Box marginRight="0px" marginLeft="auto">
             <IconButton
@@ -304,110 +202,83 @@ function Notify(props) {
                 },
               }}
             >
-              <MenuItem onClick={handleChangeSeenPropAll}>
-                Đánh dấu đọc tất cả
-              </MenuItem>
-              <MenuItem onClick={handleDeleteNotifyAll}>
-                Xóa tất cả thông báo
-              </MenuItem>
+              {options.map((option) => (
+                <MenuItem
+                  key={option}
+                  selected={option === "Pyxis"}
+                  onClick={handleClose}
+                >
+                  {option}
+                </MenuItem>
+              ))}
             </Menu>
           </Box>
         </Stack>
 
         <TabPanel value={value} index={value}>
           <Stack sx={{ minHeight: "400px" }}>
-            {notification[value].length === 0 ? (
-              <EmptyNotify />
-            ) : (
-              notification[value].map((item) => (
-                <Stack
-                  key={item.id}
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  spacing={2}
-                  padding={3}
-                >
-                  <Typography variant="body2">
-                    {handleDate(item.date)}
-                  </Typography>
+            {notification[value].length === 0 ? <EmptyNotify /> : notification[value].map((item) => (
+              <Stack
+                key={item.id}
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={2}
+                padding={3}
+              >
+                <Typography variant="body2">{handleDate(item.date)}</Typography>
 
-                  <Box className="icon">
-                    <Box className={`icon__img icon__img--${item.type}`}>
-                      {item.icon && <item.icon />}
-                    </Box>
+                <Box className="icon">
+                  <Box className={`icon__img icon__img--${item.type}`}>
+                    {item.icon&&<item.icon />}
                   </Box>
+                </Box>
 
-                  <Box style={{ flex: 1 }}>
-                    <Typography
-                      variant="body2"
-                      className="text-overflow-2-lines"
-                    >
-                      {item.text}
-                    </Typography>
-                    <a
-                      style={{ fontSize: "13px", color: "#0b74e5" }}
-                      target="_blank"
-                      href={item.link}
-                      rel="noreferrer"
-                    >
-                      Chi tiết
-                    </a>
-                  </Box>
-                  {!item.seen && (
-                    <Button id={item.id} onClick={handleSeenProp}>
-                      Đánh dấu đã đọc
-                    </Button>
-                  )}
-
-                  <Button
-                    id={item.id}
-                    color="warning"
-                    onClick={handleDeleteNotify}
+                <Box style={{ flex: 1 }}>
+                  <Typography variant="body2" className="text-overflow-2-lines">{item.text}</Typography>
+                  <a
+                    style={{ fontSize: "13px", color: "#0b74e5" }}
+                    target="_blank"
+                    href={item.link}
+                    rel="noreferrer"
                   >
-                    Xóa
-                  </Button>
-                </Stack>
-              ))
-            )}
-            {totalPage > 1 ? (
-              <Stack spacing={2} mt="10px">
-                <Pagination
-                  count={totalPage}
-                  page={page}
-                  onChange={handleChangePage}
-                  color="primary"
-                />
+                    Chi tiết
+                  </a>
+                </Box>
+
+                <Button onClick={() => seenNotification(item.id)}>Đánh dấu đã đọc</Button>
+
+                <Button color="warning" onClick={() => deleteNotification(item.id)}>Xóa</Button>
               </Stack>
-            ) : (
-              <></>
-            )}
+            ))}
           </Stack>
         </TabPanel>
       </Box>
     </Box>
   );
 }
+
+
 const listType = [
   {
-    name: "discount",
-    icon: CardGiftcardIcon,
+    name:'discount',
+    icon:CardGiftcardIcon
   },
   {
-    name: "order",
-    icon: ReceiptIcon,
+    name:'order',
+    icon:ReceiptIcon
   },
   {
-    name: "system",
-    icon: UpdateIcon,
-  },
-];
-const getIconByType = (type) => {
-  const list = listType.find((item) => item.name === type);
-  if (list) {
-    return list.icon;
+    name:'system',
+    icon:UpdateIcon
   }
-  return null;
-};
+]
+const getIconByType =type=>{
+  const list = listType.find(item=>item.name===type)
+  if(list){
+    return list.icon
+  }
+  return null
+}
 
 export default Notify;

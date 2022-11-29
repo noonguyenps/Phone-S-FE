@@ -1,7 +1,7 @@
 import axios from 'axios';
 import queryString from 'query-string';
-
-const baseURL = 'https://phone-s.herokuapp.com/api/'
+import { axiosClientWithToken } from "./axiosClient";
+const baseURL = 'https://phone-s.herokuapp.com/api'
 export const axiosClient = axios.create({
     baseURL: baseURL,
     headers: {
@@ -10,24 +10,31 @@ export const axiosClient = axios.create({
     withCredentials: true,
     paramsSerializer: (params) => queryString.stringify(params)
 });
-
+export const axiosProducts = axios.create({
+    baseURL: baseURL,
+    headers: {
+        "Content-Type": "application/json"
+    },
+    withCredentials: true,
+    paramsSerializer: (params) => queryString.stringify(params)
+});
 const apiNotify = {
+
     postNotify: async (params) => {
         const res = await axiosClient.post("/notifications",params)
         return res.data
     },
-
     getNotification: async (params) => {
-        const res = await axiosClient.get('/notifications', {params})
+        const res = await axiosClientWithToken.get('/user/notification', {params})
         return res.data
     },
-    changeSeenProp: async (params,id) => {
-        const res = await axiosClient.patch(`/notifications/${id}`,params)
-        return res.data;
+    updateNotification: async (params) => {
+        const res = await axiosClientWithToken.put(`/user/notification?id=${params.id}`)
+        return res.success
     },
-    deleteNotifyById: async (params) => {
-        const res = await axiosClient.delete(`/notifications/${params.id}`)
-        return res.data;
+    deleteNotification: async (params) => {
+        const res = await axiosClientWithToken.delete(`/user/notification?id=${params.id}`)
+        return res.success
     },
 }
 export default apiNotify;

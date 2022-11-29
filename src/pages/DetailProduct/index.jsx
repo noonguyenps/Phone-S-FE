@@ -234,7 +234,6 @@ function DetailProduct() {
     };
     getData();
   }, []);
-
   const handleClickBuy = () => {
     if(user === null){
       dispatch(
@@ -268,14 +267,15 @@ function DetailProduct() {
   };
 
   const onChangeQuantity = (e) => {
-    setQuantity(e.target.value);
-    if (e.target.value === "") return;
+    if (e.target.value === "") setQuantity(1);
+    else{
     let quantity = Number(e.target.value);
-    if (Number.isInteger(quantity)) {
-      setQuantity(quantity);
-    } else {
-      setQuantity(1);
+    if(quantity>product.inventory){
+      setQuantity(product.inventory);
+    }else{
+      setQuantity(e.target.value);
     }
+  }
   };
 
   const handleExpandContent = () => {
@@ -480,7 +480,7 @@ function DetailProduct() {
                   type="text"
                   value={quantity}
                 />
-                <button onClick={() => setQuantity(quantity + 1)}>
+                <button onClick={() => setQuantity(quantity>=product.inventory?product.inventory: quantity + 1)}>
                   <AddIcon />
                 </button>
               </Box>
