@@ -61,12 +61,6 @@ export const sidebar = [
         link: '/admin/review'
     },
     {
-        id: 10,
-        text: 'Thanh toán',
-        icon: CalculateOutlinedIcon,
-        link: '/admin'
-    },
-    {
         id: 11,
         text: 'Thuộc tính',
         icon: ListIcon,

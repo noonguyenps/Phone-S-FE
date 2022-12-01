@@ -36,7 +36,7 @@ import { toast } from "react-toastify";
 import { styled } from '@mui/material/styles';
 import { useParams,useNavigate } from "react-router-dom";
 import apiProduct from "../../apis/apiProduct";
-
+import { func } from "prop-types";
 function Loading(props) {
     return (
       <CircularProgress 
@@ -56,6 +56,7 @@ function Test() {
   const [listImage, setListImage] = useState([]);
   const [index,setIndex] = useState(0);
   const [uploading, setUploading] = useState(false);
+  const [uploading1, setUploading1] = useState(false);
   const [image, setImage] = useState([]); 
   const [brand, setBrand] = useState([])
   const [country, setCountry] = useState("")
@@ -131,6 +132,9 @@ function Test() {
         console.log(res)
     })
   }
+  const myFunction = () => {
+    // setUploading(true);
+  }
 
   const handleChangeAddNewImage = (index) => {
     setListAddNewImage(prev =>[...prev,index]);
@@ -138,107 +142,14 @@ function Test() {
   };
     return (
         <Stack>
-        <Grid container padding={4}>
-          {listAddNewImage.map((index) =>(
-            <Box padding={2}>
-            <ImageUploading
-              value={listImage[index]}
-              onChange={onChange}
-              dataURLKey="data_url"
-              acceptType={["jpg"]}
-            >
-              {({
-                imageList,
-                onImageUpload,
-                isDragging,
-                dragProps,
-              }) => (
-                // write your building UI
-                <Box className="upload__image-wrapper">
-                  {imageList.length === 0 ? (
-                    <Stack
-                      sx={{
-                        width: "15rem",
-                        height: "15rem",
-                        border: "2px dashed grey",
-                        borderRadius: "5px",
-                      }}
-                      style={isDragging ? { color: "red" } : null}
-                      justifyContent="center"
-                      alignItems="center"
-                      onClick={onImageUpload}
-                      {...dragProps}
-                    >
-                      <Typography align="center"
-                        sx={{ ml: "auto", mr: "auto", color: "blue", alignItems:"center" }}
-                      >
-                        Nhấn để chọn hoặc kéo thả hình ảnh vào khung này.
-                      </Typography>
-                    </Stack>
-                  ) : null}
-
-                  {imageList.map((image,i) => (
-                    <Stack
-                      key={i}
-                      sx={{
-                        width: "100%",
-                        height: "20rem",
-                        borderRadius: "5px",
-                      }}
-                      spacing={3}
-                      className="image-item"
-                    >
-                      <img
-                        style={{
-                          width: "15rem",
-                          height: "15rem",
-                          alignSelf: "center",
-                        }}
-                        src={image.data_url}
-                        alt=""
-                      />
-                      <Stack
-                        direction="row"
-                        className="image-item__btn-wrapper"
-                        justifyContent="center"
-                        spacing={5}>
-                      </Stack>
-                    </Stack>
-                  ))}
-                </Box>
-              )}
-            </ImageUploading>
-          </Box>
-          ))}
-          <Box p={2} paddingLeft={2} 
-          sx={{
-          width: "15rem",
-          height: "15rem",
-            }}>
-                <Stack key={0}
-                sx={{
-                    width: "15rem",
-                    height: "15rem",
-                    borderRadius: "5px",
-                  }}
-                  spacing={3}
-                  className="image-item"
-                   
-                >
-                  <img
-                    style={{
-                      width: "15rem",
-                      height: "15rem",
-                      alignSelf: "center",
-                    }}
-                    src={"https://th.bing.com/th/id/R.49f5920e471dbe4aadf67dbcba5ee404?rik=LX2UXU7UQpK8BA&riu=http%3a%2f%2fpngimg.com%2fuploads%2fplus%2fplus_PNG15.png&ehk=DzbRuCqrTXMbMQm2rvj63rfKcTtr2VzXf%2ffsIL3UZG8%3d&risl=&pid=ImgRaw&r=0"}
-                    alt=""
-                    ref={buttonRef}
-                    onClick={() => (handleChangeAddNewImage(index))}/>
-                </Stack>
-          </Box>
-        </Grid>
-        <Button padding={10} onClick={()=>uploadListImage()}>Đăng tải tệp</Button>
+        {
+          uploading1?(
+            <Button onClick={myFunction}></Button>
+          ):
+          (
+            <img width='100px' src='https://gifimage.net/wp-content/uploads/2017/02/Loading-GIF-Image-31.gif' alt="loading..." />
+          )
+        }
         </Stack>
     )
 }

@@ -22,7 +22,7 @@ export const axiosClientWithPayment = axios.create({
 
 const apiCart = {
     getOrders: async (params) => {
-        const res = await axiosClient.get('/myorders', {params})
+        const res = await axiosClientWithToken.get('/admin/order', {params});
         return res.data;
     },
     saveOrder: async (params) => {
@@ -59,6 +59,14 @@ const apiCart = {
     },
     updateCart : async(params) =>{
         const res = await axiosClientWithToken.put(`/user/cart/update/${params.id}`,params);
+        return res.data;
+    },
+    getOrderByID: async(id) =>{
+        const res = await axiosClientWithToken.get(`/admin/order/${id}`);
+        return res.data;
+    },
+    getOrdersByUser: async(params)=>{
+        const res = await axiosClientWithToken.get(`/user/order`,params);
         return res.data;
     }
     

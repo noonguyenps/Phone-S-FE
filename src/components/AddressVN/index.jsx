@@ -21,7 +21,6 @@ function AddressVN(props) {
         }
         apiAddress.getProvince(param)
           .then(res => {
-            console.log(res);
             setProvinceName(res);
           })
       };
@@ -35,7 +34,6 @@ function AddressVN(props) {
           }
           apiAddress.getDistrict(param)
             .then(res => {
-              console.log(res);
               setDistrictName(res);
             })
         };
@@ -49,7 +47,6 @@ function AddressVN(props) {
           }
           apiAddress.getCommune(param)
             .then(res => {
-              console.log(res);
               setCommuneName(res);
             })
         };

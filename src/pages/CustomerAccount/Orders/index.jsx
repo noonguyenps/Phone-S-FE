@@ -21,17 +21,15 @@ function Orders() {
 
   useEffect(() => {
     const getData = async () => {
-      let param = {
-        _page: page,
-        _limit: size,
-        idUser:user.id,
-        _sort:'updatedAt',
-        _order:'desc'
+      let params = {
+        page: page,
+        size: size,
+        sort:'order_id',
       };
-      apiCart.getOrders(param)
+      apiCart.getOrdersByUser(params)
         .then(response=>{
-           setOrders(response.data.sort((a,b)=>a.createdAt - b.createdAt));
-          setTotalPage(Math.ceil(response.pagination._totalRows / size))
+          setOrders(response.data.listOrder);
+          setTotalPage(Math.ceil(response.pagination._totalRows / size));
         })
         .catch(setOrders([]))
     };
@@ -44,7 +42,7 @@ function Orders() {
   const handleChangePage = (event, newValue) => {
     setPage(newValue);
   };
-
+  console.log(orders)
   return (
     <>
       <Typography variant="h6">Đơn hàng của tôi</Typography>
@@ -86,21 +84,21 @@ function Orders() {
         </Box>
 
         <Box>
-          <TabPanel value={value} index={0} dir={theme.direction}>
+          {/* <TabPanel value={value} index={0} dir={theme.direction}> */}
             {orders.length!==0 ? (
-              orders.map((item) => <OrderItem key={item.id} order={item} />)
+              orders.map((item) => <OrderItem key={item.orderId} order={item} />)
             ) : (
               <Box  className="myorder__none">
                 <img
                  height="200px"
                  width="200px"
-                  src="https://frontend.tikicdn.com/_desktop-next/static/img/account/empty-order.png"
+                  src="https://res.cloudinary.com/duk2lo18t/image/upload/v1665719834/frontend/S-Phone_cpfelx.png"
                   alt=""
                 />
                 <Typography>Chưa có đơn hàng</Typography>
               </Box>
             )}
-          </TabPanel>
+          {/* </TabPanel>
           {orderTabs.slice(1, orderTabs.length).map((item) => {
             const tmp = getOrderByType(orders, item.id);
             if (tmp.length === 0)
@@ -110,7 +108,7 @@ function Orders() {
                     <img
                       height="200px"
                       width="200px"
-                      src="https://frontend.tikicdn.com/_desktop-next/static/img/account/empty-order.png"
+                      src="https://res.cloudinary.com/duk2lo18t/image/upload/v1665719834/frontend/S-Phone_cpfelx.png"
                       alt=""
                     />
                     <Typography>Chưa có đơn hàng</Typography>
@@ -125,7 +123,7 @@ function Orders() {
                   ))}
                 </TabPanel>
               );
-          })}
+          })} */}
 
           {totalPage > 1 ? <Stack spacing={2}>
             <Typography>Page: {page}</Typography>
@@ -160,7 +158,7 @@ function TabPanel(props) {
   );
 }
 
-const getOrderByType = (orders, id) =>
-  orders.filter((item) => item.type.id === id);
+// const getOrderByType = (orders, id) =>
+//   orders.filter((item) => item.orderId === id);
 
 export default Orders;

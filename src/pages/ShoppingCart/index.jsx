@@ -128,8 +128,8 @@ function ShoppingCart() {
   const unchooseCoupon = () => {
     dispatch(clearCoupon())
   }
-const navigate = useNavigate()
-  const handleBuy = ()=>{
+  const navigate = useNavigate()
+   const handleBuy = async ()=>{
     if(user){
       if(listCart.filter(item=>item.choose).length===0){
         toast.warning("Vui lòng chọn ít nhất một món hàng")
@@ -141,10 +141,10 @@ const navigate = useNavigate()
             quantity: listCart[a].quantity,
             status: listCart[a].choose
           }
-          apiCart.updateCart(params)
+          await apiCart.updateCart(params)
         }
-        navigate('/payment')
       }
+      navigate('/payment')
     }
     else{
       toast.warning("Bạn cần đăng nhập để thực hiện chức năng này")

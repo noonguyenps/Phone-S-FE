@@ -188,21 +188,27 @@ function DetailProduct() {
     onChangeValue();
   }, [value, addressCustom, listAddress]);
 
-  useEffect(() => {
-    const getListAddress = async () => {
-      if (user)
-        apiAddress
-          .getUserAddress()
-          .then((response) => {
-            setListAddress((pre) => [...response.data.addressList, ...pre]);
-          })
-          .catch((err) => {
-            setListAddress((pre) => [...pre]);
-          });
-      else setListAddress((pre) => [...pre]);
-    };
-    getListAddress();
-  }, [user]);
+  // useEffect(() => {
+  //   const getListAddress = async () => {
+  //     if (user)
+  //       apiAddress
+  //         .getUserAddress()
+  //         .then((response) => {
+  //           if(response.data.addressList===null){
+  //             setListAddress([]);
+  //           }
+  //           else{
+  //             setListAddress((pre) => [...response.data.addressList, ...pre]);
+  //             setAddress(listAddress[0]);
+  //           }
+  //         })
+  //         .catch((err) => {
+  //           setListAddress((pre) => [...pre]);
+  //         });
+  //     else setListAddress((pre) => [...pre]);
+  //   };
+  //   getListAddress();
+  // }, [user]);
 
   const setAddressDetails = useCallback((newAddress) => {
     setAddressCustom(newAddress);
@@ -455,18 +461,6 @@ function DetailProduct() {
                 </Box>
               );
               })} 
-
-            <Box className="detailProduct__address">
-              <span> </span>
-              <span>
-                {address ? address : "Bạn chưa đăng nhập để nhận địa chỉ"}
-              </span>
-              <span> {address ? "-" : " "} </span>
-              <span onClick={openModal} style={{ cursor: "pointer" }}>
-                {address ? "Đổi địa chỉ" : ""}
-              </span>
-            </Box>
-
             <Box className="product-quanlity">
               <Box className="product-quanlity__title">Số lượng</Box>
               <Box className="product-quanlity__groupInput">
