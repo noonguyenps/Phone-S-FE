@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Home.scss";
 
@@ -18,21 +18,13 @@ import { Pagination, Navigation, Autoplay } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import apiMain from "../../apis/apiMain";
 import apiHome from "../../apis/apiHome";
 import Loading from "../../components/Loading";
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import apiProduct from "../../apis/apiProduct";
 
 function Home() {
   const [products, setProducts] = useState([]);
-  const [Quicklink, setQuicklink] = useState([]);
-  const [CategorySpecify, setCategorySpecify] = useState([]);
-  const [Suggestions, setSuggestions] = useState([]);
   const [loadingShowmore, setLoadingShowmore] = useState(false)
-  const [chooseSuggestion, setChooseSuggestion] = useState(0)
-
   const [page, setPage] = useState(0);
   const size = 30;
 
@@ -52,48 +44,12 @@ function Home() {
     getData();
   }, [page]);
 
-
-  useEffect(() => {
-    const getDataQuickLink = async () => {
-      let param = {};
-      const response = await apiHome.getQuickLink(param);
-      if (response) {
-        setQuicklink(response);
-      }
-    };
-    getDataQuickLink();
-
-    const getDataCategorySpecify = async () => {
-      let param = {};
-      const response = await apiHome.getCategorySpecify(param);
-      if (response) {
-        setCategorySpecify(response);
-      }
-    };
-    getDataCategorySpecify();
-
-    const getDataSuggestion = async () => {
-      let param = {};
-      const response = await apiHome.getSuggestions(param);
-      if (response) {
-        setSuggestions(response);
-      }
-    };
-    getDataSuggestion();
-  }, []);
-
   const handleLoadMore = () => {
     setPage((page) => page + 1);
   };
 
   return (
     <>
-      <Box className="category">
-        <Box className="container">
-          <Category />
-        </Box>
-      </Box>
-
       <Stack spacing={2} className="container home">
         <Box id="section1">
           <SlideKhuyenMai />
@@ -158,7 +114,7 @@ function Home() {
         <Box id="section9">
           <Box className="suggestion">
             <Box className="section__heading">
-              <Box className="section__title">Gợi Ý Hôm Nay</Box>
+              <Box className="section__title">Sản phẩm nổi bật</Box>
             </Box>
           </Box>
           <Grid container>
@@ -363,15 +319,13 @@ function SectionFlashsale() {
     <>
       <Box
         width="100%"
-        height="274px"
+        height="330px"
         bgcolor="#fff"
         borderRadius="4px"
       >
         <Box id="section2__heading">
           <Box id="section2__title">
-            <img alt="" src="https://frontend.tikicdn.com/_desktop-next/static/img/giasoc.svg" />
-            <img alt="" src="https://frontend.tikicdn.com/_desktop-next/static/img/dealFlashIcon.svg" />
-            <img src="https://frontend.tikicdn.com/_desktop-next/static/img/homnay.svg" alt="" />
+            <img alt="" src="https://res.cloudinary.com/duk2lo18t/image/upload/v1670316903/frontend/R-removebg-preview_gzgdem.png" height='80px'/>
             <span className="flashsale__time">{("0" + countDown.hour).slice(-2)}</span>
             <span>:</span>
             <span className="flashsale__time">{("0" + countDown.minute).slice(-2)}</span>
@@ -394,91 +348,6 @@ function SectionFlashsale() {
         </Swiper>
       </Box>
     </>
-  );
-}
-
-function Category() {
-  const categoryRef = useRef();
-
-  const [translate,setTranslate] = useState(0)
-  const [categories, setCategories] = useState([])
-
-  useEffect(() => {
-    const getData = async () => {
-      apiHome.getCategories({})
-        .then(res => {
-          setCategories(res)
-        })
-        .catch(error => {
-          setCategories([])
-        })
-    }
-    getData()
-  }, [])
-
-  const onClickPrev = () => {
-    if (categoryRef) {
-      let offset = categoryRef.current.offsetWidth - 50
-      if ( translate + offset >= 0){
-        setTranslate(0)
-        categoryRef.current.children[0].style.display = "none";
-      }
-      else{
-        setTranslate(translate + offset)
-        categoryRef.current.children[0].style.removeProperty("display");
-        categoryRef.current.children[2].style.removeProperty("display");
-      }
-    }
-  };
-
-  const onClickNext = () => {
-    if (categoryRef) {
-      let offset = categoryRef.current.offsetWidth -50
-      if(translate - 2*offset <= -categoryRef.current.children[1].offsetWidth){
-        categoryRef.current.children[2].style.display = "none";
-        setTranslate(-categoryRef.current.children[1].offsetWidth + offset)
-      }
-      else{
-        setTranslate(translate - offset)
-        categoryRef.current.children[0].style.removeProperty("display");
-        categoryRef.current.children[2].style.removeProperty("display");
-      }
-    }
-  };
-
-  return (
-    <Stack className='catogory'
-      ref={categoryRef}
-      direction='row'
-      justifyContent="space-between"
-      alignItems={'center'}
-    >
-      <Box className='catogory__prev' onClick = {onClickPrev} style={{display:'none'}}>
-        <ArrowBackIosIcon />
-      </Box>
-      <Stack sx={{transform:`translateX(${translate}px)`}}
-      className='catogory__content' direction="row" justifyContent="space-between" spacing="16px"
-      >
-        {categories.map((item) => (
-          <Box key={item.id} >
-            <Link to={`filter/${item.id}`}>
-              <Box
-                style={{
-                  fontSize: "16px",
-                  textAlign: "center",
-                  whiteSpace: "nowrap",
-                }}
-              >{item.name}
-              </Box>
-            </Link>
-          </Box>
-        ))}
-      </Stack>
-      <Box className='catogory__next' onClick={onClickNext}>
-        <ArrowForwardIosIcon />
-      </Box>
-    </Stack>
-
   );
 }
 export default Home;

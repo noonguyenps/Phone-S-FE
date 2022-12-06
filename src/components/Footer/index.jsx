@@ -38,17 +38,6 @@ function Footer() {
         </Stack>
 
         <Stack>
-          <Typography component="h4" className="block__title">
-            Về Chúng tôi
-          </Typography>
-          {footerLink.aboutTiki.map((item) => (
-            <a key={item.id} href={item.link}>
-              {item.display}
-            </a>
-          ))}
-        </Stack>
-
-        <Stack>
           <Box>
             <Typography component="h4" className="block__title">
               Hợp tác và liên kết

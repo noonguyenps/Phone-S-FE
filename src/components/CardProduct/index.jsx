@@ -19,8 +19,8 @@ function CardProduct({ data }) {
 
     return (
         <Link className="card__wrap" to={`/product/${data.id}`}>
-            <Card className="card">
-                <Box className="card__img">
+            <Card className="card1">
+                <Box className="card1__img">
                     {loading&&<Skeleton variant="rectangular" width='100%' height='100%' />}
                 <CardMedia
                     component="img"
@@ -31,7 +31,7 @@ function CardProduct({ data }) {
                 />
                 </Box>
                 <CardContent className="card__content">
-                    <Typography className="card__title" variant="h5" component="div" fontSize="13px">
+                    <Typography className="card__title" variant="h5" component="div" fontSize="16px">
                         {data?.name}
                     </Typography>
                     <Stack direction="row" alignItems="center">

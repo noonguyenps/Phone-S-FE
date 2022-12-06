@@ -19,8 +19,8 @@ function CardFlashsale({ data }) {
                 <CardMedia
                     component="img"
                     alt="green iguana"
-                    width="124px"
-                    height="124px"
+                    width="75px"
+                    height="150px"
                     image={data?.image}
                 />
                 <Typography>{data.name}</Typography>

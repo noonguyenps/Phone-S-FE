@@ -59,7 +59,6 @@ function ForgetPassword(props) {
         <p style={{ fontSize: "15px" }}>
           Vui lòng nhập thông tin tài khoản để lấy lại mật khẩu
         </p>
-
         <form>
           <Stack spacing={2}>
             <Stack>
@@ -96,21 +95,6 @@ function ForgetPassword(props) {
             </Button>
           </Stack>
         </form>
-      </Stack>
-
-      <Stack
-        sx={{
-          width: "300px",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <img
-          src="https://res.cloudinary.com/duk2lo18t/image/upload/v1665719834/frontend/S-Phone_cpfelx.png"
-          width="203"
-        />
-        <h4>Mua sắm tại S-Phone</h4>
-        <span>Tin cậy và nhanh chóng</span>
       </Stack>
       <span style={{ position: "absolute", top: 0, right: 0 }}>
         <IconButton onClick={props.closeModalForgetPWD}>
