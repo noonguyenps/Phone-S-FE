@@ -124,19 +124,6 @@ function Footer() {
           </Box>
         </Stack>
       </Stack>
-
-      <Box className="container address-info">
-        <Typography>
-          Trụ sở chính: Số 1, Võ Văn Ngân, phường Linh Chiểu, Tp Thủ Đức, Tp Hồ Chí Minh
-        </Typography>
-        <Typography>
-          S-Phone nhận đặt hàng trực tuyến và giao hàng tận nơi, chưa hỗ trợ mua và
-          nhận hàng trực tiếp tại văn phòng hoặc trung tâm xử lý đơn hàng
-        </Typography>
-        <Typography style={{ marginBottom: "0" }}>
-          © 2022 - Bản quyền thuộc về Dương Văn Ngọc Tín
-        </Typography>
-      </Box>
     </Box>
   );
 }

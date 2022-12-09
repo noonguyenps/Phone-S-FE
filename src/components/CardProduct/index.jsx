@@ -20,6 +20,14 @@ function CardProduct({ data }) {
     return (
         <Link className="card__wrap" to={`/product/${data.id}`}>
             <Card className="card1">
+            <Typography className="card__price" color={`${data?.discount!==0 ? "#ff0000" : "#000000"}`} variant="h5" component="div">{
+                            data?.discount!==0 ?
+                            <><Box className="card__sale">Giảm giá: {data?.discount}%</Box>
+                            </>
+                            :
+                            <></>
+                        } 
+                        </Typography> 
                 <Box className="card1__img">
                     {loading&&<Skeleton variant="rectangular" width='100%' height='100%' />}
                 <CardMedia
@@ -31,19 +39,17 @@ function CardProduct({ data }) {
                 />
                 </Box>
                 <CardContent className="card__content">
-                    <Typography className="card__title" variant="h5" component="div" fontSize="16px">
+                    <Typography className="card__title" variant="h5" component="div" fontSize="14px">
                         {data?.name}
                     </Typography>
                     <Stack direction="row" alignItems="center">
-                        <Rating name="read-only" value={data?.rate || 0} sx={{ fontSize: "0.875rem" }} readOnly />
-                        <span style={{ color: "#787878", fontSize: "11px" }}>| Đã bán {data?.sold}</span>
+                        <Rating name="read-only" value={data?.rate || 0} sx={{ fontSize: "1.2rem" }} readOnly />
                     </Stack>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Typography className="card__price" color={`${data?.discount!==0 ? "#ff0000" : "#000000"}`} variant="h5" component="div">
                         {
                             data?.discount!==0 ?
-                            <>{numWithCommas(Math.round(data?.price*(1-0.01*data.discount)))} ₫ <Box className="card__sale">{data?.discount}%</Box>
-                            </>
+                            <>{numWithCommas(Math.round(data?.price*(1-0.01*data.discount)))} ₫</>
                             :
                             <>{numWithCommas(data?.price)} ₫ </>
                             

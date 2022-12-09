@@ -23,7 +23,7 @@ function CardFlashsale({ data }) {
                     height="150px"
                     image={data?.image}
                 />
-                <Typography>{data.name}</Typography>
+                <Typography className="card__title" variant="h5" component="div" fontSize="14px">{data.name}</Typography>
                 <CardContent className="card__content">
                     <Typography className="card__price" color={`${data?.discount!==0 ? "#ff0000" : "#000000"}`} variant="h5" component="div">
                     {

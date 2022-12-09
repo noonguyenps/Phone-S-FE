@@ -2,13 +2,14 @@
     max-width: 190px;
     border-radius: 10%;
     margin: 10px;
-    height: 300px;
+    height: 330px;
     padding: 12px;
     width: 100%;
     box-shadow: none !important;
     &__img{
+        margin: 5px;
         width: 100%;
-        padding-top:76%;
+        padding-top:100%;
         position: relative;
         &>*{
             position: absolute;
@@ -31,11 +32,14 @@
     }
     &__sale {
         display: inline;
-        font-size: 12px;
-        padding: 0 3px;
-        height: 16px;
+        font-size: 14px;
+        color: #ff0000;
+        border-radius: 30%;
+        padding: 0 5px;
+        padding-bottom: 10px;
+        height: 18px;
         margin-left: 8px;
-        border: 1px solid #ff0000;
+        border: 3px solid #ff0000;
     }
     &__price {
         display: flex;

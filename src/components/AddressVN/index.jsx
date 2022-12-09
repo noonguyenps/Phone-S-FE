@@ -54,7 +54,7 @@ function AddressVN(props) {
       }, []);
   
   return (
-          <span>{communeName?', '+communeName:""}{districtName?', '+districtName:""}{provinceName?', '+provinceName:''}</span>
+          <span>{communeName?communeName:""}{districtName?', '+districtName:""}{provinceName?', '+provinceName:''}</span>
   )
 }
   AddressVN.propTypes = {

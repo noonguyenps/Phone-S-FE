@@ -23,6 +23,7 @@ import apiReviews from "../../apis/apiReviews";
 import Loading from "../../components/Loading";
 
 function ReviewProduct(props) {
+  const product = props.product;
   const [reviews, setReviews] = useState([]);
   const [content, setContent] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
@@ -103,22 +104,25 @@ function ReviewProduct(props) {
     <Box className="container">
       <Box bgcolor={"#fff"}>
         <Typography sx={{ fontSize: "20px" }} py={1} px={2}>
-          Đánh Giá - Nhận Xét Từ Khách Hàng
+          Đánh Giá và Nhận Xét {product?.name}
         </Typography>
         <Stack
           direction="row"
           sx={{ padding: "0px 48px 24px", borderBottom: "1px solid #BFBFBf" }}
         >
-          <Box sx={{ width: "335px" }}>
-            <Stack direction="row" spacing={2} mb={1}>
+          <Box>
+            <Stack direction="row" spacing={7} mb={1} justifyContent="center" alignItems="center">
               <Stack
-                direction="row"
+                direction="column"
                 justifyContent="center"
                 alignItems="center"
                 spacing={2}
                 sx={{ fontSize: "32px", fontWeight: 600 }}
               >
-                {avgRating}
+                {avgRating} /5 
+                <Typography sx={{ fontSize: "14px", color: "rgb(128, 128, 137)" }}>
+                  {count} Nhận xét
+                </Typography>
               </Stack>
               <Stack direction="column">
                 <Rating
@@ -127,14 +131,8 @@ function ReviewProduct(props) {
                   value={avgRating}
                   readOnly
                 />
-                <Typography
-                  sx={{ fontSize: "13px", color: "rgb(128, 128, 137)" }}
-                >
-                  {count} Nhận xét
-                </Typography>
               </Stack>
-            </Stack>
-            <Stack direction="column">
+              <Stack direction="column">
               {[5, 4, 3, 2, 1].map((item) => {
                 let countRate = reviews.filter(
                   (rev) => rev.rating === item
@@ -159,52 +157,18 @@ function ReviewProduct(props) {
                     </div>
                     <Typography
                       sx={{
-                        width: "30px",
+                        width: "60px",
                         fontSize: "11px",
                         color: "rgb(128, 128, 137)",
                       }}
                     >
-                      {countRate}
+                      {countRate} đánh giá
                     </Typography>
                   </Stack>
                 );
               })}
             </Stack>
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <Stack direction="row" alignItems={"center"} spacing={2} mt={4}>
-              <Typography sx={{ fontSize: "15px" }}>Lọc xem theo: </Typography>
 
-              <Stack
-                direction="row"
-                alignItems="center"
-                spacing={2}
-                className="ReviewProduct__Filter"
-              >
-                {items?.map((item, i) => (
-                  <Stack
-                    onClick={() => {
-                      handleClickTab(item.id);
-                    }}
-                    key={item.id || i}
-                    alignItems="center"
-                    justifyContent="center"
-                    className={` reviewTab__item ${
-                      item.id === selected ? "selected" : ""
-                    }`}
-                  >
-                    <Stack
-                      direction="row"
-                      alignItems="center"
-                      justifyContent="center"
-                      spacing={0.5}
-                    >
-                      <Typography>{item.label}</Typography>
-                      <StarBorderIcon sx={{ color: "gold" }} />
-                    </Stack>
-                  </Stack>
-                ))}
-              </Stack>
             </Stack>
           </Box>
         </Stack>
@@ -477,9 +441,6 @@ function ReplyReviews(props) {
             <></>
           )}
         </Stack>
-
-      
-          
           {props.item?.reply?.map((itemReply, i) => (
             <Stack
               spacing={3}

@@ -51,7 +51,7 @@ function Addresses() {
 
   return (
     <Stack spacing={2} className="addresses">
-      <Typography className="heading">Sổ địa chỉ</Typography>
+      <Typography className="heading">Danh sách địa chỉ</Typography>
       <Link to="/customer/address/create">
         <Button className="new" variant="outlined" startIcon={<AddIcon />}>
           Thêm địa chỉ mới
@@ -59,7 +59,7 @@ function Addresses() {
       </Link>
       <Stack spacing={5}>{
         addresses.length === 0 ?
-          <EmptyNotify title="Bạn chưa có địa chỉ" />
+          <Typography>Bạn chưa có địa chỉ</Typography>
           : addresses.map((item) => {
             return (
               <Stack key={item.id}
@@ -70,7 +70,8 @@ function Addresses() {
                 <Stack className="info">
                   <Typography className="name">{item.fullName}</Typography>
                   <Typography className="name">{item.companyName}</Typography>
-                  <Typography className="address">Địa chỉ: {`${item.addressDetail}`}<AddressVN province={Number(item.province)} district={item.district} commune={item.commune}></AddressVN></Typography>
+                  <Typography className="address">Địa chỉ cụ thể: {`${item.addressDetail}`}</Typography>
+                  <Typography className="address">Địa chỉ : <AddressVN province={Number(item.province)} district={item.district} commune={item.commune}/></Typography>
                   <Typography className="number">Điện thoại: {item.phoneNumber}</Typography>
                 </Stack>
 

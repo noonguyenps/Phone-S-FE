@@ -148,8 +148,7 @@ function CreateAddress(props) {
 
   return (
     <Box className="create-address" p={2} m={2}>
-      <Typography variant="h6">Tạo sổ địa chỉ</Typography>
-
+      <Typography variant="h6">Thêm địa chỉ</Typography>
       <Stack p='2rem' spacing={1.875} width='80%'>
         <Stack direction="row">
           <Typography className="create-address__label">
@@ -221,12 +220,12 @@ function CreateAddress(props) {
             <FormControlLabel
               value="1"
               control={<Radio />}
-              label="Nhà riêng/ Chung cư"
+              label="Nhà riêng"
             />
             <FormControlLabel
               value="2"
               control={<Radio />}
-              label="Cơ quan/ Công ty"
+              label="Công ty"
             />
           </RadioGroup>
         </Stack>

@@ -1,19 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import {
   Box,
-  Stack,
   Typography,
-  Card,
-  CardMedia,
-  CardContent,
-  CardActions,
-  Pagination,
   Grid,
 } from "@mui/material";
 
 import CardProduct from "../../../components/CardProduct";
-import productImage from "../../../assets/img/avatar1.jpg";
-import apiProduct from "../../../apis/apiProduct";
 import apiAccount from "../../../apis/apiAccount";
 import { useSelector } from "react-redux";
 
@@ -70,15 +62,6 @@ function FavoriteProduct() {
           );
         })}
       </Grid>
-
-      {myFavorites.length !== 0 ? (
-        <Stack spacing={2}>
-          <Typography>Page: {page}</Typography>
-          <Pagination count={totalPage} page={page} onChange={handleChange} />
-        </Stack>
-      ) : (
-        <></>
-      )}
     </Box>
   );
 }

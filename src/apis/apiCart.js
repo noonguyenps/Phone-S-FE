@@ -65,6 +65,10 @@ const apiCart = {
         const res = await axiosClientWithToken.get(`/admin/order/${id}`);
         return res.data;
     },
+    getUserOrderByID: async(id) =>{
+        const res = await axiosClientWithToken.get(`/user/order/${id}`);
+        return res.data;
+    },
     getOrdersByUser: async(params)=>{
         const res = await axiosClientWithToken.get(`/user/order`,params);
         return res.data;

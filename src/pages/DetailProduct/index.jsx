@@ -4,6 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import imgDefault from '../../assets/img/img_default.jpg'
 import ReviewProduct from "./ReviewProduct";
 
+import Login from "../../components/Login";
+import SignUp from "../../components/SignUp";
+import ForgetPassword from "../../components/ForgetPassword";
+
 import {
   Rating,
   Button,
@@ -12,7 +16,6 @@ import {
   Stack,
   Typography,
   Modal,
-  FormControlLabel,
   IconButton,
   Tooltip,
   Skeleton,
@@ -20,22 +23,15 @@ import {
 
 import "./DetailProduct.scss";
 import CheckIcon from "@mui/icons-material/Check";
-import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
 import CardProduct from "../../components/CardProduct";
 import apiProduct from "../../apis/apiProduct";
 import { addItem } from "../../slices/cartSlice";
-import apiMain from "../../apis/apiMain";
-import apiAddress from "../../apis/apiAddress";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
 
-import { numWithCommas, roundPrice } from "../../constraints/Util";
-import SelectBoxAddress from "../../components/SelectBoxAddress";
+import { numWithCommas} from "../../constraints/Util";
 
 import { toast } from "react-toastify";
 
@@ -46,6 +42,50 @@ import apiCart from "../../apis/apiCart";
 
 function DetailProduct() {
   const user = useSelector((state) => state.auth.user);
+  const [modalLogin, setModalLogin] = useState(false);
+  const openModalLogin = () => setModalLogin(true);
+
+  const [isLoginForm, setIsLoginForm] = useState(true);
+  const [isRegister, setIsRegister] = useState(false);
+  const [isForgetPwd, setIsForgetPwd] = useState(false);
+
+  const closeModalLogin = () => {
+    setModalLogin(false);
+    setIsLoginForm(true);
+    setIsRegister(false);
+    setIsForgetPwd(false);
+  };
+
+  const closeModalForgetPWD = () => {
+    setIsForgetPwd(false);
+    setModalLogin(false);
+    setIsLoginForm(true);
+    setIsRegister(false);
+  };
+
+  const handleReturnLogin = useCallback(() => {
+    setIsLoginForm(true);
+    setIsForgetPwd(false);
+    setIsRegister(false);
+  }, []);
+
+  const handleOpenSignup = useCallback(() => {
+    setIsRegister(true);
+    setIsForgetPwd(false);
+    setIsLoginForm(false);
+  }, []);
+
+  const handleOpenLogin = useCallback(() => {
+    setIsLoginForm(true);
+    setIsRegister(false);
+    setIsForgetPwd(false);
+  }, []);
+
+  const handleOpenForgetPwd = useCallback(() => {
+    setIsForgetPwd(true);
+    setIsRegister(false);
+    setIsLoginForm(false);
+  }, []);
 
   const [product, setProduct] = useState(null);
   const { id } = useParams();
@@ -124,22 +164,7 @@ function DetailProduct() {
     }
   };
 
-  const [expandContent, setExpandContent] = useState(false);
   const [productSimilars, setProductSimilars] = useState([]);
-
-  const [quantity, setQuantity] = useState(1);
-  const [address, setAddress] = useState("");
-  const [listAddress, setListAddress] = useState([
-    { id: 0, text: "Chọn địa chỉ khác" },
-  ]);
-  const [addressCustom, setAddressCustom] = useState("");
-
-  const descriptionRef = useRef(null);
-
-  const [province, setProvince] = useState("");
-  const [district, setDistrict] = useState("");
-  const [commune, setCommune] = useState("");
-
   const [value, setValue] = React.useState("0");
   const [modalSlider, setModelSlider] = useState(false);
   const [loading, setLoading] = React.useState(true);
@@ -153,78 +178,6 @@ function DetailProduct() {
   const closeModalSlider = () => {
     setModelSlider(false);
   };
-
-  const handleChangeAddress = (event) => {
-    setValue(event.target.value);
-  };
-
-  const [modal, setModal] = useState(false);
-  const openModal = () => {
-    if (user === null) {
-      toast.warning("Vui lòng đăng nhập để thực hiện chức năng này");
-    }
-    else{
-      setModal(true);
-    }
-  }
-
-  const closeModal = () => {
-    setModal(false);
-  };
-
-  useEffect(() => {
-    const onChangeValue = () => {
-      if (value === "0") {
-        setAddress(addressCustom);
-      } else {
-        let addressSelect = listAddress.find((item) => item.id === value);
-        if (addressSelect) {
-          setAddress(
-            `${addressSelect.commune.name}, ${addressSelect.district.name}, ${addressSelect.province.name}`
-          );
-        }
-      }
-    };
-    onChangeValue();
-  }, [value, addressCustom, listAddress]);
-
-  // useEffect(() => {
-  //   const getListAddress = async () => {
-  //     if (user)
-  //       apiAddress
-  //         .getUserAddress()
-  //         .then((response) => {
-  //           if(response.data.addressList===null){
-  //             setListAddress([]);
-  //           }
-  //           else{
-  //             setListAddress((pre) => [...response.data.addressList, ...pre]);
-  //             setAddress(listAddress[0]);
-  //           }
-  //         })
-  //         .catch((err) => {
-  //           setListAddress((pre) => [...pre]);
-  //         });
-  //     else setListAddress((pre) => [...pre]);
-  //   };
-  //   getListAddress();
-  // }, [user]);
-
-  const setAddressDetails = useCallback((newAddress) => {
-    setAddressCustom(newAddress);
-  }, []);
-
-  const handleChangeProvince = useCallback((value) => {
-    setProvince(value);
-  }, []);
-
-  const handleChangeDistrict = useCallback((value) => {
-    setDistrict(value);
-  }, []);
-
-  const handleChangeCommune = useCallback((value) => {
-    setCommune(value);
-  }, []);
 
   useEffect(() => {
     const getData = async () => {
@@ -251,7 +204,7 @@ function DetailProduct() {
           name: product.name,
           image: product.image,
           price: Math.round(price * (1 - product.discount / 100)),
-          quantity,
+          quantity:1,
         })
       );
       toast.success("Đã thêm vào giỏ hàng");
@@ -259,7 +212,7 @@ function DetailProduct() {
       let params = {
         listAttribute:listOptionId,
         productId:product.id,
-        quantity:quantity
+        quantity:1
       };
       apiCart.addProductToCart(params)
       .then((res)=>{
@@ -270,22 +223,6 @@ function DetailProduct() {
         toast.warning("Có lỗi sảy ra " + err);
       })
     }
-  };
-
-  const onChangeQuantity = (e) => {
-    if (e.target.value === "") setQuantity(1);
-    else{
-    let quantity = Number(e.target.value);
-    if(quantity>product.inventory){
-      setQuantity(product.inventory);
-    }else{
-      setQuantity(e.target.value);
-    }
-  }
-  };
-
-  const handleExpandContent = () => {
-    setExpandContent((pre) => !pre);
   };
 
   const onChangeOption = (optionId, itemId) => {
@@ -320,6 +257,33 @@ function DetailProduct() {
   return (
     <>
       <Box className="container">
+        <Box className="panelProduct">
+        <Stack direction="row">
+        <Typography className="panelProduct__title">
+              {product?.name ? (
+                <h2>{product.name}</h2>
+              ) : (
+                <>
+                  <Skeleton animation="wave" height={40} width="100%"/>
+                </>
+              )}
+        </Typography>
+        <Box className="panelProduct__rating">
+              {product?(
+                <>
+                  <Rating
+                    name="simple-controlled"
+                    value={product.rate || 0}
+                    readOnly
+                    sx={{ fontSize: "18px" }}
+                  />
+                  <span>{product.rate} đánh giá | Đã bán {product?.sold} </span>
+                </>
+              ) : (
+                <Skeleton animation="wave" height={40} width="100%" />
+              )}
+        </Box>
+        </Stack>
         <Box className="detailProduct">
           <Box className="detailProduct__img">
             <Box
@@ -387,42 +351,13 @@ function DetailProduct() {
           </Box>
 
           <Box flex={1}>
-            <Box className="detailProduct__title">
-              {product?.name ? (
-                <h2>{product.name}</h2>
-              ) : (
-                <>
-                  <Skeleton animation="wave" height={40} />
-                  <Skeleton animation="wave" height={40} />
-                </>
-              )}
-            </Box>
-            <Box className="detailProduct__rating">
-              {product?(
-                <>
-                  <Rating
-                    name="simple-controlled"
-                    value={product.rate || 0}
-                    readOnly
-                    sx={{ fontSize: "18px" }}
-                  />
-                  <span>Xem {product.rate} đánh giá | Đã bán {product?.sold} </span>
-                </>
-              ) : (
-                <Skeleton animation="wave" height={40} width="100%" />
-              )}
-            </Box>
-
             <Box className="detailProduct__price">
               {product?.price ? (
                 <>
                   <span>
-                  {Math.round(price * (1 - product.discount / 100))}₫
+                  {numWithCommas(Math.round(price * (1 - product.discount / 100)))}₫
                   </span>
                   <span>{numWithCommas(price || 0)} ₫</span>
-                  <span className="detailProduct__discount">
-                    {product?.discount}%
-                  </span>
                 </>
               ) : (
                 <Skeleton animation="wave" height={40} width="100%" />
@@ -460,30 +395,20 @@ function DetailProduct() {
                   </Box>
                 </Box>
               );
-              })} 
-            <Box className="product-quanlity">
-              <Box className="product-quanlity__title">Số lượng</Box>
-              <Box className="product-quanlity__groupInput">
-                <button
-                  onClick={() => setQuantity(quantity === 1 ? 1 : quantity - 1)}
-                >
-                  <RemoveIcon />
-                </button>
-                <input
-                  onChange={onChangeQuantity}
-                  type="text"
-                  value={quantity}
-                />
-                <button onClick={() => setQuantity(quantity>=product.inventory?product.inventory: quantity + 1)}>
-                  <AddIcon />
-                </button>
-              </Box>
-            </Box>
-
+              })}
+              <Box className="descriptionProduct"
+                    bgcolor="white"
+                    p={2}
+                    borderRadius="4px"
+                  >
+              <Box className="productSpecification__title">Mô Tả Sản phẩm</Box>
+              <Typography px={3}>{product?.description}</Typography>
+              </Box> 
             <Stack
               sx={{ marginTop: "2rem" }}
               direction="row"
               alignItems="center"
+              justify="center"
               spacing={3}
             >
               <Box>
@@ -491,17 +416,17 @@ function DetailProduct() {
                   variant="contained"
                   onClick={handleClickBuy}
                   sx={{
-                    width: "400px",
+                    width: "200px",
                     height: "48px",
-                    backgroundColor: "#ff3945",
-                    "&:hover": { opacity: 0.8, backgroundColor: "#ff3945" },
+                    backgroundColor: "#00CC99",
+                    "&:hover": { opacity: 0.8, backgroundColor: "#006699" },
                   }}
                 >
-                  Chọn mua
+                  <AddShoppingCartIcon/>Thêm vào giỏ hàng
                 </Button>
               </Box>
-
-              <IconButton
+              {user?(<>
+                <IconButton
                 sx={{ border: "1px solid silver" }}
                 color="error"
                 size="large"
@@ -517,9 +442,27 @@ function DetailProduct() {
                   </Tooltip>
                 )}
               </IconButton>
+              </>):(<>
+                <IconButton
+                sx={{ border: "1px solid silver" }}
+                color="error"
+                size="large"
+                onClick={openModalLogin}
+              >
+                {isFavorite ? (
+                  <Tooltip title="Xóa khỏi danh sách yêu thích">
+                    <FavoriteIcon />
+                  </Tooltip>
+                ) : (
+                  <Tooltip title="Thêm vào danh sách yêu thích">
+                    <FavoriteBorderIcon />
+                  </Tooltip>
+                )}
+              </IconButton></>)}
             </Stack>
           </Box>
         </Box>
+      </Box>
 
         <Box className="productSimilar">
           <Box className="productSimilar__title">Sản Phẩm Tương Tự</Box>
@@ -531,72 +474,42 @@ function DetailProduct() {
             ))}
           </Grid>
         </Box>
-        <Box
-          className="descriptionProduct"
-          bgcolor="white"
-          p={2}
-          borderRadius="4px"
-        >
-        <Box className="productSpecification__title">Mô Tả Sản phẩm</Box>
-        <Typography px={3}>{product?.description}</Typography>
-        </Box>
       </Box>
-
-      <Modal sx={{ overflowY: "scroll" }} open={modal} onClose={closeModal}>
-        <Box className="modal-login" width="800px">
-          <Stack spacing="16px">
-            <Typography style={{ fontSize: "24px" }}>
-              {" "}
-              Địa chỉ giao hàng
-            </Typography>
-            <Typography>
-              {" "}
-              Hãy chọn địa chỉ nhận hàng để được dự báo thời gian giao hàng cùng
-              phí đóng gói, vận chuyển một cách chính xác nhất.
-            </Typography>
-
-            <RadioGroup
-              aria-labelledby="demo-controlled-radio-buttons-group"
-              name="radio-buttons-group"
-              value={value}
-              onChange={handleChangeAddress}
-            >
-              {listAddress.map((addr) => (
-                <FormControlLabel
-                  value={addr.id}
-                  control={<Radio />}
-                  label={
-                    addr.id === 0
-                      ? addr.text
-                      : `${addr.commune.name}, ${addr.district.name}, ${addr.province.name}`
-                  }
-                />
-              ))}
-            </RadioGroup>
-            <Stack
-              sx={{ display: `${value === "0" ? "flex" : "none"}` }}
-              spacing={2}
-            >
-              <SelectBoxAddress
-                province={province}
-                district={district}
-                commune={commune}
-                onChangeProvince={handleChangeProvince}
-                onChangeDistrict={handleChangeDistrict}
-                onChangeCommune={handleChangeCommune}
-                setAddressDetails={setAddressDetails}
-              />
-            </Stack>
-          </Stack>
-        </Box>
-      </Modal>
-
       <Modal open={modalSlider} onClose={closeModalSlider}>
         <Box className="modal-images" sx={{ width: "100%" }}>
           <SliderImage
             images={product?.img}
             onClose={closeModalSlider}
           ></SliderImage>
+        </Box>
+      </Modal>
+      <Modal
+        sx={{ overflowY: "scroll" }}
+        open={modalLogin}
+        onClose={closeModalLogin}
+      >
+        <Box className="modal-login" sx={{ width: "360px" }}>
+          {isLoginForm && (
+            <Login
+              handleOpenSignup={handleOpenSignup}
+              closeModalLogin={closeModalLogin}
+              handleOpenForgetPwd={handleOpenForgetPwd}
+            />
+          )}
+
+          {isRegister && (
+            <SignUp
+              handleOpenLogin={handleOpenLogin}
+              closeModalLogin={closeModalLogin}
+            />
+          )}
+
+          {isForgetPwd && (
+            <ForgetPassword
+              closeModalForgetPWD={closeModalForgetPWD}
+              handleReturnLogin={handleReturnLogin}
+            />
+          )}
         </Box>
       </Modal>
 

@@ -37,6 +37,10 @@ const apiCoupon = {
         const res = await axiosClient.get(`/coupons`,{params})
         return res.data;
     },
+    getCouponByUser: async (params)=>{
+        const res = await axiosClientWithToken.get('/user/voucher/all',params)
+        return res.data;
+    }
      
 }
 export default apiCoupon;

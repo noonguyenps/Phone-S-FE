@@ -6,10 +6,6 @@ import { Grid, Stack, Button, Box } from "@mui/material";
 import CardProduct from "../../components/CardProduct";
 import CardFlashsale from "../../components/CardFlashsale";
 
-import {
-  SlideThuongHieu1,
-  SlideThuongHieu2,
-} from "../../constraints/Home";
 import { Swiper, SwiperSlide } from "swiper/react";
 // import required modules
 import { Pagination, Navigation, Autoplay } from "swiper";
@@ -26,7 +22,7 @@ function Home() {
   const [products, setProducts] = useState([]);
   const [loadingShowmore, setLoadingShowmore] = useState(false)
   const [page, setPage] = useState(0);
-  const size = 30;
+  const size = 12;
 
   useEffect(() => {
     const getData = async () => {
@@ -37,7 +33,7 @@ function Home() {
       };
       apiHome.getProducts(param)
         .then(res => {
-          setProducts(res.data.listProduct);
+          setProducts((prev)=>([...prev , ...res.data.listProduct]));
         })
         .finally(() => setLoadingShowmore(false))
     };
@@ -183,91 +179,6 @@ function SlideKhuyenMai() {
             </SwiperSlide>
           ))}
         </Swiper>
-    </>
-  );
-}
-
-function SlideThuongHieu() {
-  return (
-    <>
-      <Swiper
-        slidesPerView={2}
-        spaceBetween={30}
-        slidesPerGroup={2}
-        
-        navigation={true}
-        loop={true}
-        pagination={{
-          clickable: true,
-        }}
-        breakpoints={{
-          "@0.00": {
-            slidesPerView: 1,
-            spaceBetween: 10,
-            slidesPerGroup:1
-          },
-          "@0.75": {
-            slidesPerView: 1,
-            spaceBetween: 20,
-            slidesPerGroup:1
-          },
-          "@1.00": {
-            slidesPerView: 2,
-            spaceBetween: 30,
-            slidesPerGroup:2
-          },
-          "@1.50": {
-            slidesPerView: 2,
-            spaceBetween: 40,
-            slidesPerGroup:2
-          },
-        }}
-        autoplay={{
-          delay: 8000,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true,
-        }}
-        modules={[Autoplay, Navigation, Pagination]}
-        className="mySwiper"
-        id="slider-thuonghieu1"
-      >
-        {SlideThuongHieu1.map((item) => (
-          <SwiperSlide key={item.id}>
-            <Link to={item.link}>
-              <Box style={{ width: "100%" }}>
-                <img
-                  style={{ width: "100%", borderRadius: "8px" }}
-                  alt={item.alt}
-                  src={item.image}
-                />
-              </Box>
-            </Link>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-
-      <Swiper
-        slidesPerView={6}
-        slidesPerGroup={6}
-        navigation={true}
-        modules={[Navigation]}
-        className="mySwiper slider-thuonghieu2"
-      >
-        {SlideThuongHieu2.map((item) => (
-          <SwiperSlide key={item.id} style={{ padding: "0 8px" }}>
-            <Link to={item.link}>
-              <Box className="img__thuonghieu2" style={{ width: "100%" }}>
-                <img
-                  style={{ width: "100%", borderRadius: "8px" }}
-                  alt={item.alt}
-                  src={item.image}
-                />
-                <p>{item.alt}</p>
-              </Box>
-            </Link>
-          </SwiperSlide>
-        ))}
-      </Swiper>
     </>
   );
 }

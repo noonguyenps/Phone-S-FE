@@ -9,8 +9,8 @@ function EmptyNotify(props) {
   return (
     <Stack
       sx={{
-        width: "100%",
-        minHeight: "400px",
+        width: "100px",
+        paddingLeft:10
       }}
       justifyContent="center"
       alignItems="center"
@@ -18,13 +18,14 @@ function EmptyNotify(props) {
     >
       <img
         alt=""
-        src="https://frontend.tikicdn.com/_desktop-next/static/img/mascot_fail.svg"
+        src="https://res.cloudinary.com/duk2lo18t/image/upload/v1665719834/frontend/S-Phone_cpfelx.png"
       />
       <Typography variant="body1">{props.title}</Typography>
 
-      <Button variant="contained" color="warning">
+      <a href='/'><Button variant="contained" color="warning">
         Tiếp tục mua sắm
       </Button>
+      </a>
     </Stack>
   )
 }

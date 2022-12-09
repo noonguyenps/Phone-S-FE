@@ -23,7 +23,7 @@
 
 
 
-#input-name, #input-nickname{
+#input-name, #input-nickname,#input-phone{
     width: 15rem;
     height: 2.2rem;
     padding-left: 0.5rem;
@@ -33,6 +33,7 @@
         outline: none;
     }
 }
+
 
 .avatar-control{
     position: absolute;

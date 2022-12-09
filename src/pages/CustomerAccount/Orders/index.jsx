@@ -1,10 +1,30 @@
 import { useState } from "react";
 import { useTheme } from "@mui/material/styles";
-import { Box, Tabs, Tab, Typography, Pagination, Stack } from "@mui/material";
+import {
+  Tabs, 
+  Tab,
+  Box,
+  Typography,
+  Stack,
+  Button,
+  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Pagination,
+  MenuItem,
+  FormControl,
+  Select,
+  Checkbox,
+  Modal
+} from '@mui/material';
 import "./Orders.scss";
 import SearchIcon from "@mui/icons-material/Search";
 import OrderItem from "../../../components/OrderItem/index.jsx";
 import { orderTabs} from "../../../constraints/OrderItem";
+import { numWithCommas} from "../../../constraints/Util";
 import { useEffect } from "react";
 import apiCart from "../../../apis/apiCart";
 import { useSelector } from "react-redux";
@@ -42,7 +62,11 @@ function Orders() {
   const handleChangePage = (event, newValue) => {
     setPage(newValue);
   };
-  console.log(orders)
+
+  const convertDate = (date)=>{
+    var dateNew = new Date(date)
+    return String(dateNew.getDay()+"/"+String(dateNew.getMonth()+1)+'/'+dateNew.getFullYear())
+  };
   return (
     <>
       <Typography variant="h6">Đơn hàng của tôi</Typography>
@@ -70,23 +94,48 @@ function Orders() {
             ))}
           </Tabs>
         </Box>
-
-        <Box className="myorder__search">
-          <div className="myorder__search__logo">
-            <SearchIcon />
-          </div>
-          <input
-            type="text"
-            className="myorder__search__input"
-            placeholder="Tìm đơn hàng theo Mã đơn hàng, Đơn hàng, nhà bán"
-          />
-          <div className="myorder__search__btn">Tìm đơn hàng</div>
-        </Box>
-
         <Box>
-          {/* <TabPanel value={value} index={0} dir={theme.direction}> */}
             {orders.length!==0 ? (
-              orders.map((item) => <OrderItem key={item.orderId} order={item} />)
+              <Table className="productTable" sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+              <TableHead>
+                  <TableRow>
+                      <TableCell>Mã đơn vận</TableCell>
+                      <TableCell>Tổng tiền</TableCell>
+                      <TableCell>Ngày tạo</TableCell>
+                      <TableCell>Trạng thái</TableCell>
+                      <TableCell>Thao tác</TableCell>
+                  </TableRow>
+              </TableHead>
+              <TableBody>
+                  {orders.map(row => (
+                      <TableRow key={row} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                          <TableCell>
+                              <Stack>
+                                  <Typography sx={{ color: "#1890ff" }}>{row.name}</Typography>
+                              </Stack>
+                          </TableCell>
+                          <TableCell>
+                              <Stack direction="row" justifyContent="center">
+                                  <Typography sx={{ margin: "auto 0" }}>{numWithCommas(row.total)} VND</Typography>
+                              </Stack>
+                          </TableCell>
+                          <TableCell align="center">{convertDate(row.createdDate)}</TableCell>
+                          <TableCell align="center">{row.orderStatus==0?"Đang xử lý":(
+                                row.orderStatus==1?"Đang vận chuyển":(
+                                    row.orderStatus==2?"Đã giao hàng":"Đã hủy"
+                                )
+                            )}</TableCell>
+                          <TableCell align='center'>
+                              <Stack spacing={1} justifyContent="center" py={1}>
+                              <a href={`detail/${row.orderId}`}>
+                                        <Button sx={{ width: "100px" }} variant="outlined" >Xem chi tiết</Button>
+                              </a>
+                              </Stack>
+                          </TableCell>
+                      </TableRow>
+                  ))}
+              </TableBody>
+          </Table>
             ) : (
               <Box  className="myorder__none">
                 <img

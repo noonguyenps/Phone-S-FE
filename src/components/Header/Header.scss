@@ -1,6 +1,6 @@
 @use "../../style/abstract/breakpoint" as *;
 .header {
-    background-color: #caa9bc;
+    background-color: #c7354e;
     padding: 0 16px;
     &__account {
         position: relative;
@@ -129,7 +129,6 @@
     margin-top: 80px;
     left: 50%;
     transform: translateX(-50%);
-    width: 30rem;
     background-color: white;
     box-shadow: 24px;
     padding: 32px;

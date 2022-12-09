@@ -16,8 +16,6 @@ import ForgetPassword from "../ForgetPassword";
 
 import { addItem, removeAll } from "../../slices/searchSlice";
 import { logoutSuccess } from "../../slices/authSlice";
-
-import apiProduct from "../../apis/apiProduct";
 import apiHome from "../../apis/apiHome";
 
 import SearchIcon from "@mui/icons-material/Search";
@@ -121,7 +119,6 @@ function Header() {
     setIsRegister(false);
     setIsLoginForm(false);
   }, []);
-
   return (
     <header className="header">
       <Stack
@@ -185,7 +182,7 @@ function Header() {
             direction="row"
             alignItems="center"
             borderRadius={50}
-            sx={{ weight :"100%", padding: "0", height: "40px", flex: 1, position: "relative" }}>
+            sx={{ weight :"100%", padding: "0", height: "40px", flex: 1, position: "relative"}}>
             <DebounceInput
               style={{ height: "100%", flex: 1 }}
               id="input-search"
@@ -197,6 +194,7 @@ function Header() {
             <Button
               sx={{
                 height: "100%",
+                borderRadius:"50%",
                 backgroundColor: "#006600",
                 borderTopLeftRadius: "0",
                 borderBottomLeftRadius: "0",
@@ -230,7 +228,7 @@ function Header() {
               spacing={1}
               sx={{ color: "white", width: "110px", maxWidth: "110px" }}
             >
-              <Badge color="warning" badgeContent={user?cartUser:cart.length} showZero>
+              <Badge color="warning" badgeContent={user?user.phone:cart.length} showZero>
                 <ShoppingBagIcon sx={{ fontSize: "32px" }} />
               </Badge>
               <Typography fontSize="12px">Giỏ hàng</Typography>
@@ -258,7 +256,7 @@ function Header() {
                       alignItems="center" className="header__cart">
                 <Stack><img src={user.img} /></Stack>
                 <Button
-                  href = "/customer/account/edit"
+                  href = "/customer/homepage"
                   sx={{ color: "white" }}>
                   <Typography sx={{ fontSize: "13px" }}>Quản lý tài khoản</Typography>
                 </Button>

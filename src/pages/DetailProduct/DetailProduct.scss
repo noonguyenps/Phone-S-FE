@@ -1,9 +1,32 @@
-    .detailProduct {
-        display: flex;
+    .panelProduct{
+        background-color: #fff;
         padding: 16px;
         margin: 12px 0;
+        &__title {
+            &>h2 {
+                font-size: 24px;
+                font-weight: 300;
+                width: 100%;
+                color: #333;
+                line-height: 32px;
+            }
+        }
+        &__rating {
+            height: 24px;
+            margin: 5px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            &>span:last-child {
+                font-size: 15px;
+                color: #888;
+            }
+        }
+    }
+    .detailProduct {
+        display: flex;
+        height: 550px;
         gap: 24px;
-        background-color: #fff;
         &__img {
             width: 444px;
         }
@@ -46,25 +69,6 @@
                 align-items: center;
             }
         }
-        &__title {
-            &>h2 {
-                font-size: 24px;
-                font-weight: 300;
-                color: #333;
-                line-height: 32px;
-            }
-        }
-        &__rating {
-            height: 24px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            width: 100%;
-            &>span:last-child {
-                font-size: 15px;
-                color: #888;
-            }
-        }
         &__price {
             margin: 32px 0;
             & span:first-child {
@@ -87,23 +91,6 @@
         }
         &__buy {
             margin-top: 12px;
-        }
-        &__address {
-            margin-top: 16px;
-            gap: 10px;
-            padding: 12px 0;
-            & span:first-child {
-                font-size: 14px;
-            }
-            & span:nth-child(2) {
-                font-size: 15px;
-                font-weight: 600;
-                text-decoration: underline;
-            }
-            & span:last-child {
-                font-size: 16px;
-                color: #1890ff;
-            }
         }
     }
     
@@ -157,11 +144,6 @@
             & * {
                 max-width: 100%;
             }
-        }
-        &__showmore {
-            display: flex;
-            justify-content: center;
-            align-self: center;
         }
         & .bg-gradient {
             position: absolute;
@@ -258,30 +240,6 @@
         }
     }
     
-    .product-coupon {
-        &__title {
-            font-size: 14px;
-            height: 24px;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        &__list {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        &__item {
-            height: 28px;
-            width: 84px;
-            font-weight: 500;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid #1890ff;
-            color: #1890ff;
-            border-radius: 4px;
-        }
-    }
     
     .product-quanlity {
         margin: 24px 0;

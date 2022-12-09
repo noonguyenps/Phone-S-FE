@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import React, {useRef} from "react";
 import { Link } from "react-router-dom";
+import CardFlashsale from "../../components/CardFlashsale";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Navigation, Autoplay } from "swiper";
 import {
   Stack,
   Box,
@@ -17,27 +20,27 @@ import {
   Radio,
 } from "@mui/material";
 import "./FilterProduct.scss";
-import StarIcon from "@mui/icons-material/Star";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { numWithCommas } from "../../constraints/Util";
 import CardProduct from "../../components/CardProduct";
 import apiProduct from "../../apis/apiProduct";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import HomeIcon from '@mui/icons-material/Home';
+import SellIcon from '@mui/icons-material/Sell';
+import Loading from "../../components/Loading";
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import FiberNewIcon from '@mui/icons-material/FiberNew';
+import {RemoveRedEye} from "@mui/icons-material";
 
 function FilterProduct(props) {
   const idCategory = useParams().id;
-  const slugCategory = useParams().slug;
   const [category, setCategory] = useState(null);
   const [value, setValue] = useState(0);
   const [products, setProducts] = useState([]);
   const [categoryChild, setCategoryChild] = useState([]);
   const [categories, setCategories] = useState([]);
   const [page, setPage] = useState(0);
-  const [test, setTest] = useState([1,2,3]);
+  const [loadingShowmore, setLoadingShowmore] = useState(false)
   const [filter, setFilter] = useState({});
   const [filterPrice, setFilterPrice] = useState({
     minPrice: "",
@@ -47,11 +50,9 @@ function FilterProduct(props) {
     value: "",
   });
 
-  const [productFilter, setProductFilter] = useState([]);
-
+  const [sort, setSort] = useState("product_id")
   const navigate = useNavigate();
-  const size = 30;
-  const sort = "product_id";
+  const size = 16;
 
   useEffect(() => {
     const getData = async () => {
@@ -68,6 +69,10 @@ function FilterProduct(props) {
     };
     getData();
   }, [idCategory]);
+
+  const handleLoadMore = () => {
+    setPage((page) => page + 1);
+  };
   
   useEffect(() => {
     const getData = async () => {
@@ -94,14 +99,19 @@ function FilterProduct(props) {
         sort: sort,
       };
       if (category) {
-        const response = await apiProduct.getProductByCategory(params);
-        if (response) {
-          setProducts(response.data.listProduct);
+        await apiProduct.getProductByCategory(params)
+        .then((res)=>{
+          if(page==0){
+            setProducts(res.data.listProduct);
+          }else{
+            setProducts((prev)=>([...prev,...res.data.listProduct]))
+          }
         }
+        );
       }
     };
     getData();
-  }, [page, category]);
+  }, [page, category, sort]);
 
   useEffect(() => {
     const getData = async () => {
@@ -116,378 +126,244 @@ function FilterProduct(props) {
       }
     };
     getData();
-  }, [page, category]);
+  }, [page, category, sort]);
 
   useEffect(() => {
     const filterData = () => {
       if (!category) return;
-      let data = [...products];
       switch (value) {
         case 1: {
-          const getData = async () => {
-            let param = {
-              idCategory: idCategory,
-              page: page,
-              size: size,
-              sort: "product_sell_amount",
-            };
-            apiProduct
-              .getProductByCategory(param)
-              .then((res) => {
-                data = res.data.listProduct;
-                setProductFilter(data);
-                console.log("res data: ", data);
-              })
-              .catch((err) => console.log(err));
-          };
-          getData();
+          setSort("product_sell_amount");
+          setPage(0);
           break;
         }
         case 2: {
-          const getData = async () => {
-            let param = {
-              idCategory: idCategory,
-              page: page,
-              size: size,
-              sort: "create_at",
-            };
-            apiProduct
-              .getProductByCategory(param)
-              .then((res) => {
-                data = res.data.listProduct;
-                setProductFilter(data);
-                console.log("res data: ", data);
-              })
-              .catch((err) => console.log(err));
-          };
-          getData();
+          setSort("create_at");
+          setPage(0);
           break;
         }
         case 3: {
-          const getData = async () => {
-            let param = {
-              idCategory: idCategory,
-              page: page,
-              size: size,
-              sort: "product_price_down",
-            };
-            apiProduct
-              .getProductByCategory(param)
-              .then((res) => {
-                data = res.data.listProduct;
-                setProductFilter(data);
-                console.log("res data: ", data);
-              })
-              .catch((err) => console.log(err));
-          };
-          getData();
+          setSort("product_price_down");
+          setPage(0);
           break;
         }
         case 4: {
-          const getData = async () => {
-            let param = {
-              idCategory: idCategory,
-              page: page,
-              size: size,
-              sort: "product_price_up",
-            };
-            apiProduct
-              .getProductByCategory(param)
-              .then((res) => {
-                data = res.data.listProduct;
-                setProductFilter(data);
-                console.log("res data: ", data);
-              })
-              .catch((err) => console.log(err));
-          };
-          getData();
+          setSort("product_price_up");
+          setPage(0);
           break;
         }
         default: {
-          const getData = async () => {
-            let param = {
-              idCategory: idCategory,
-              page: page,
-              size: size,
-              sort: "product_id",
-            };
-            apiProduct
-              .getProductByCategory(param)
-              .then((res) => {
-                data = res.data.listProduct;
-                setProductFilter(data);
-                console.log("res data: ", data);
-              })
-              .catch((err) => console.log(err));
-          };
-          getData();
+          setSort("product_id");
+          setPage(0);
           break;
         }
       }
-      setProductFilter(data);
     };
 
     filterData();
-  }, [products, filter, category, filterPrice, value]);
-
-
-  const onChangeMinPrice = (e) => {
-    let value = Number(e.target.value);
-    if (Number.isInteger(value) && value >= 0) {
-      setFilterPrice({ ...filterPrice, minPrice: value, option: -1 });
-    } else {
-      setFilterPrice({ ...filterPrice, minPrice: 0, option: -1 });
-    }
-  };
-  const onChangeMaxPrice = (e) => {
-    let value = Number(e.target.value);
-    if (Number.isInteger(value) && value >= 0) {
-      setFilterPrice({ ...filterPrice, maxPrice: value, option: -1 });
-    } else {
-      setFilterPrice({ ...filterPrice, maxPrice: 1000000000, option: -1 });
-    }
-  };
-
-  const onSetFilterPrice = (value, index) => {
-    setFilterPrice((pre) => {
-      return {
-        ...pre,
-        option: index,
-        value: value,
-      };
-    });
-  };
+  }, [value]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const onChangeFilter = useCallback(
-    (e, propertyName) => {
-      let property = filter[propertyName] || [];
-      if (e.target.checked) {
-        property = [...property, e.target.name];
-      } else property = property.filter((item) => item !== e.target.name);
-
-      setFilter((filter) => {
-        return {
-          ...filter,
-          [propertyName]: [...property],
-        };
-      });
-
-      console.log({
-        ...filter,
-        [propertyName]: [...property],
-      });
-    },
-    [filter]
-  );
-  const onChangeCategory = (rate) => {
-    if (filter.rate === rate) {
-      const newFilter = delete filter.rate;
-      setFilter(newFilter);
-    } else {
-      setFilter({ ...filter, rate });
-    }
-  };
-  const onChangeRating = (rate) => {
-    if (filter.rate === rate) {
-      const newFilter = delete filter.rate;
-      setFilter(newFilter);
-    } else {
-      setFilter({ ...filter, rate });
-    }
-  };
-  const onChangeShipping = (e) => {
-    setFilter({ ...filter, shipping: e.target.value });
-  };
-  const handleApplyFilterPrice = () => {
-    setFilterPrice((pre) => {
-      return { ...pre, apply: !pre.apply };
-    });
-  };
-
   return (
-    <Stack className="filterProduct container" direction="row" spacing={1}>
-      <Stack className="filterProduct__sidebar" direction="column">
-      <Box className='filterProduct__form'>
-                    <Typography className='filterProduct__title'>DANH MỤC SẢN PHẨM</Typography>
-                    <FormGroup>{
-                            categories.map(item =>
-                              <Box key={item.id} onClick={() => refreshPage()}>
-                              <Link to={`/filter/${item.id}`}>
-                                <Box fontSize="13px">
-                                  {item.name}
-                                </Box>
-                              </Link>
-                            </Box>)
-                        }
-                    </FormGroup>
-                </Box>
-        <Box className='filterProduct__form'>
-                    <Typography className='filterProduct__title'>Đánh giá</Typography>
-                    <FormGroup>
-                        {
-                            [5, 4, 3].map(item =>
-                                <Box key={item} onClick={() => onChangeRating(item)}
-                                    className={`filterProduct__rating ${item === filter.rate ? 'selected' : ''}`}>
-                                    <Rating
-                                        name="hover-feedback"
-                                        value={item}
-                                        readOnly
-                                        icon={<StarIcon sx={{ fontSize: 16 }} />}
-                                        emptyIcon={<StarIcon style={{ opacity: 0.55 }} sx={{ fontSize: 16 }} />}
-                                    /><Box fontSize="13px">{`từ ${item} sao`}</Box>
-                                </Box>)
-                        }
-                    </FormGroup>
-                </Box>
-        <Box className='filterProduct__form'>
-                    <Typography className='filterProduct__title'>Giao hàng</Typography>
-                    <RadioGroup
-                        aria-labelledby="demo-radio-buttons-group-label"
-                        name="radio-buttons-group"
-                        onChange={onChangeShipping}>
-                        <FormControlLabel className='filterProduct__label'
-                            value="noidia"
-                            control={<Radio className="filterProduct__radiobutton" />}
-                            label="Hàng Nội Địa" />
-                        <FormControlLabel className='filterProduct__label'
-                            value="quocte"
-                            control={<Radio className="filterProduct__radiobutton" />}
-                            label="Hàng Quốc Tế" />
-                    </RadioGroup>
-                </Box>
+    <Stack className="filterProduct container" py={1} px={2} spacing={1}>
+      <Stack direction="row" py ={2} alignItems="center" height='10px'>
+        <HomeIcon/><br/>
+        <a href="/" ><h3>Trang chủ </h3></a>
+        <Typography>/ {category?.name}</Typography>
       </Stack>
-      <Box sx={{ flex: 1 }}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+    <Stack className="filterProduct__sidebar" direction="row">
+      <Box className='filterProduct__form'>
+      <Stack direction="row" alignItems="center">
+      <Typography className='filterProduct__title' width='190px'>Danh mục liên quan : </Typography>
+        {
+          categories.map((item) =>(
+            <Box key={item.id} sx={{
+              width: '100px',
+            }}>
+            <a href={`/filter/${item.id}`}>
+              <Box fontSize="14px">
+                {item.name}
+              </Box>
+            </a>
+          </Box>))                
+        }
+      </Stack> 
+      </Box>
+      </Stack>
+      <SectionFlashsale/><br/><br/><br/>
+      <Stack className="filterProduct__sidebar" direction="row">
+      <Stack className='filterProduct__form' direction="row">
+          <Typography className='filterProduct__title' width='180px'>Sắp xếp theo tiêu chí : </Typography>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs
             value={value}
+            width={290}
             onChange={handleChange}
+            sx={{
+              width:'490px'
+            }}
+            padding = {1}
             textColor="primary"
-            indicatorColor="primary"
+            indicatorColor="inherit"
             aria-label="basic tabs example"
           >
-            {tabs.map((item) => (
               <Tab
-                key={item.id}
-                label={item.name}
+                key='1'
+                icon={<RemoveRedEye/>}
+                label='Xem nhiều'
                 sx={{
                   fontSize: "12px",
                   textTransform: "none",
                   fontWeight: "500",
                 }}
               />
-            ))}
+              <Tab
+                key='2'
+                icon={<SellIcon/>}
+                label='Mua nhiều'
+                sx={{
+                  fontSize: "12px",
+                  textTransform: "none",
+                  fontWeight: "500",
+                }}
+              />
+              <Tab
+                key='3'
+                icon={<FiberNewIcon/>}
+                label='Hàng mới'
+                sx={{
+                  fontSize: "12px",
+                  textTransform: "none",
+                  fontWeight: "500",
+                }}
+              />
+              <Tab
+                key='4'
+                icon={<KeyboardDoubleArrowUpIcon/>}
+                label='Giá Thấp-Cao'
+                sx={{
+                  fontSize: "12px",
+                  textTransform: "none",
+                  fontWeight: "500",
+                }}
+              />
+              <Tab
+                key='5'
+                icon={<KeyboardDoubleArrowDownIcon/>}
+                label='Giá Cao-Thấp'
+                sx={{
+                  fontSize: "12px",
+                  textTransform: "none",
+                  fontWeight: "500",
+                }}
+              />
           </Tabs>
         </Box>
+      </Stack>
+      </Stack>
         <Box>
-          <Grid container spacing={2}>
-            {productFilter.map((item) => (
+          <Grid container spacing={1}>
+            {products.map((item) => (
               <Grid key={item.id} item xs={3}>
                 <CardProduct data={item} />
               </Grid>
             ))}
           </Grid>
         </Box>
-      </Box>
+        <Stack direction='row' justifyContent="center" mt={2}>
+            <Button
+              width="15rem"
+              height="2rem"
+              color="primary"
+              variant="outlined"
+              onClick={handleLoadMore}
+            >{loadingShowmore && <Loading />}
+              Xem thêm
+            </Button>
+          </Stack>
     </Stack>
   );
 }
+function SectionFlashsale() {
+  const idCategory = useParams().id;
+  const [sales, setSales] = useState([]);
+  const [countDown, setCountDown] = useState({ hour: 0, minute: 0, second: 0 });
 
-function FilterForm(props) {
-  const { property, onChangeFilter } = props;
-  const [expand, setExpand] = useState(false);
-  const handleExpand = () => {
-    setExpand((pre) => !pre);
-  };
+  useEffect(() => {
+    const countDownFlashsale = () => {
+      let initTime = new Date()
+      let hourFlashsale = Math.ceil((initTime.getHours() + initTime.getMinutes() / 60) / 3) * 3
 
+      initTime.setHours(hourFlashsale)
+      initTime.setMinutes(0)
+      initTime.setSeconds(0)
+      var x = setInterval(function () {
+
+        // Get today's date and time
+        var now = new Date().getTime();
+
+        // Find the distance between now and the count down date
+        var distance = initTime - now;
+
+        // Time calculations for days, hours, minutes and seconds
+        setCountDown({
+          hour: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minute: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+          second: Math.floor((distance % (1000 * 60)) / 1000)
+        })
+        if (distance < 0) {
+          clearInterval(x);
+        }
+      }, 1000);
+    }
+    countDownFlashsale()
+  }, [])
+
+  useEffect(() => {
+    const getData = async () => {
+      const response = await apiProduct.getProductByCategory({page:0,size:16,idCategory: idCategory,sort:"product_discount"});
+      if (response) {
+        setSales(response.data.listProduct);
+      }
+    };
+    getData();
+  }, []);
   return (
-    <Box className="filterProduct__form">
-      <Typography className="filterProduct__title">{property.name}</Typography>
-      <FormGroup>
-        {(expand ? property.values : property.values.slice(0, 4)).map(
-          (item) => (
-            <FormControlLabel
-              key={item.id}
-              className="filterProduct__label"
-              name={item.value}
-              onChange={(e) => onChangeFilter(e, property.name)}
-              control={<Checkbox className="filterProduct__checkbox" />}
-              label={item.value}
-            />
-          )
-        )}
-      </FormGroup>
-      {expand ? (
-        <Stack
-          onClick={handleExpand}
-          direction="row"
-          sx={{ cursor: "pointer", marginTop: "14px" }}
+    <>
+      <Box
+        width="100%"
+        height="330px"
+        bgcolor="#fff"
+        borderRadius="4px"
+      >
+        <Box id="section2__heading">
+          <Box id="section2__title">
+            <img alt="" src="https://res.cloudinary.com/duk2lo18t/image/upload/v1670316903/frontend/R-removebg-preview_gzgdem.png" height='80px'/>
+            <span className="flashsale__time">{("0" + countDown.hour).slice(-2)}</span>
+            <span>:</span>
+            <span className="flashsale__time">{("0" + countDown.minute).slice(-2)}</span>
+            <span>:</span>
+            <span className="flashsale__time">{("0" + countDown.second).slice(-2)}</span>
+          </Box>
+        </Box>
+        <Swiper
+          slidesPerView={6}
+          slidesPerGroup={6}
+          navigation={true}
+          modules={[Navigation]}
+          className="mySwiper slider-sale"
         >
-          <Typography sx={{ fontSize: 14, color: "#0D5CB6" }}>
-            Thu gọn
-          </Typography>
-          <KeyboardArrowUpIcon sx={{ fontSize: 20, color: "#0D5CB6" }} />
-        </Stack>
-      ) : (
-        <Stack
-          onClick={handleExpand}
-          direction="row"
-          sx={{ cursor: "pointer", marginTop: "14px" }}
-        >
-          <Typography sx={{ fontSize: 14, color: "#0D5CB6" }}>
-            Xem thêm
-          </Typography>
-          <KeyboardArrowDownIcon sx={{ fontSize: 20, color: "#0D5CB6" }} />
-        </Stack>
-      )}
-    </Box>
+          {sales.map((item) => (
+            <SwiperSlide key={`sale-${item.id}`} style={{ minWidth: "150px" }}>
+              <CardFlashsale data={item} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </Box>
+    </>
   );
 }
-
-const services = [
-  {
-    id: 1,
-    name: "Giao siêu tốc 2h",
-  },
-  {
-    id: 2,
-    name: "Không giới hạn",
-  },
-  {
-    id: 3,
-    name: "Rẻ hơn hoàn tiền",
-  },
-  {
-    id: 4,
-    name: "Trả góp 0%",
-  },
-];
-const refreshPage = ()=>{
-  window.location.reload();
-}
-const tabs = [
-  {
-    id: 1,
-    name: "Phổ biến",
-  },
-  {
-    id: 2,
-    name: "Bán chạy",
-  },
-  {
-    id: 3,
-    name: "Hàng mới",
-  },
-  {
-    id: 4,
-    name: "Giá thấp",
-  },
-  {
-    id: 5,
-    name: "Giá cao",
-  },
-];
 export default FilterProduct;
