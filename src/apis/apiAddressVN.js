@@ -1,4 +1,3 @@
-import {useEffect} from "react";
 const apiAddressVN = {
     getAllProvince : async ()=>{
         const res = await fetch("https://provinces.open-api.vn/api/p/").

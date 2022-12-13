@@ -4,7 +4,7 @@ import { ErrorInput, ErrorAfterSubmit } from "../ErrorHelper";
 import { loginSuccess} from "../../slices/authSlice";
 import { useDispatch , useSelector} from "react-redux";
 import apiAuth from "../../apis/apiAuth";
-import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
+
 
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
@@ -35,7 +35,6 @@ function Login(props) {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
 
@@ -178,15 +177,6 @@ function Login(props) {
           alignItems="center"
           spacing={2}
         >
-          <a href={`https://phone-s.herokuapp.com/oauth2/authorization/facebook?redirect_uri=${client_url}oauth2/redirect`} className="hre">
-            <FacebookRoundedIcon
-              sx={{
-                cursor: 'pointer',
-                color: "#4267b2",
-                fontSize: "3rem"
-              }} />
-          </a>
-
           <a href={`https://phone-s.herokuapp.com/oauth2/authorization/google?redirect_uri=${client_url}oauth2/redirect`} className="hre">
             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
               width="48" height="48"

@@ -72,7 +72,11 @@ const apiCart = {
     getOrdersByUser: async(params)=>{
         const res = await axiosClientWithToken.get(`/user/order`,params);
         return res.data;
-    }
+    },
+    insertOrder: async(params)=>{
+        const res = await axiosClientWithToken.post(`/user/order/insert`,params);
+        return res.data;
+    },
     
 }
 export default apiCart;

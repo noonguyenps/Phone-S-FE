@@ -5,6 +5,7 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { numWithCommas } from "../../constraints/Util";
 import { useDispatch } from "react-redux";
 import { removeItem, updateItem } from "../../slices/cartSlice";
+import ClearIcon from '@mui/icons-material/Clear';
 import {Link} from "react-router-dom";
 
 function CartItem(props) {
@@ -81,27 +82,26 @@ function CartItem(props) {
         choose: !data.choose,
       })
     );
+    // props.handleChangeCartData(data.id, quantity, !data.choose);
   };
 
   return (
     <>
-      <Box className="cart-item cart">
-        <Stack direction="row" alignItems="center" className="cart-item__cell cart-item__description">
-          <Checkbox checked={data?.choose} onChange={handleChangeChoose} className="cart__checkbox" />
+    <Box className="cart-item">
+        <Stack direction="row" alignItems="center" justifyContent="space-between" className="cart-item__cell cart-item__description">
+        <Checkbox checked={data?.choose} onChange={handleChangeChoose} className="cart__checkbox" />
           <img src={data?.image} alt="" />
-          <Stack className="cart-item__content">
-            <Link to={data?.id?`/product/${data.id}`:''}>
+          <Stack>
+            <Link to={data?.productId?`/product/${data.productId}`:''}>
               <Typography fontSize="16px" className="text-overflow-2-lines" variant="h5">
                 {data?.name}
               </Typography>
             </Link>
             <Typography fontSize={14}>{data.option}</Typography>
-          </Stack>
-        </Stack>
-        <Box className="cart-item__cell cart-item__price">
-          {numWithCommas(Math.round(data?.price) || 0)} ₫
-        </Box>
-        <Box className="cart-item__cell">
+            <Typography fontSize="16px" className="text-overflow-2-lines" variant="h5">
+              {numWithCommas(Math.round(data?.price) || 0)} ₫
+            </Typography>
+            <Box className="cart-item__cell">
           <Box className="cart-item__quantity">
             <button
               onClick={() => {
@@ -120,16 +120,17 @@ function CartItem(props) {
             </button>
           </Box>
         </Box>
-        <Box className="cart-item__cell cart-item__total">
-          {numWithCommas(data?.price * data?.quantity)} ₫
-        </Box>
-        <Box className="cart-item__cell">
-          <span style={{ cursor: "pointer" }} onClick={handleClickRemove}>
-            <DeleteOutlinedIcon />
-          </span>
-        </Box>
+        </Stack>
+          <Stack>
+            <Box>
+              <span onClick={handleClickRemove}>
+                <ClearIcon />
+              </span>
+            </Box>
+          </Stack>
+        </Stack>
       </Box>
-
+      <br/>
       <Dialog onClose={handleClose} open={open}>
         <Box className="dialog-removecart">
           <Box className="dialog-removecart__title">

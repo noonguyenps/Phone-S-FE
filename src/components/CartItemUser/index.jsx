@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./CartItem.scss";
 import PropTypes from 'prop-types';
 import { Checkbox, Typography, Dialog, Button, Box, Stack } from "@mui/material";
-import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import ClearIcon from '@mui/icons-material/Clear';
 import { numWithCommas } from "../../constraints/Util";
 import { useDispatch } from "react-redux";
 import { removeItem, updateItem } from "../../slices/cartSlice";
@@ -83,23 +83,21 @@ function CartItemUser(props) {
 
   return (
     <>
-      <Box className="cart-item cart">
+      <Box className="cart-item">
         <Stack direction="row" alignItems="center" className="cart-item__cell cart-item__description">
           <Checkbox checked={choose} onChange={handleChangeChoose} className="cart__checkbox" />
           <img src={data?.image} alt="" />
-          <Stack className="cart-item__content">
+          <Stack>
             <Link to={data?.productId?`/product/${data.productId}`:''}>
               <Typography fontSize="16px" className="text-overflow-2-lines" variant="h5">
                 {data?.name}
               </Typography>
             </Link>
             <Typography fontSize={14}>{data.option}</Typography>
-          </Stack>
-        </Stack>
-        <Box className="cart-item__cell cart-item__price">
-          {numWithCommas(Math.round(data?.price) || 0)} ₫
-        </Box>
-        <Box className="cart-item__cell">
+            <Typography fontSize="16px" className="text-overflow-2-lines" variant="h5">
+              {numWithCommas(Math.round(data?.price) || 0)} ₫
+            </Typography>
+            <Box className="cart-item__cell">
           <Box className="cart-item__quantity">
             <button
               onClick={() => {
@@ -118,14 +116,15 @@ function CartItemUser(props) {
             </button>
           </Box>
         </Box>
-        <Box className="cart-item__cell cart-item__total">
-          {numWithCommas(data?.price * quantity)} ₫
-        </Box>
-        <Box className="cart-item__cell">
-          <span style={{ cursor: "pointer" }} onClick={handleClickRemove}>
-            <DeleteOutlinedIcon />
-          </span>
-        </Box>
+        </Stack>
+          <Stack alignItems="flex">
+            <Box>
+              <span onClick={handleClickRemove}>
+                <ClearIcon />
+              </span>
+            </Box>
+          </Stack>
+        </Stack>
       </Box>
 
       <Dialog onClose={handleClose} open={open}>

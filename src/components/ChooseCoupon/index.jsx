@@ -1,33 +1,33 @@
 import { useEffect, useState } from 'react'
 import './ChooseCoupon.scss'
 import { Button, Modal, Box, Stack, Typography } from '@mui/material'
-// import { CartItems } from "../../constraints/Cart"
-import InfoIcon from '@mui/icons-material/Info';
-import DiscountIcon from '@mui/icons-material/Discount'
 import CloseIcon from '@mui/icons-material/Close';
-import CancelIcon from '@mui/icons-material/Cancel';
-import apiMain from '../../apis/apiMain';
+import apiCoupon from '../../apis/apiCoupon';
 import PropTypes from 'prop-types';
+import { numWithCommas } from '../../constraints/Util';
 import { useDispatch } from 'react-redux';
 import { setCoupon } from '../../slices/paymentSlice';
 
 function ChooseCoupon(props) {
     const [coupons, setCoupons] = useState([]);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     useEffect(() => {
-        const getCoupons = () => {
-            let params = {
-                _page: 1,
-                _limit: 10
+        const getCoupons = async () => {
+            let param = {
+              page: 0,
+              size: 20,
+            };
+            const response = await apiCoupon.getCouponByUser(param);
+            if (response) {
+              setCoupons(response.data.listVoucher);
             }
-            apiMain.getCoupons(params)
-                .then(res => {
-                    setCoupons(res.data)
-                })
-        }
-        getCoupons()
+          };
+          getCoupons();
     }, [])
-
+    const convertDate = (date)=>{
+        var dateNew = new Date(date)
+        return String(dateNew.getDay()+"/"+String(dateNew.getMonth()+1)+'/'+dateNew.getFullYear())
+      };
     const handleChooseCoupon = (item) => {
         dispatch(setCoupon(item))
         props.handleClose()
@@ -39,23 +39,9 @@ function ChooseCoupon(props) {
         >
             <Box className='choose-coupon'>
                 <Stack direction='row' className="choose-coupon__heading">
-                    <span>Tiki Khuyến mãi</span>
+                    <span>Mã Khuyến mãi của bạn</span>
                     <CloseIcon onClick={props.handleClose} height="24px" />
                 </Stack>
-                <Box className="choose-coupon__search">
-                    <Box className="choose-coupon__groupinput">
-                        <input type="text" placeholder='Nhập mã giảm giá' />
-                        <span className="choose-coupon__icon">
-                            <DiscountIcon sx={{ height: "18px", color: "#888" }} />
-                        </span>
-                        <span className="choose-coupon__iconclear">
-                            <CancelIcon sx={{ height: "18px", color: "#888" }} />
-                        </span>
-                    </Box>
-
-                    <Button variant="contained" className="choose-coupon__btn-apply"
-                    >Áp dụng</Button>
-                </Box>
                 <Box className="choose-coupon__content">
                     <Stack direction='row' className="choose-coupon__content-heading">
                         <span>Mã giảm giá</span>
@@ -66,60 +52,34 @@ function ChooseCoupon(props) {
                             coupons.map(item =>
                                 <Box key={item.id} className="coupon-item">
                                     <Box className="coupon-item__img">
-                                        <img src={item.img} alt="" />
+                                        <img src="https://res.cloudinary.com/duk2lo18t/image/upload/v1661389658/coupon_dc26by.png" alt="" />
                                     </Box>
                                     <Box className="coupon-item__content">
                                         <Box className="coupon-item__title">
-                                            <Typography
-                                                style={{
-                                                    fontSize: "14px",
-                                                    margin: "0",
-                                                    color: '#1890ff'
-                                                }}
-                                            >
-                                                {item.name}
+                                            <Typography style={{ fontSize: "16px", margin: "0", color: '#000000'}}>
+                                                Loại Giảm giá: {item.type}
                                             </Typography>
-                                            <InfoIcon color="#017fff" height="20px" />
                                         </Box>
                                         <Box className="coupon-item__description">
-                                            <Typography
-                                                sx={{
-                                                    fontSize: "17px",
-                                                    fontWeight: "500",
-                                                    lineHeight: "24px",
-                                                    color: "#242424",
-                                                }}
-                                                className="text-overflow-2-lines"
-                                            >
-                                                {`Giảm ${item.value}${item.unit}`}
-                                            </Typography>
-                                            <Typography
-                                                sx={{
-                                                    color: "#787878",
-                                                    fontSize: "13px",
-                                                    fontWeight: "400",
-                                                }}
-                                                className="text-overflow-3-lines"
-                                            >
-                                                {item.limit > 0 ? `Cho đơn hàng từ ${item.limit / 1000}K` : 'Dành cho tất cả giá trị đơn hàng'}
+                                            <Typography style={{fontSize: "18px",color: "#FF0000",}} className="text-overflow-2-lines">
+                                               - {numWithCommas(item.value)} đ
                                             </Typography>
                                         </Box>
-                                        <Box className="coupon-item__apply">
-                                            <Typography
-                                                sx={{
-                                                    color: "#787878",
-                                                    fontSize: "13px",
-                                                    fontWeight: "400",
-                                                    marginBottom: "0px",
-                                                    marginTop: "auto",
-                                                }}
-                                            >
-                                                {`HSD:${new Date(item.expired).toLocaleDateString()}`}
+                                        <Stack className="coupon-item__apply" justifyContent="center" alignItems="center">
+                                            <Stack direction='row' justifyContent="center" alignItems="center" spacing={5}>
+                                            <Typography sx={{color: "#787878", fontSize: "15px", fontWeight: "400", marginBottom: "0px", marginTop: "auto",}}>
+                                                NBD: {convertDate(item.fromDate)}
                                             </Typography>
-                                            <Button onClick={() => handleChooseCoupon(item)}
-                                                variant="contained" className="coupon-item__btn-apply"
-                                            >Áp dụng</Button>
-                                        </Box>
+                                            <Typography sx={{color: "#787878", fontSize: "15px", fontWeight: "400", marginBottom: "0px", marginTop: "auto",}}>
+                                                NHH: {convertDate(item.toDate)}
+                                            </Typography>
+                                            </Stack>
+                                            {item.status?(
+                                                <><Button onClick={() => handleChooseCoupon(item)} variant="contained" className="coupon-item__btn-apply">Chọn mã</Button></>
+                                            ):(
+                                                <><Button disabled='disabled' variant="contained" className="coupon-item__btn-apply">Chọn mã</Button></>
+                                            )}
+                                        </Stack>
                                     </Box>
                                 </Box>
                             )

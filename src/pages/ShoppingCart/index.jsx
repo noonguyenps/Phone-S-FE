@@ -1,31 +1,22 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import './ShoppingCart.scss'
-import { Grid, Typography, Button, Stack, Box, Dialog } from '@mui/material'
+import { Typography, Button, Stack, Box, Dialog } from '@mui/material'
 import CartItem from '../../components/CartItem'
 import CartItemUser from '../../components/CartItemUser'
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { numWithCommas } from "../../constraints/Util"
 import { useSelector, useDispatch } from 'react-redux'
-import { unchooseAll, chooseAll, deleteAll } from '../../slices/cartSlice'
+import { deleteAll } from '../../slices/cartSlice'
 import { useNavigate } from "react-router-dom"
-import ChooseAddress from '../../components/ChooseAddress';
 import {toast} from 'react-toastify'
-import { clearCoupon } from '../../slices/paymentSlice';
 import apiCart from '../../apis/apiCart';
-import el from 'date-fns/esm/locale/el/index.js'
 
 function ShoppingCart() {
-  const [open, setOpen] = useState(false);
-  const [openAddress, setOpenAddress] = useState(false);
   const [dialogDelete, setDialogDelete] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [couponValue, setCouponValue] = useState(0)
   const CartItems = useSelector(state => state.cart.items)
   const dispatch = useDispatch()
   const [listCart, setListCart] = useState([]);
   const user = useSelector(state => state.auth.user)
-  const coupon = useSelector(state => state.payment.coupon)
-  const addressShip = useSelector(state => state.payment.address)
 
   useEffect(() => {
     if(user==null){
@@ -52,7 +43,7 @@ function ShoppingCart() {
       }
       fetchData();
     }
-  }, [])
+  }, [CartItems])
 
   useEffect(()=>{
     const loadTitle = ()=>{
@@ -60,22 +51,6 @@ function ShoppingCart() {
     }
     loadTitle()
   },[])
-  useEffect(()=>{
-    const handle = ()=>{
-      if(coupon){
-        let value = 0
-        if(coupon.unit === 'đ'){
-          value = coupon.value / 1000
-        }
-        else {
-          if(totalPrice>0)
-            value = (coupon.value * totalPrice / 100)/1000
-        }
-        setCouponValue(value)
-      }
-    }
-    handle()
-  },[coupon,totalPrice])
 
   const handleDeleteAll = () => {
     if(user){
@@ -96,37 +71,28 @@ function ShoppingCart() {
     listCart[a].quantity = quantity;
     listCart[a].choose = choose
     setListCart((prev)=>[...prev]);
+    let totalPriceTemp = 0;
     for(let a in listCart){
       if(listCart[a].choose){
-        setTotalPrice(totalPrice+listCart[a].price*listCart[a].quantity)
+        totalPriceTemp+= totalPriceTemp + listCart[a].price*listCart[a].quantity
       }
     }
+    setTotalPrice(totalPriceTemp)
   }
   const handleDeleteCart = async (id)=>{
     const a = listCart.findIndex((item)=>(item.id === id))
     listCart.splice(a,1);
     setListCart((prev)=>[...prev]);
-  }
-  const openDialogDeleteAll = () => {
-    setDialogDelete(true)
+    let totalPriceTemp = 0;
+    for(let a in listCart){
+      if(listCart[a].choose){
+        totalPriceTemp+= totalPriceTemp + listCart[a].price*listCart[a].quantity
+      }
+    }
+    setTotalPrice(totalPriceTemp)
   }
   const closeDialogDeleteAll = () => {
     setDialogDelete(false)
-  }
-  const handleOpen = useCallback(() => setOpen(true), []);
-  const handleClose = useCallback(() => setOpen(false), []);
-  const handleOpenAddress = useCallback(() => {
-    if(user){
-      setOpenAddress(true)
-    }
-    else{
-      toast.warning("Vui lòng đăng nhập để chọn địa chỉ")
-    }
-  }, [user]);
-  const handleCloseAddress = useCallback(() => setOpenAddress(false), []);
-  
-  const unchooseCoupon = () => {
-    dispatch(clearCoupon())
   }
   const navigate = useNavigate()
    const handleBuy = async ()=>{
@@ -144,97 +110,49 @@ function ShoppingCart() {
           await apiCart.updateCart(params)
         }
       }
-      navigate('/payment')
+      navigate('/payment/info')
     }
     else{
       toast.warning("Bạn cần đăng nhập để thực hiện chức năng này")
     }
   }
-  const finalPrice = () => {
-    return totalPrice - (coupon?.value || 0)  > 0 ?
-    Math.round(totalPrice - (coupon?.value || 0)) : 0
-  }
   return (<>
-    <Box className="container" >
-      <Grid container spacing={2} style={{ marginTop: "5px" }}>
-        <Grid item lg={12} md={12} sm={12} xs={12}>
+    <Box className="container" ><br/>
+      <Stack>
           <Box>
-            <Typography className="cart__title" gutterBottom variant="h5" component="div" >
-              GIỎ HÀNG
-            </Typography>
-
-            <Box className="cart__heading cart">
-              <Stack direction="row">
-                {user?`Tất cả (${listCart.length} sản phẩm)`:`Tất cả (${CartItems.length} sản phẩm)`}
-              </Stack>
-              <Stack>Đơn giá</Stack>
-              <Stack>Số lượng</Stack>
-              <Stack>Thành tiền</Stack>
-              <Stack>
-                <span onClick={openDialogDeleteAll}><DeleteOutlinedIcon /></span>
-              </Stack>
-            </Box>
-            <Stack className="cart__list">
+            <Stack justifyContent="center" direction="row">
+              <Typography className="cart__title" gutterBottom variant="h5" component="div" >
+                GIỎ HÀNG
+              </Typography>
+            </Stack>
+            <Stack justifyContent="center" alignItems="center">
               {
                 user?(
                   listCart?.map(item => <CartItemUser key={item.id+' '+item.price} data={item} handleChangeCartData={(id,quantity,choose)=>{handleChangeCartData(id,quantity,choose)}} handleDeleteCart={(id)=>{handleDeleteCart(id)}}/>)
                 ):(
-                CartItems.map(item => <CartItem key={item.id+' '+item.price} data={item} />))
+                CartItems.map(item => <CartItem key={item.id+' '+item.price} data={item} handleChangeCartData={(id,quantity,choose)=>{handleChangeCartData(id,quantity,choose)}} handleDeleteCart={(id)=>{handleDeleteCart(id)}}/>))
               }
             </Stack>
           </Box>
-          <Box>
-            <Box className="cart-summary">
-              <Box className="cart-summary__price">
-                <span>
-                  Tạm tính
-                </span>
-                <span>{numWithCommas(totalPrice)} ₫</span>
-              </Box>
-              <Box className="cart-summary__price">
-                <span>
-                  Tổng tiền
-                </span>
-                <Box className="cart-summary__valueprice">
-                  <span>{numWithCommas(finalPrice())} ₫</span>
-                </Box>
-              </Box>
-            </Box>
+          <Stack justifyContent="center" alignItems="center">
+          <Box sx={{ width: "500px", height: "42px", backgroundColor: "#FFFFFF", margin:'0.5rem', padding:'10px', borderRadius:'2%'}}>
+            <Stack direction='row' justifyContent="space-between" alignItems="center">
+              <Typography>Tổng tiền tạm tính: </Typography>
+              <Typography>{numWithCommas(totalPrice)} ₫</Typography>
+            </Stack>
+          </Box>
               <Button variant="contained" onClick={handleBuy}
-                sx={{ width: "100%", height: "42px", backgroundColor: "#ff424e", "&:hover": { opacity: 0.8, backgroundColor: "#ff424e" } }}>
+                sx={{ width: "500px", height: "42px", backgroundColor: "#ff424e", "&:hover": { opacity: 0.8, backgroundColor: "#ff424e" } }}>
                 Mua hàng
               </Button>
-          </Box>
-        </Grid>
-        </Grid>
+              <br/>
+              <Button variant="contained" href="/"
+                sx={{ width: "500px", height: "42px", backgroundColor: "#FFFFFF",color:'inherit', "&:hover": { opacity: 0.8, backgroundColor: "#ff424e", color:'#FFFFFF' } }}>
+                Tiếp tục mua hàng
+              </Button>
+          </Stack>
+        </Stack>
     </Box>
-    {dialogDelete &&
-      <Dialog onClose={closeDialogDeleteAll} open={dialogDelete}>
-        <Box className="dialog-removecart">
-          <Box className="dialog-removecart__title">
-            <h4>Xoá sản phẩm</h4>
-          </Box>
-          <Box className="dialog-removecart__content">
-            Bạn có muốn xóa tất cả sản phẩm trong giỏ hàng
-          </Box>
-          <Box className="dialog-removecart__choose">
-            <Button
-              variant="outlined"
-              onClick={handleDeleteAll}
-              sx={{ width: "94px", height: "36px" }}
-            >
-              Xác nhận
-            </Button>
-            <Button
-              variant="contained"
-              onClick={closeDialogDeleteAll}
-              sx={{ width: "57px", height: "36px" }}
-            >
-              Huỷ
-            </Button>
-          </Box>
-        </Box>
-      </Dialog>}
   </>
   )
 }

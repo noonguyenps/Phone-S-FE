@@ -5,6 +5,8 @@ import FilterProduct from "./pages/FilterProduct";
 import DetailProduct from "./pages/DetailProduct";
 import Admin from "./pages/Admin";
 import Payment from "./pages/Payment";
+import PaymentVoucher from "./pages/Payment/PaymentVoucher";
+import PaymentPending from "./pages/Payment/PaymentPending"
 import Error from "./pages/Error/index";
 import { Route, Routes } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
@@ -21,7 +23,9 @@ function ConfigRoute() {
       <Route path="/" element={<Home />} />
       <Route path="cart" element={<ShoppingCart />} />
       <Route element={<PrivateRoute roles={["ADMIN", "USER"]} />}>
-        <Route path="payment" element={<Payment />} />
+        <Route path="payment/info" element={<Payment />} />
+        <Route path="payment/voucher" element={<PaymentVoucher />} />
+        <Route path="payment/pending" element={<PaymentPending />} />
       </Route>
       {/* Routing customer account */}
       <Route element={<PrivateRoute roles={["USER",'ADMIN']} />}>

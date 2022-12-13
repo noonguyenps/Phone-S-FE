@@ -42,6 +42,14 @@ const apiHome = {
     getCategories: async (params) => {
         const res = await axiosClient.get('/category/root', {params})
         return res.data;
-    }, 
+    },
+    getListShips: async () =>{
+        const res = await axiosClient.get('/ship/list');
+        return res.data;
+    },
+    getListPayments : async () =>{
+        const res = await axiosClient.get('/payment/list');
+        return res.data;
+    } 
 }
 export default apiHome;

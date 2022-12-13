@@ -145,7 +145,6 @@ function SlideKhuyenMai() {
       let param = {};
       const response = await apiHome.getSlideKhuyenMai(param);
       if (response) {
-        console.log(response)
         setSlideKhuyenMai(response);
       }
     };

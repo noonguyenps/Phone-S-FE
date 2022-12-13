@@ -16,14 +16,13 @@ function ChooseAddress(props) {
         const getAddresses = () => {
             apiAddress.getUserAddress()
                 .then(res => {
-                    setAddresses(res.data.addressList)
+                    setAddresses(res.data?.addressList)
                 })
         }
         getAddresses()
     }, [])
 
     const chooseAddressShip = (address)=>{
-    //props.chooseAddressShip(address)
         props.handleClose()
         dispatch(setAddress(address))
     }
@@ -39,7 +38,7 @@ function ChooseAddress(props) {
                     <CloseIcon onClick={props.handleClose} height="24px" />
                 </Stack>
                 <Stack spacing={5}>{
-                    addresses.map((item) => {
+                    addresses?.map((item) => {
                         return (
                             <Stack
                                 direction="row"
@@ -49,7 +48,7 @@ function ChooseAddress(props) {
                             >
                                 <Stack className="info">
                                     <Typography className="name">{item.fullName}</Typography>
-                                    <Typography className="address">Địa chỉ cụ thể : {item.addressDetail}<AddressVN province={item.province} district={item.district} commune={item.commune}></AddressVN></Typography>
+                                    <Typography className="address">Địa chỉ cụ thể : {item.addressDetail}, <AddressVN province={item.province} district={item.district} commune={item.commune}></AddressVN></Typography>
                                     <Typography className="number">Điện thoại: {item.phoneNumber}</Typography>
                                 </Stack>
                                 <Stack direction="row" className="action">

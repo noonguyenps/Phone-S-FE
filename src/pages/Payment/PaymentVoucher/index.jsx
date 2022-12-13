@@ -1,38 +1,34 @@
 import { useCallback, useEffect, useState } from 'react'
-import './Payment.scss'
 import {Typography, Box, Button, Stack, Radio, RadioGroup, TextField } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import PaymentIcon from '@mui/icons-material/Payment';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
-import EditIcon from '@mui/icons-material/Edit';
 import DiscountIcon from '@mui/icons-material/Discount';
-import { numWithCommas } from "../../constraints/Util"
+import { numWithCommas } from '../../../constraints/Util';
 import { useDispatch, useSelector } from 'react-redux'
-import ChooseAddress from '../../components/ChooseAddress';
 import { useNavigate } from 'react-router-dom'
-import apiCart from '../../apis/apiCart';
+import apiCart from '../../../apis/apiCart';
 import { toast } from 'react-toastify';
-import {setAddress, setShipType} from '../../slices/paymentSlice';
-import apiAddress from '../../apis/apiAddress'
-import apiHome from '../../apis/apiHome';
-import apiAddressVN from '../../apis/apiAddressVN';
+import apiAddressVN from '../../../apis/apiAddressVN';
+import apiAddress from '../../../apis/apiAddress';
+import ChooseCoupon from '../../../components/ChooseCoupon';
 
-function Payment() {
+function PaymentVoucher() {
+  const handleOpen = useCallback(() => setOpen(true), []);
+  const handleClose = useCallback(() => setOpen(false), []);
+  const [open, setOpen] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [openAddress, setOpenAddress] = useState(false);
-  const [ship, setShip] = useState(1);
   const [listCart, setListCart] = useState([])
-  const [listShip, setListShip] = useState([])
   const addressShip = useSelector(state => state.payment.address)
+  const voucher = useSelector(state => state.payment.coupon)
   const user = useSelector(state => state.auth.user);
-  const ship1 = useSelector(state => state.payment.ship);
+  const ship = useSelector(state => state.payment.ship);
   const [commune, setCommune] = useState('');
   const [district, setDistrict] = useState('');
   const [province, setProvine] = useState('')
-  const dispatch = useDispatch()
   const navigate = useNavigate()
-
+  
   useEffect(() => {
     if(user!=null){
       async function fetchData() {
@@ -50,29 +46,15 @@ function Payment() {
               }
             }
             setTotalPrice(totalTemp)
-          }).catch((err)=>{
-            toast.warning("Có lỗi xảy ra" + err);
           })
       }
       fetchData();
     }
   },[])
-
   useEffect(() => {
-    if(user!=null){
-      async function fetchData() {
-        await apiHome.getListShips()
-          .then((res)=>{
-            setListShip(res.data.listShip);
-          }).catch((err)=>{
-            toast.warning("Có lỗi xảy ra" + err);
-          })
-      }
-      fetchData();
-    }
+    if(!(addressShip&&ship))
+      navigate('/payment/info')
   },[])
-
-  
   useEffect(() => {
     const getAddresses = () => {
         apiAddress.getUserAddress()
@@ -80,11 +62,6 @@ function Payment() {
             if(!res.data){
               toast.info('Hãy thêm địa chỉ để thực hiện thanh toán bạn nhé')
               navigate('/customer/address/create')
-            }
-            else{
-              if(!addressShip){
-                dispatch(setAddress(res.data.addressList[0]))
-              }
             }
           })
           .catch((err)=>{
@@ -111,6 +88,10 @@ function Payment() {
     getAddresses()
 
   }, [addressShip])
+  const convertDate = (date)=>{
+    var dateNew = new Date(date)
+    return String(dateNew.getDay()+"/"+String(dateNew.getMonth()+1)+'/'+dateNew.getFullYear())
+  };
 
   useEffect(() => {
     const loadTitle = () => {
@@ -118,32 +99,15 @@ function Payment() {
     }
     loadTitle()
   }, [])
-
-  const handleChangeTypeShip = (event) => {
-    setShip(event.target.value);
-    dispatch(setShipType(listShip.find(item => item.shipId === Number(event.target.value))))
-  };
-  const handleOpenAddress = useCallback(() => setOpenAddress(true), []);
-  const handleCloseAddress = useCallback(() => setOpenAddress(false), []);
   const handleSubmitOrder = () => {
-    if (!addressShip) {
-      toast.warning("Vui lòng chọn địa chỉ giao hàng")
-      return;
-    }
-    if(!ship){
-      toast.warning("Vui lòng chọn cách thức giao hàng")
-      return;
-    }
-    dispatch(setAddress(addressShip))
-    dispatch(setShipType(listShip.find(item => item.shipId === Number(ship))))
-    navigate('/payment/voucher')
+    navigate('/payment/pending')
   }
   return (
   <>
     <Box className="container" >
       <Stack justifyContent="center" alignItems="center">
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx ={{width:'600px'}}>
-          <Button href='/cart' sx={{color:'#FF3366', fontSize:'16px'}}>Trở về</Button>
+          <Button href='/payment/info' sx={{color:'#FF3366', fontSize:'16px'}}>Trở về</Button>
           <Typography variant="h5" color="#FF3366"> THÔNG TIN ĐẶT HÀNG</Typography>
           <Typography></Typography>
           <Typography></Typography>
@@ -160,8 +124,8 @@ function Payment() {
                   <Typography sx={{color:'#FF0000', fontSize:'12px'}}>Thông tin đặt hàng</Typography>
               </Stack>
               <Stack justifyContent="center" alignItems="center" margin={1}>
-                  <DiscountIcon sx={{color:'#000000', fontSize:'24px'}}/>
-                  <Typography sx={{color:'#000000', fontSize:'12px'}}>Phiếu giảm giá</Typography>
+                  <DiscountIcon sx={{color:'#FF0000', fontSize:'24px'}}/>
+                  <Typography sx={{color:'#FF0000', fontSize:'12px'}}>Phiếu giảm giá</Typography>
               </Stack>
               <Stack justifyContent="center" alignItems="center" margin={1}>
                   <PaymentIcon sx={{color:'#000000', fontSize:'24px'}}/>
@@ -173,40 +137,28 @@ function Payment() {
               </Stack>
             </Stack>
           </Box>
-
-          <Box padding={1} sx={{background:'#FFFFFF', borderRadius:'0.5rem', width:'600px'}}>
-            <Stack direction='row' width='600px' padding={1} justifyContent="space-between" alignItems="center" spacing={2}>
-            <Typography sx={{color:'#000000'}}>Thông tin khách hàng</Typography>
-            <Button href='/customer/account/edit' sx={{color:'#FF3366', fontSize:'16px'}}><EditIcon/></Button>
-            </Stack>
-            <Stack direction='row' width='590px' padding={1} justifyContent="space-between" alignItems="center" spacing={2}>
-              <Typography>Tên khách hàng: </Typography>
-              <TextField value={user?.fullName} sx={{width:'400px'}} disabled='disable'/>
-            </Stack>
-            <Stack direction='row' width='590px' padding={1} justifyContent="space-between" alignItems="center" spacing={2}>
-              <Typography>Số điện thoại: </Typography>
-              <TextField value={user?.phone} sx={{width:'400px'}} disabled='disable'/>
-            </Stack>
-            <Typography>Cách thức giao hàng</Typography>
-            <RadioGroup
-                aria-labelledby="demo-controlled-radio-buttons-group"
-                name="controlled-radio-buttons-group"
-                value={ship}
-                onChange={handleChangeTypeShip}
-              >
-                <Stack direction='row' alignItems="center" justifyContent="center" spacing={2}>
-                {
-                  listShip.map(item =>
-                    <Stack key={item.id} direction="row" height="48px" >
-                      <Radio name='shipping' value={item.shipId} id={item.shipId} sx={{ padding: 0, marginRight: "8px" }}/>
-                      <Typography sx={{ margin: "auto 0" }} component='label' htmlFor={item.id}>{item.shipType}</Typography>
-                    </Stack>)
-                }
+          {user&&voucher?(
+              <Box sx={{background:'#EEEEEE', borderRadius:'0.5rem', width:'585px', margin:'0.5rem'}} onClick={handleOpen}>
+                <Stack direction='row' justifyContent="center" alignItems="center" spacing={3}>
+                  <Stack justifyContent="center" alignItems="center" padding={2}>
+                    <Typography>Loại giảm giá : {voucher.type}</Typography>
+                    <Typography>Ngày sử dụng : {convertDate(voucher.fromDate)}</Typography>
+                    <Typography>Ngày hết hạn : {convertDate(voucher.toDate)}</Typography>
+                  </Stack>
+                  <Typography>Giá trị : {numWithCommas(voucher.value)} đ</Typography>
                 </Stack>
-              </RadioGroup>
+              </Box>
+            ):(
+              <Box sx={{background:'#CCCCCC', borderRadius:'0.5rem', width:'585px', margin:'0.5rem'}} onClick={handleOpen}>
+                <Stack direction='row' justifyContent="center" alignItems="center" padding={2}>
+                  <DiscountIcon sx={{color:'#000000', fontSize:'24px'}}/>
+                  <Typography sx={{color:'#000000', fontSize:'20px'}}>Chọn mã giảm giá</Typography>
+                </Stack>
+              </Box>
+            )}
+          <Box padding={1} sx={{background:'#FFFFFF', borderRadius:'0.5rem', width:'600px'}}>
             <Stack direction='row' justifyContent="space-between" alignItems="center">
             <Typography>Thông tin nhận hàng</Typography>
-            <Typography onClick={handleOpenAddress} color="#1890ff" sx={{ cursor: "pointer" }}>Thay đổi</Typography>
             </Stack>  
             <Box padding={1} sx={{background:'#FFFFF0', borderRadius:'0.5rem', width:'580px'}}>
             {user?
@@ -219,10 +171,22 @@ function Payment() {
             :<Typography></Typography>
             }
             </Box>
+            <Stack direction='row' justifyContent="space-between" alignItems="center">
+            <Typography>Phương thức giao hàng</Typography>
+            </Stack>  
+            <Box padding={1} sx={{background:'#FFFFF0', borderRadius:'0.5rem', width:'580px'}}>
+            {user?
+              ship && <>
+                <Typography>Loại giao hàng: {ship.shipType}</Typography>
+                <Typography>Chi phí: {numWithCommas(ship.shipPrice)} đ</Typography>
+                </>
+            :<Typography></Typography>
+            }
+            </Box>
             <Box sx={{ width: "500px", height: "42px", backgroundColor: "#FFFFFF", margin:'0.5rem', padding:'10px', borderRadius:'2%'}}>
             <Stack direction='row' justifyContent="space-between" alignItems="center">
               <Typography>Tổng tiền tạm tính: </Typography>
-              <Typography>{numWithCommas(totalPrice + Number(ship1?ship1.shipPrice:0))} ₫</Typography>
+              <Typography>{numWithCommas(totalPrice - Number(voucher?voucher.value:0)+ Number(ship?ship.shipPrice:0))} ₫</Typography>
             </Stack>
             </Box>
             <Button variant="contained" onClick={handleSubmitOrder}
@@ -238,8 +202,8 @@ function Payment() {
         </Box>
       </Stack>
     </Box>
-    <ChooseAddress handleOpen={handleOpenAddress} handleClose={handleCloseAddress} open={openAddress} />
+    <ChooseCoupon handleOpen={handleOpen} handleClose={handleClose} open={open} />
   </>
   )
 }
-export default Payment
+export default PaymentVoucher

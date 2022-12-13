@@ -32,6 +32,8 @@ import DetailOrder from "./Orders/DetailOrder";
 import { useSelector } from "react-redux";
 import apiNotify from "../../apis/apiNotify";
 import HomePage from "./HomePage";
+import { deleteAll } from "../../slices/cartSlice";
+import { clearAll } from "../../slices/paymentSlice"
 
 function CustomerAccount() {
   const location = useLocation();
@@ -60,6 +62,8 @@ function CustomerAccount() {
   const handleLogout = () => {
     navigate('/');
     dispatch(logoutSuccess());
+    dispatch(deleteAll());
+    dispatch(clearAll())
   };
 
   React.useEffect(() => {
