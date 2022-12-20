@@ -19,10 +19,6 @@ import {
   Typography,
   Input,
 } from "@mui/material";
-
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import CloseIcon from "@mui/icons-material/Close";
 import Loading from "../Loading";
 import { toast } from "react-toastify";
 import apiCart from "../../apis/apiCart";
@@ -30,7 +26,6 @@ import { deleteAll } from "../../slices/cartSlice";
 
 function Login(props) {
   const dispatch = useDispatch();
-  const client_url = "https://phone-s-fe.vercel.app/"
 
   const {
     register,
@@ -177,7 +172,7 @@ function Login(props) {
           alignItems="center"
           spacing={2}
         >
-          <a href={`https://phone-s.herokuapp.com/oauth2/authorization/google?redirect_uri=${client_url}oauth2/redirect`} className="hre">
+          <a href={`https://phone-s.herokuapp.com/oauth2/authorization/google?redirect_uri=https://phone-s-fe.vercel.app/oauth2/redirect`} className="hre">
             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
               width="48" height="48"
               viewBox="0 0 48 48"

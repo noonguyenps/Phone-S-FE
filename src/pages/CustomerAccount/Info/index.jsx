@@ -195,7 +195,7 @@ function Info() {
       })
   }
   return (
-    <Stack className="customer-info" justifyContent="center" alignItems="center" spacing={3}>
+    <Stack className="customer-info" justifyContent="center" alignItems="center" spacing={3}  paddingTop={2}>
       <ClickAwayListener onClickAway={handleClickAwayAvatar}>
               <Box sx={{ position: "relative" }} onClick={handleClickAvatar}>
                 <Badge
@@ -228,7 +228,6 @@ function Info() {
                         />
                         Cập nhật ảnh đại diện
                       </MenuItem>
-
                       <MenuItem onClick={openModalDeleteAvatar}>
                         <DeleteIcon sx={{ mr: 2 }} color="disabled" />
                         Xóa ảnh đại diện hiện tại
