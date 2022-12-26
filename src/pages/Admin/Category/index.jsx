@@ -16,7 +16,6 @@ import {
   TableRow,
   TableCell
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 
@@ -63,7 +62,7 @@ function Category() {
       <Stack spacing={2} width="100%">
         <Stack direction="row" justifyContent="space-between">
           <Typography>Danh sách danh mục sản phẩm</Typography>
-          <Link to="/admin/category/create">
+          <Link to="/admin/category/add">
             <Button variant="contained">Thêm danh mục</Button>
           </Link>
         </Stack>
@@ -73,14 +72,10 @@ function Category() {
             placeholder="Tìm danh mục"
             variant="outlined"
             width="100% !important"
+            value={query}
             onChange={(event) => setQuery(event.target.value)}
-
           />
-          <span className="category__iconSearch">
-            <SearchIcon sx={{ fontSize: "28px" }} />
-          </span>
         </Stack>
-
         <Table
           className="tableCategory"
           sx={{ minWidth: "650px" }}
@@ -92,7 +87,6 @@ function Category() {
               <TableCell sx={{ width: "15%", top: "64px" }}>
                 Tên danh mục
               </TableCell>
-              {/* <TableCell sx={{ width: "15%", top: "64px" }}>Danh mục cha</TableCell> */}
               <TableCell align="center" sx={{ width: "10%", top: "64px" }}>
                 Thao tác&nbsp;
               </TableCell>
@@ -100,7 +94,7 @@ function Category() {
           </TableHead>
           <TableBody>
             { 
-              category.filter((category) => (category.name.toLowerCase().includes(query)) || (category.parent.toLowerCase().includes(query))).map((item, id) => (
+              category.filter((category) => (category.name.toLowerCase().includes(query))).map((item, id) => (
                 <TableRow
                   key={item.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -108,7 +102,6 @@ function Category() {
                   <TableCell component="th" scope="row">
                     {item.name}
                   </TableCell>
-                  {/* <TableCell align="left">{item.parent}</TableCell> */}
                   <TableCell>
                     <Stack spacing={1} justifyContent="center" py={1}>
                       <Link to={`edit/${item.id}`} >

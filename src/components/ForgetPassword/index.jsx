@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import CloseIcon from "@mui/icons-material/Close";
+import { toast } from "react-toastify";
 
 function ForgetPassword(props) {
   //const dispatch = useDispatch();
@@ -36,6 +37,7 @@ function ForgetPassword(props) {
       .then((res) => {
         if(res.status === 302){
           setIsNoAccount(false);
+          toast.info('Đã gửi thông tin đăng nhập đến tài khoản của bạn');
         }
         if(res.status === 200){
           setIsNoAccount(true);
@@ -50,12 +52,13 @@ function ForgetPassword(props) {
   return (
     <Stack direction="row">
       <Stack sx={{ flex: 5 }} spacing={2}>
-        <Box>
+        <Stack direction='row' alignContent='center'>
           <IconButton onClick={props.handleReturnLogin}>
             <ArrowBackIosIcon />
           </IconButton>
-        </Box>
         <h4 style={{ fontSize: "24px" }}>Quên mật khẩu ?</h4>
+        </Stack>
+        
         <p style={{ fontSize: "15px" }}>
           Vui lòng nhập thông tin tài khoản để lấy lại mật khẩu
         </p>

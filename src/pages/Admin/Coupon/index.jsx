@@ -13,6 +13,7 @@ import {
     TableCell,
     TableRow,
     Typography,
+    TextField,
     InputBase,
     Modal,
 } from "@mui/material"
@@ -26,45 +27,35 @@ import { toast } from "react-toastify";
 
 function Coupon() {
     const [modalDelete, setModalDelete] = React.useState(false);
+    const [fillterVoucher, setFillterVoucher] = useState();
     const closeModalDelete = () => setModalDelete(false);
     const [itemDelete, setItemDelete] = useState("")
     const [status, setStatus] = useState(0)
     const [coupons, setCoupons] = useState([])
     const [listCoupon, setListCoupon] = useState([])
-    const [totalPage, setTotalPage] = useState(1)
-    const [page, setPage] = useState(1)
+    const [page, setPage] = useState(0)
     const size = 10
 
     const openModalDelete = (itemDelete) => {
         setItemDelete(itemDelete)
         setModalDelete(true)
     }
-
-    const handleChange = (event, value) => {
-        setPage(value);
-    };
-
     const handleDelete = () => {
+        let message = ''
         const newCoupon = coupons.filter(item => {
+            message = 'Voucher' + item.id +' đã bị xóa bởi Admin'
             return itemDelete.id !== item.id
         })
-
-        apiCoupon.deleteCouponById({ id: itemDelete.id })
+        apiCoupon.deleteCouponById({ id: itemDelete.id, message:message })
             .then(res => {
-                console.log(res)
                 toast.success("Xóa thành công")
+                setCoupons(newCoupon)
             })
             .catch(error => {
                 toast.error("Xóa không thành công!")
             })
-        setCoupons(newCoupon)
         closeModalDelete()
     }
-
-    const onChangeStatus = (e) => {
-        setStatus(e.target.value)
-    }
-
     useEffect(() => {
         const getData = async () => {
             apiCoupon.getCoupons()
@@ -73,46 +64,47 @@ function Coupon() {
                 })
         };
         getData();
-      }, []);
+      }, [page]);
 
 
     return (
-        <Box mt={2} className="couponAdmin" backgroundColor="white">
-            <Box px={4}>
-                <Typography component="h2" className="couponAdmin__title">Mã giảm giá</Typography>
-                <Typography mt={0.625} pb={2} lineHeight="32px"
-                >Vui lòng xem hướng dẫn chi tiết: <span>Cách cài đặt “Mã giảm giá”</span></Typography>
-            </Box>
-            <Box mt={2} mx={3} py={2} px={3}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography fontSize="16px" fontWeight={500}>Danh sách mã giảm giá</Typography>
-                    <Link to="/admin/coupon/create">
-                        <Button variant="contained" startIcon={<AddIcon />}>Tạo mã giảm giá</Button>
-                    </Link>
-                </Stack>
-                <Stack className="couponAdmin__filter" direction="row" spacing={2} mt={4} mb={2}>
-                    <Stack width="256px" spacing={0.25}>
-                        <label>Mã giảm giá</label>
-                        <Box className="couponAdmin__groupinput">
-                            <input type="text" placeholder="Nhập mã giảm giá" />
-                            <SearchIcon sx={{ color: "#888" }} />
-                        </Box>
-
-                    </Stack>
-                </Stack>
-                <Table mx={3} className="couponTable" sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell sx={{ width: "calc(13*100%/101)" }}>Tên Mã giảm giá</TableCell>
-                            <TableCell sx={{ width: "calc(13*100%/101)" }}>Mã giảm giá</TableCell>
-                            <TableCell sx={{ width: "calc(13*100%/101)" }}>Tổng số mã</TableCell>
-                            <TableCell sx={{ width: "calc(13*100%/101)" }}>Loại giảm giá</TableCell>
-                            <TableCell sx={{ width: "calc(18*100%/101)" }}>Thời gian áp dụng</TableCell>
-                            <TableCell sx={{ width: "calc(13*100%/101)" }}>Thao tác</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {listCoupon?.map((item) => (
+        <Stack direction="row" bgcolor="#fff" p={3}>
+      <Stack spacing={2} width="100%">
+        <Stack direction="row" justifyContent="space-between">
+          <Typography>Danh sách Mã giảm giá</Typography>
+          <Link to="/admin/coupon/create">
+            <Button variant="contained">Thêm Mã giảm giá</Button>
+          </Link>
+        </Stack>
+        <Stack direction="row" width="100%" position="relative">
+          <TextField
+            id="outlined-basic"
+            label='Tìm mã giảm giá'
+            placeholder="Tìm mã giảm giá"
+            variant="outlined"
+            width="100% !important"
+            value={fillterVoucher}
+            onChange={(event) => setFillterVoucher(event.target.value)}
+          />
+        </Stack>
+        <Table
+          className="tableCategory"
+          sx={{ minWidth: "650px" }}
+          stickyHeader
+          size="small"
+        >
+          <TableHead>
+            <TableRow>
+                <TableCell sx={{ width: "calc(13*100%/101)" }}>Tên Mã giảm giá</TableCell>
+                <TableCell sx={{ width: "calc(13*100%/101)" }}>Mã giảm giá</TableCell>
+                <TableCell sx={{ width: "calc(13*100%/101)" }}>Tổng số mã</TableCell>
+                <TableCell sx={{ width: "calc(13*100%/101)" }}>Loại giảm giá</TableCell>
+                <TableCell sx={{ width: "calc(18*100%/101)" }}>Thời gian áp dụng</TableCell>
+                <TableCell sx={{ width: "calc(13*100%/101)" }}>Thao tác</TableCell>
+            </TableRow>
+        </TableHead>
+          <TableBody>
+          {listCoupon?.map((item) => (
                             <TableRow
                                 key={item}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -153,16 +145,19 @@ function Coupon() {
                                 </TableCell>
                             </TableRow>
                         ))}
-                    </TableBody>
-                </Table>
-                {totalPage > 1 ?
-                    <Stack spacing={2}>
-                        <Typography>Page: {page}</Typography>
-                        <Pagination count={totalPage} page={page} onChange={handleChange} />
-                    </Stack> : <></>}
-            </Box>
-
-            <Modal
+          </TableBody>
+        </Table>
+        <Stack direction='row' spacing={2} justifyContent="center">
+          {
+            page==0?(<></>):(<Button sx={{backgroundColor:'#EEEEEE', color:'red'}} onClick={() => { setPage(page-1) }}>Trước</Button>)
+          }
+          <Button sx={{backgroundColor:'#EEEEEE'}}>Trang {page+1}</Button>
+          {
+            coupons.length<10?(<></>):(<Button sx={{backgroundColor:'#EEEEEE', color:'red'} } onClick={() => { setPage(page+1) }}>Sau</Button>)
+          }
+        </Stack>
+      </Stack>
+      <Modal
                 sx={{ overflowY: "scroll" }}
                 open={modalDelete}
                 onClose={closeModalDelete}
@@ -181,7 +176,7 @@ function Coupon() {
                     <Stack spacing={3}>
                         <Stack>
                             <Typography sx={{ fontWeight: "bold" }}>
-                                Bạn có chắc muốn xoá coupon này ?
+                                Bạn có chắc muốn xoá mã giảm giá này ?
                             </Typography>
                         </Stack>
 
@@ -194,7 +189,7 @@ function Coupon() {
                     </Stack>
                 </Stack>
             </Modal>
-        </Box>
+    </Stack>
 
     )
 }

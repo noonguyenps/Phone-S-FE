@@ -43,7 +43,7 @@ import Loading from "../../../components/Loading";
 
 
 function Info() {
-  const Gender = [{ id: "0", name: "Nam" }, { id: "1", name: "Nữ" }, { id: "2", name: "Không xác định" }];
+  const Gender = [{ id: "0", name: "Male", display:"Nam" }, { id: "1", name: "Female", display:"Nữ" }, { id: "2", name: "Không xác định", display:"Không xác định" }];
   const user = useSelector(state => state.auth.user);
   const dispatch = useDispatch();
   const [commune, setCommune] = useState(user?.address[0]?.commune);
@@ -53,7 +53,7 @@ function Info() {
   const [month, setMonth] = useState(user.birth_day ? user.birth_day[1] : null);
   const [year, setYear] = useState(user.birth_day ? user.birth_day[0] : null);
   const [country, setCountry] = useState(user.country ? user.country : null);
-  const [gender, setGender] = useState(user.gender ? Gender.find(item => item.id === user.gender) : null);
+  const [gender, setGender] = useState(user.gender ? Gender.find(item => item.name === user.gender) : null);
   const [image, setImage] = useState([]);
   const [addressDetail, setAddressDetail] = useState(user?.address[0]?.addressDetail)
   const [email,setEmail] = useState(user.email);
@@ -70,8 +70,6 @@ function Info() {
   const [uploading, setUploading] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [createAt, setCreateAt] = useState(user.createAt);
-  console.log(user)
-  console.log(commune)
 
   const openModalNational = () => setModalNational(true);
   const closeModalNational = () => setModalNational(false);
@@ -153,23 +151,28 @@ function Info() {
     setBirthDate(event.target.value);
   }
   const onChangeGender = (event) => {
-    let newGender = Gender.find(item => item.id === event.target.value);
-    setGender(newGender);
+    setGender(Gender.find(item => item.id === event.target.value));
   }
   const onSaveChange = () => {
-    if (!(RegExp("\\d+").test(day) && RegExp("\\d+").test(month) && RegExp("\\d+").test(year)
-      && country && fullname && gender && nickname)) {
+    if (!(birthDate && country && fullname && gender && nickname)) {
       toast.warning("Vui lòng nhập đầy đủ thông tin !!");
       return
     }
-    let birth_day = `${year}-${('0' + month).slice(-2)}-${('0' + day).slice(-2)}`
+    let genderStr = 'Male'
+    if(gender.id === '1'){
+      genderStr = "Female"
+    }
+    else if(gender.id === '2'){
+      genderStr = "Null"
+    }
     const params = {
-      birthDay: birth_day,
-      country: country.id,
+      birthDate: birthDate,
+      country: "1",
       fullName: fullname,
-      gender: gender,
+      gender: genderStr,
       nickName: nickname
     };
+    console.log(params)
     setUpdating(true)
     apiProfile
       .putChangeInfo(params)
@@ -252,7 +255,7 @@ function Info() {
               color="inherit"
               sx={{ color: hexToRgb("#ACABAB"), width: "60%" }}
             >
-              {gender ? gender.name : "Chọn Giới tính"}
+              {gender?.id==='0' ? 'Nam' : (gender?.id==='1'?'Nữ':'Không xác định')}
             </Button>
           </Stack>
       <Stack direction="row" spacing={5} alignItems="center" justifyContent="space-between" width={'400px'}>
@@ -353,7 +356,7 @@ function Info() {
             </IconButton>
           </Stack>
           <RadioGroup
-            value={country ? country.id : null}
+            value={gender ? gender.id : null}
             onChange={onChangeGender}
           >
             {Gender.map(item =>
@@ -361,7 +364,7 @@ function Info() {
                 key={item.id}
                 value={item.id}
                 control={<Radio />}
-                label={item.name}
+                label={item.display}
               />
             )}
 

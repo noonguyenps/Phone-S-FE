@@ -76,6 +76,10 @@ const apiProduct = {
     getCategoryChild: async (params) => {
         const res = await axiosClient.get('/category/child', {params})
         return res.data
+    },
+    getProductsByStatus: async (params)=>{
+        const res = await axiosClientWithToken.get('/admin/product/all/status',{params})
+        return res.data
     }
 
 }

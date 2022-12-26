@@ -163,18 +163,6 @@ const token = getUrlParameter('token')
             </Button>
           </Stack>
         </Stack>
-        <Stack sx={{ flex: 3, borderTopRightRadius:"20px", borderBottomRightRadius:"20px", backgroundColor:"#dbeeff"}}
-          justifyContent="center"
-          alignItems="center"
-          spacing={2}
-        >
-          <img
-            alt=""
-            src="https://res.cloudinary.com/duk2lo18t/image/upload/v1665719834/frontend/S-Phone_cpfelx.png"
-            width="220"
-            height="340"
-          />
-        </Stack>
       </Stack>
     </Stack>
   );

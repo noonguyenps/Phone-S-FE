@@ -25,12 +25,16 @@ const apiCart = {
         const res = await axiosClientWithToken.get('/admin/order', {params});
         return res.data;
     },
-    saveOrder: async (params) => {
-        const res = await axiosClient.post('/myorders',params)
+    getOrdersByStatus: async (params) => {
+        const res = await axiosClientWithToken.get('/admin/order/status', {params});
         return res.data;
     },
-    changeTypeOrder: async (params, id) => {
-        const res = await axiosClient.patch(`/myorders/${id}`,params)
+    deleteOrder: async (id) =>{
+        const res = await axiosClientWithToken.delete(`/user/order/delete/${id}`);
+        return res.data;
+    },
+    changeTypeOrder: async (id, status) => {
+        const res = await axiosClientWithToken.put(`/admin/order/change/${id}?status=${status}`)
         return res.data;
     },
     makePaymentMomo: async (params) => {
@@ -70,7 +74,11 @@ const apiCart = {
         return res.data;
     },
     getOrdersByUser: async(params)=>{
-        const res = await axiosClientWithToken.get(`/user/order`,params);
+        const res = await axiosClientWithToken.get(`/user/order`,{params});
+        return res.data;
+    },
+    getOrdersByUserAndStatus: async(params)=>{
+        const res = await axiosClientWithToken.get(`/user/order/status`,{params});
         return res.data;
     },
     insertOrder: async(params)=>{

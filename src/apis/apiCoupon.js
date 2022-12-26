@@ -24,17 +24,17 @@ const apiCoupon = {
     },
 
     deleteCouponById: async (params) => {
-        const res = await axiosClient.delete(`/coupons/${params.id}`)
+        const res = await axiosClientWithToken.delete(`/admin/voucher/${params.id}?message=${params.message}`)
         return res.data;
     },
 
     updateCoupon: async (params,id) => {
-        const res = await axiosClient.patch(`/coupons/${id}`,params)
+        const res = await axiosClientWithToken.put(`/admin/voucher/update/${id}`,params)
         return res.data;
     },
 
     findCouponById: async (params) => {
-        const res = await axiosClient.get(`/coupons`,{params})
+        const res = await axiosClient.get(`/voucher/${params.id}`)
         return res.data;
     },
     getCouponByUser: async (params)=>{

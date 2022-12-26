@@ -31,27 +31,25 @@ import {
 
 import MenuIcon from "@mui/icons-material/Menu";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import DriveFileRenameOutlineOutlinedIcon from "@mui/icons-material/DriveFileRenameOutlineOutlined";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import CreateCoupon from "./Coupon/CreateCoupon";
+import EditCoupon from "./Coupon/EditCoupon";
 import AdminLogin from "./Login";
 import Brand from "./Brand";
 import CreateBrand from "./Brand/CruBrand";
 import UpdateBrand from "./Brand/UpdateBrand";
 import Category from "./Category";
-import CreateCategory from "./Category/CruCategory/index";
+import AddCategory from "./Category/AddCategory/index";
+import EditCategory from "./Category/EditCategory/index";
 import CouponAdmin from "./Coupon";
 import Dashboard from "./Dashboard";
-import GrowthCenter from "./GrowthCenter";
 import Order from "./Order";
 import Product from "./Product";
 import CreateProduct from "./Product/CreateProduct";
-import Review from "./Review";
+import Rating from "./Rating";
 import User from "./User";
 import DetailUser from "./User/DetailUser";
 import Attribute from "./Attribute";
@@ -271,7 +269,6 @@ function Admin() {
               edge="start"
               sx={{
                 marginRight: 5,
-                // ...(open && { display: "none" }),
               }}
             >
               <MenuIcon />
@@ -281,24 +278,6 @@ function Admin() {
               <IconButton sx={{ border: "1px solid silver" }}>
                 <TextsmsOutlinedIcon sx={{ borderRadius: "50%" }} />
               </IconButton>
-
-              <IconButton
-                onClick={() => setOpenNotify(true)}
-                sx={{ border: "1px solid silver" }}
-              >
-                <Badge color="info" badgeContent={3}>
-                  <NotificationsNoneOutlinedIcon />
-                </Badge>
-              </IconButton>
-
-              <SwipeableDrawer
-                anchor="right"
-                open={openNotify}
-                onClose={() => setOpenNotify(false)}
-                onOpen={() => setOpenNotify(true)}
-              >
-                {formNotify()}
-              </SwipeableDrawer>
 
               <ClickAwayListener onClickAway={handleClickAwayAccount}>
                 <Stack
@@ -334,48 +313,6 @@ function Admin() {
                   >
                     {user.fullName}
                   </Typography>
-                  <ExpandMoreOutlinedIcon />
-                  {openAccount ? (
-                    <Stack sx={stylesAccount}>
-                      <Stack px={2} py={1} direction="row">
-                        <Box
-                          borderRadius="50%"
-                          component="img"
-                          src="https://salt.tikicdn.com/cache/w32/ts/sellercenterFE/93/76/03/2a08fa4ae6a024a752fbba87d145bce8.png"
-                          sx={{ width: "40px", height: "40px" }}
-                        />
-                        <Stack sx={{ paddingLeft: "10px" }}>
-                          <Typography sx={{ fontWeight: "bold" }}>
-                            {user.fullName}
-                          </Typography>
-                        </Stack>
-                      </Stack>
-
-                      <ListItem
-                        disablePadding
-                        sx={{
-                          display: "block",
-                          paddingX: "16px",
-                          alignItems: "left",
-                        }}
-                      >
-                        <Button
-                          variant="text"
-                          startIcon={<PersonOutlineIcon />}
-                          sx={{ color: "#333" }}
-                        >
-                          Hồ sơ nhà bán
-                        </Button>
-                        <Button
-                          variant="text"
-                          startIcon={<DriveFileRenameOutlineOutlinedIcon />}
-                          sx={{ color: "#333" }}
-                        >
-                          Thay đổi mật khẩu
-                        </Button>
-                      </ListItem>
-                    </Stack>
-                  ) : null}
                 </Stack>
               </ClickAwayListener>
             </Stack>
@@ -464,10 +401,10 @@ function Admin() {
             element={
               <Routes>
                 <Route index element={<Category />} />
-                <Route path="create" element={<CreateCategory />} />
+                <Route path="add" element={<AddCategory />} />
                 <Route
                   path="edit/:id"
-                  element={<CreateCategory edit={true} />}
+                  element={<EditCategory/>}
                 />
               </Routes>
             }
@@ -493,15 +430,13 @@ function Admin() {
               </Routes>
             }
           />
-
-          <Route path="develop" element={<GrowthCenter />} />
           <Route
             path="coupon/*"
             element={
               <Routes>
                 <Route index element={<CouponAdmin />} />
                 <Route path="create" element={<CreateCoupon />} />
-                <Route path="edit/:id" element={<CreateCoupon edit={true} />} />
+                <Route path="edit/:id" element={<EditCoupon/>} />
               </Routes>
             }
           />
@@ -516,7 +451,7 @@ function Admin() {
             }
           />
 
-          <Route path="review" element={<Review />} />
+          <Route path="rating" element={<Rating />} />
         </Routes>
       </Box>
     </Stack>

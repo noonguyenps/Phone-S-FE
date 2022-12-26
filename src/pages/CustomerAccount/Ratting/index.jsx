@@ -15,39 +15,32 @@ import {
   styled,
   TextareaAutosize
 } from '@mui/material';
-import "./CreateProduct.scss"
-import Loading from "../../../../components/Loading";
+import "./Ratting.scss"
+import Loading from "../../../components/Loading";
 import AddIcon from '@mui/icons-material/Add';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import ImageUploading from "react-images-uploading";
-import apiCategory from '../../../../apis/apiCategory';
+import apiRating from '../../../apis/apiRating';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { toast } from "react-toastify";
-import apiBrand from '../../../../apis/apiBrand';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ErrorIcon from '@mui/icons-material/Error';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import apiProduct from '../../../../apis/apiProduct';
-import apiAttribute from '../../../../apis/apiAttribute';
 import { func } from 'prop-types';
 
-const choose = [
-  { label: 'The Shawshank Redemption' },
-  { label: 'The Godfather' },
-  { label: 'The Godfather: Part II' },
-  { label: 'The Dark Knight' },
-  { label: '12 Angry Men' },
-  { label: "Schindler's List" },
-  { label: 'Pulp Fiction' }];
+
+
 export default function CreateProduct() {
+
+
   const buttonRef = useRef(null);
   const [loadingShowmore, setLoadingShowmore] = useState(false)
   const buttonRef1 = useRef(null);
   const [listType, setListType] = useState([]);
-  const [name, setName] = useState("");
+  const [comment, setComment] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState(0);
+  const [star, setStar] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [inventory, setInventory]= useState(0);
   const [listBrand, setListBrand] = useState([]);
@@ -67,6 +60,9 @@ export default function CreateProduct() {
   const [indexAttr, setIndexAttr] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [image, setImage] = useState([]);
+
+
+
   const onChange = (imageList,i) => {
     setListImage(prev=> [...prev,imageList]);
   };
@@ -89,7 +85,7 @@ export default function CreateProduct() {
   };
   function uploadListImageBE(index){
     return new Promise((resolve, reject)=>{
-      apiProduct.uploadImgProduct(listImage[index]).then((res)=>{
+      apiRating.uploadImgProductRating(listImage[index]).then((res)=>{
       listUrl[index] = res.data.url;
       setListUrl(prev =>[...prev]);
       console.log(listUrl);
@@ -103,39 +99,26 @@ export default function CreateProduct() {
       })}
     )
   };
-  async function saveProduct(){
+
+
+  async function saveRating(){
     setLoadingShowmore(true)
     for(var index in listImage){
       await uploadListImageBE(index);
     }
     let params = {
-      name:name,
-      attribute:listAttributeInsert,
-      brand : brand,
-      category: category,
-      description : description,
-      discount: discount,
+      id:1,
+      message:comment,
       imgUrl:listUrl,
-      inventory:inventory,
-      price:price,
-      values:listValue
+      ratingPoint:star,
     }
-    apiProduct.addNewProduct(params)
+    apiRating.addNewRating(params)
     .then((res)=>{
-      toast.info("Thêm sản phẩm thành công");
+      toast.info("Thêm đánh giá thành công");
       setLoadingShowmore(false)
-      setListAttributeInsert([]);
-      setBrand("");
-      setCategory("");
-      setDescription("");
-      setDiscount(0);
-      setPrice(0);
       setImgUrl([]);
-      setInventory(0);
-      setListValue([]);
-      setListAttributeOption([[],]);
-      setListImage([]);
-      setName("");
+      setComment('');
+      setStar(0);
     })
     .catch((err)=>{
       toast.warning("Đã xảy ra lỗi")
@@ -143,75 +126,50 @@ export default function CreateProduct() {
   }
 
 
-  useEffect(() => {
-    const getData = async () => {
-        apiCategory.showAllCategory()
-            .then(res => {
-                setListType(res.data.listCategory);
-            })
-    };
-    getData();
-  }, []);
+//   useEffect(() => {
+//     const getData = async () => {
+//         apiCategory.showAllCategory()
+//             .then(res => {
+//                 setListType(res.data.listCategory);
+//             })
+//     };
+//     getData();
+//   }, []);
 
 
-  useEffect(() => {
-    const getData = async () => {
-        apiAttribute.getAllAttribute()
-            .then(res => {
-              setListAttribute(res.data.listAttribute)
-            })
-    };
-    getData();
-  }, []);
+//   useEffect(() => {
+//     const getData = async () => {
+//         apiAttribute.getAllAttribute()
+//             .then(res => {
+//               setListAttribute(res.data.listAttribute)
+//             })
+//     };
+//     getData();
+//   }, []);
 
 
-  useEffect(() => {
-    const getData = async () => {
-        apiBrand.getListBrand()
-            .then(res => {
-                setListBrand(res.data.listBrand);
-            })
-    };
-    getData();
-  }, []);
+//   useEffect(() => {
+//     const getData = async () => {
+//         apiBrand.getListBrand()
+//             .then(res => {
+//                 setListBrand(res.data.listBrand);
+//             })
+//     };
+//     getData();
+//   }, []);
 
 
 
   return (
     <Stack sx={{backgroundColor:"#FFFFFF"}}>
       <Stack margin='1rem' spacing={2}>
-        <Typography>Tạo sản phẩm mới</Typography>
+        <Typography>Đánh giá sản phẩm</Typography>
         <Stack sx={{maxWidth:"1100px", width:"100%"}}>
           <Stack direction='row' padding ={1} sx={{width:'100%'}}>
-            <Typography sx={{width:'20%'}}>Tên sản phẩm</Typography>
-            <TextField sx={{width:'80%'}} label= "Tên sản phẩm" value={name} onChange={(event) => {
-                          setName(event.target.value)
+            <Typography sx={{width:'20%'}}>Đánh giá</Typography>
+            <TextField sx={{width:'80%'}} label= "Đánh giá" value={comment} multiline='true' onChange={(event) => {
+                          setComment(event.target.value)
                         }}></TextField>
-          </Stack>
-          <Stack direction='row' padding ={1} sx={{width:'100%'}}>
-            <Typography sx={{width:'20%'}}>Danh mục</Typography>
-            <FormControl sx={{width:'80%'}}>
-                        <Select size="small" labelId="demo-simple-select-helper-label" 
-                            id="demo-simple-select-helper" value={category}
-                            onChange={handleChangeType} input={<InputCustom placeholder="Chọn Loại" />}>
-                            {
-                                listType.map(item => item.name !== name && <MenuItem value={item.id} >{item.name}</MenuItem>)
-                            }
-                        </Select>
-            </FormControl>
-          </Stack>
-          <Stack direction='row' padding ={1} sx={{width:'100%'}}>
-            <Typography sx={{width:'20%'}}>Thương hiệu</Typography>
-            <FormControl sx={{width:'80%'}}>
-                        <Select size="small" labelId="demo-simple-select-helper-label" 
-                            id="demo-simple-select-helper" value={brand}
-                            
-                            onChange={handleChangeBrand} input={<InputCustom placeholder="Chọn Thương hiệu" />}>
-                            {
-                                listBrand.map(item => item.name !== name && <MenuItem value={item.id} >{item.name}</MenuItem>)
-                            }
-                        </Select>
-            </FormControl>
           </Stack>
           <Stack direction='row' padding ={1} sx={{width:'100%'}}>
             <Typography sx={{width:'20%'}}>Hình ảnh sản phẩm</Typography>
@@ -319,93 +277,15 @@ export default function CreateProduct() {
             </Box>
           </Stack>
           <Stack direction='row' padding ={1} sx={{width:'100%'}}>
-            <Typography sx={{width:'20%'}}>Mô tả</Typography>
-            <TextField size="small" sx={{ width: "80%" }} 
-            label= "Mô tả"
-            multiline = "true" value={description} 
-            onChange={(event) => {
-              setDescription(event.target.value)
-            }}></TextField>
-          </Stack>
-          <Stack direction='row' padding ={1} sx={{width:'100%'}}>
-            <Typography sx={{width:'20%'}}>Giá cả</Typography>
-            <TextField type={"number"} sx={{ width: "80%" }} 
-            label= "Giá cả"
-            value={price} onChange={(event) => {
-                        if(event.target.value>=0){
-                          setPrice(event.target.value)
+            <Typography sx={{width:'20%'}}>Mức độ</Typography>
+            <TextField type={"number"} sx={{ width: "20%" }} 
+            label= "Số sao"
+            value={star} onChange={(event) => {
+                        if(event.target.value>=0||event.target.value<=5){
+                          setStar(event.target.value)
                         }
                     }}/>
           </Stack>
-          <Stack direction='row' padding ={1} sx={{width:'100%'}}>
-            <Stack direction='row' sx={{width:'100%'}} spacing ={1}>
-              <Stack direction='row' sx={{width:'50%'}}>
-                <Typography sx={{width:'40%'}}>Giảm giá (%)</Typography>
-                <TextField sx={{width:'60%'}} type={"number"}
-                label= "Giảm giá (%)"
-                value={discount} onChange={(event) => {
-                        if(event.target.value>=0 && event.target.value<=100){
-                          setDiscount(event.target.value)
-                        }
-                }}/>
-              </Stack>
-              <Stack direction='row' sx={{width:'50%'}}>
-                <Typography sx={{width:'40%'}}>Số lượng</Typography>
-                <TextField sx={{width:'60%'}} 
-                label= "Số lượng"
-                type={"number"} value={inventory} onChange={(event) => {
-                        if(event.target.value>0){
-                          setInventory(event.target.value)
-                        }
-                }}/>
-              </Stack>
-            </Stack>
-          </Stack>
-          <Typography>Thuộc tính</Typography>
-          {
-          listAddNewAttribute.map((item)=>(
-            <Stack sx={{ backgroundColor: "#FFF", height: "46px"}} px={2} py={3} direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-            <FormControl sx={{ width:'25%'}} className="create-address__input">
-                        <Select size="small" labelId="demo-simple-select-helper-label" 
-                            id="demo-simple-select-helper" value={listAddNewAttribute[item.index].attribute}
-                            onChange={(event) => {
-                              listAddNewAttribute[item.index].attribute = event.target.value;
-                              setListAddNewAttribute(prev =>[...prev]);
-                              listAttributeOption[item.index]=event.target.value.values;
-                              setListAttributeOption(prev =>[...prev,[]]);
-                            }} input={<InputCustom placeholder="Chọn Thuộc tính" />}>
-                            {
-                                listAttribute.map(item => item.name !== name && <MenuItem value={item} >{item.name}</MenuItem>)
-                            }
-                        </Select>
-              </FormControl>
-              <FormControl sx={{ width:'25%'}} className="create-address__input">
-                        <Select size="small" labelId="demo-simple-select-helper-label" 
-                            id="demo-simple-select-helper" value={listAttributeInsert[item.index]}
-                            onChange={(event) => {
-                              listAttributeInsert[item.index] = event.target.value;
-                              setListAttributeInsert(prev=>[...prev]);
-                            }} input={<InputCustom placeholder="Chọn Loại" />}>
-                            {
-                                listAttributeOption[item.index].map(item => <MenuItem value={item.id} >{item.value}</MenuItem>)
-                            }
-                        </Select>
-              </FormControl>
-              <TextField label= "Chênh lệch giá" sx={{ width:'50%'}} inputProps={{style: {height: "10px",},}} type={"number"} value={listValue[item.index]} onChange={(event) => {
-                      if(event.target.value>=0){
-                        listValue[item.index]=Number(event.target.value);
-                        setListValue(prev=> [...prev]);
-                      }
-                    }}/>
-            </Stack>
-          ))
-        }
-        <Stack sx={{width:"100%"}}>
-          <Button ref={buttonRef1} onClick={() => (handleChangeAddNewAttribute(indexAttr))}>
-            <AddIcon sx={{color:"#1890ff"}} />
-            <Typography sx={{color:"#1890ff", width:"100%"}}>Thêm lựa chọn hàng để giúp khách hàng tìm kiếm sản phẩm và dễ dàng thêm mới lựa chọn</Typography>
-          </Button>
-        </Stack>
         </Stack>
       </Stack>
         <Stack px={2}>
@@ -415,9 +295,11 @@ export default function CreateProduct() {
                 <Loading/>
               </Button>
               </>):(
-              <Button className="btn__addProduct" variant="contained" component="label" onClick={() =>(saveProduct())}>
+              <Button className="btn__addProduct" variant="contained" component="label" 
+              onClick={() =>(saveRating())}
+              >
                 <AddIcon sx={{color:"#ffffff"}} />
-                <Typography sx={{color:"#ffffff"}}>Thêm sản phẩm</Typography>
+                <Typography sx={{color:"#ffffff"}}>Thêm đánh giá</Typography>
               </Button>)
           }
         </Stack>

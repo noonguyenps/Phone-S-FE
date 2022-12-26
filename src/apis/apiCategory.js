@@ -13,7 +13,11 @@ const apiCategory = {
         const res = await axiosClient.get(`/category/${params.id}`)
         return res.data;
     },
-    insertCategory: async (params) => {
+    insertCategoryChild: async (params) => {
+        const res = await axiosClientWithToken.post(`/admin/category/insert?parentId=${params.parentId}`,params)
+        return res.data;
+    },
+    insertCategoryRoot: async (params) => {
         const res = await axiosClientWithToken.post(`/admin/category/insert`,params)
         return res.data;
     },

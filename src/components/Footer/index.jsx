@@ -9,43 +9,19 @@ import { footerLink } from "../../constraints/Footer";
 function Footer() {
   return (
     <Box className="Footer">
-      <Stack className="block" direction="row">
-        <Stack>
-          <Typography component="h4" className="block__title">
-            Hỗ trợ khách hàng
-          </Typography>
-          <div className="hotline">
-            Hotline:&nbsp;
-            <a href="tel:0868704516"> 0868704516</a>
-            <span className="small-text" style={{ marginRight: "1rem" }}>
-              (1000 đ/phút, 8-21h kể cả T7, CN)
-            </span>
-          </div>
-          {footerLink.supportCustomer.map((item) => (
-            <a key={item.id} href={item.link}>
-              {item.display}
-            </a>
-          ))}
-
-          <div className="security">
-            Hỗ trợ khách hàng:&nbsp;
-            <a href="mailto:ngoctin2412test@gmail.com">ngoctin2412test@gmail.com</a>
-          </div>
-          <div className="security">
-            Báo lỗi bảo mật:&nbsp;
-            <a href="mailto:ngoctin2412test@gmail.com">ngoctin2412test@gmail.com</a>
-          </div>
+      <Stack className="block" direction="row" sx={{fontSize:'11px'}}>
+        <Stack spacing={2} paddingTop={2}>
+          <Typography>Điện thoại - BlackFriday 2022 - Quà Tết 2023</Typography>
+          <Typography>Điện thoại Iphone - Iphone 13</Typography>
+          <Typography>Điện thoại iPhone 12 - iPhone cũ giá rẻ</Typography>
         </Stack>
 
+        <Stack spacing={2} paddingTop={2}>
+          <Typography>Điện thoại Samsung - Điện thoại Oppo</Typography>
+          <Typography>Điện thoại Samsung S22 - Samsung A73</Typography>
+          <Typography>Sansung A13 - Samsung A53 - Samsung A23</Typography>
+        </Stack>
         <Stack>
-          <Box>
-            <Typography component="h4" className="block__title">
-              Hợp tác và liên kết
-            </Typography>
-            <a href={"https://thuvienphapluat.vn/van-ban/thuong-mai/nghi-dinh-52-2013-nd-cp-thuong-mai-dien-tu-187901.aspx?_ga=2.85203161.1739556867.1665717787-1218695441.1665717787"}>
-              Quy chế hoạt động Sàn GDTMĐT của Việt Nam
-            </a>
-          </Box>
           <Box>
             <Typography
               component="h4"
@@ -95,7 +71,7 @@ function Footer() {
         </Stack>
 
         <Stack>
-          <Box>
+          <Box paddingTop={2}>
             <Typography component="h4" className="block__title">
               Phương thức thanh toán
             </Typography>

@@ -2,7 +2,6 @@ import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import imgDefault from '../../assets/img/img_default.jpg'
-import ReviewProduct from "./ReviewProduct";
 
 import Login from "../../components/Login";
 import SignUp from "../../components/SignUp";
@@ -13,12 +12,15 @@ import {
   Button,
   Grid,
   Box,
+  Tabs,
+  Tab,
   Stack,
   Typography,
   Modal,
   IconButton,
   Tooltip,
   Skeleton,
+  TextField,
 } from "@mui/material";
 
 import "./DetailProduct.scss";
@@ -39,6 +41,7 @@ import SliderImage from "./SliderImage";
 
 import apiAccount from "../../apis/apiAccount";
 import apiCart from "../../apis/apiCart";
+import apiRating from "../../apis/apiRating";
 
 function DetailProduct() {
   const user = useSelector((state) => state.auth.user);
@@ -48,6 +51,12 @@ function DetailProduct() {
   const [isLoginForm, setIsLoginForm] = useState(true);
   const [isRegister, setIsRegister] = useState(false);
   const [isForgetPwd, setIsForgetPwd] = useState(false);
+
+  const [pageRating, setPageRating] = useState(0);
+  const [valueRating, setValueRating] = useState(0);
+  const [sortRating,setSortRating] = useState('id');
+  const [comment, setComment] = useState('');
+  const [ratingid, setRatingid] = useState(0);
 
   const closeModalLogin = () => {
     setModalLogin(false);
@@ -89,6 +98,7 @@ function DetailProduct() {
 
   const [product, setProduct] = useState(null);
   const { id } = useParams();
+  const size = 10;
 
   const [price, setPrice] = useState(0);
   const [listOptionValue,setListOptionValue] = useState([]);
@@ -172,6 +182,7 @@ function DetailProduct() {
   const [indexImg, setIndexImg] = useState(0);
   const [listOptionId, setListOptionId] = useState([]);
   const dispatch = useDispatch();
+  const [ratings, setRatings] = useState([]);
 
   const openModalSlider = () => setModelSlider(true);
 
@@ -193,6 +204,79 @@ function DetailProduct() {
     };
     getData();
   }, []);
+
+  const handleChange = (event, newValue) => {
+         setValueRating(newValue);
+  };
+
+  const handlePostComment = () => {
+    let params ={
+      id: ratingid,
+      comment:comment
+    }
+    apiRating.postComment(params).then(res=>{
+      toast.info("Thêm bình luận thành công")
+    }).catch(err=>{
+      console.log(err)
+    })
+
+
+
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      let params = {
+        page:pageRating,
+        productId:id,
+        size:size,
+        sort:sortRating
+      }
+      apiRating.getAllRatingByProductClient(params)
+      .then(res=>{
+      setRatings(res.data.listRating);      
+      })
+      .catch(setRatings([]))
+    };
+    getData();
+  }, [pageRating, sortRating]);
+
+  useEffect(() => {
+    const filterData = () => {
+      switch (valueRating) {
+        case 1: {
+          setSortRating("date_up");
+          setPageRating(0);
+          break;
+        }
+        case 2: {
+          setSortRating("date_down");
+          setPageRating(0);
+          break;
+        }
+        case 3: {
+          setSortRating("rating_point_up");
+          setPageRating(0);
+          break;
+        }
+        case 4: {
+          setSortRating("rating_point_down");
+          setPageRating(0);
+          break;
+        }  
+        default: {
+          setSortRating("id");
+          setPageRating(0);
+          break;
+        }
+      }
+    };
+
+    filterData();
+  }, [valueRating]);
+
+  
+
   const handleClickBuy = () => {
     if(user === null){
       dispatch(
@@ -474,6 +558,128 @@ function DetailProduct() {
             ))}
           </Grid>
         </Box>
+        <Box className="panelProduct">
+      <Tabs
+                     value={valueRating}
+                     width={500}
+                     onChange={handleChange}
+                     sx={{
+                     width:'900px'
+                     }}
+                     padding = {1}
+                     textColor="primary"
+                     indicatorColor="primary"
+                     aria-label="basic tabs example"
+                 >
+                     <Tab
+                         key='1'
+                         label='Tất cả'
+                         sx={{
+                         fontSize: "12px",
+                         textTransform: "none",
+                         fontWeight: "500",
+                         }}
+                     />
+                     <Tab
+                         key='2'
+                         label='Mới nhất'
+                         sx={{
+                         fontSize: "12px",
+                         textTransform: "none",
+                         fontWeight: "500",
+                         }}
+                     />
+                     <Tab
+                         key='3'
+                         label='Cũ nhất'
+                         sx={{
+                         fontSize: "12px",
+                         textTransform: "none",
+                         fontWeight: "500",
+                         }}
+                     />
+                     <Tab
+                         key='4'
+                         label='Nhiều sao'
+                         sx={{
+                         fontSize: "12px",
+                         textTransform: "none",
+                         fontWeight: "500",
+                         }}
+                     />
+                     <Tab
+                         key='5'
+                         label='Ít sao'
+                         sx={{
+                         fontSize: "12px",
+                         textTransform: "none",
+                         fontWeight: "500",
+                         }}
+                     />
+                 </Tabs>
+                 <Stack pading={1} margin={1}>
+                  <Typography>Đánh giá và nhận xét {product?.name?product.name:""}</Typography>
+                  <Box>
+                    <Stack justifyContent='center' alignItems='center'>
+                      <Typography sx={{ fontSize: "30px", color: "red" }}>{product?.rate}/5</Typography>
+                      <Rating name="read-only" value={product?.rate || 0} sx={{ fontSize: "1.2rem" }} readOnly />
+                      <Typography sx={{ fontSize: "20px"}}>{ratings?.length} Đánh giá và nhận xét</Typography>
+                      
+                    </Stack>
+                    {
+                        ratings?.map(item=>(
+                          <Stack margin={1}>
+                            <Typography sx={{ fontSize: "20px"}}>Khách hàng: {item?.nickname}</Typography>
+                            <Stack margin ={1}>
+                              <Rating name="read-only" value={product?.rate || 0} sx={{ fontSize: "1.2rem" }} readOnly />
+                              <Typography sx={{ fontSize: "16px"}}>Đánh giá : {item.comment}</Typography>
+                            </Stack>
+                            <Stack margin ={1} spacing={1} direction='row'>
+                              <Typography>Hình ảnh </Typography>
+                                {
+                                  item?.urls?.map(item=>(
+                                    <img width='100px' height='100px' src={item}></img>
+                                  ))
+                                }
+                            </Stack>
+                            <Stack margin ={1} spacing={1}>
+                              <Typography>Bình luận </Typography>
+                                {
+                                  item?.comments?.map(item=>(
+                                    <Stack direction='row' spacing={2} paddingLeft={2}>
+                                      <Typography sx={{ fontSize: "13px"}}>{item.userNickName}</Typography>
+                                      <Typography sx={{ fontSize: "13px"}}>-</Typography>
+                                      <Typography sx={{ fontSize: "13px"}}>{item.comment}</Typography>
+                                    </Stack> 
+                                  ))
+                                }
+                              <Stack direction='row' spacing={2} paddingLeft={2}>
+                              <TextField
+                              sx={{ fontSize: "13px"}}
+                              label="Bình luận của bạn"
+                              value={comment}
+                              onChange={event=>{
+                                setComment(event.target.value)
+                                setRatingid(item.id)}}
+                              ></TextField>
+                              {user?(<>
+                                <Button
+                              onClick={handlePostComment}>
+                                Thêm bình luận
+                              </Button>
+                              </>):(<>
+                                <Button
+                              onClick={openModalLogin}>
+                                Thêm bình luận
+                              </Button></>)}
+                              </Stack> 
+                            </Stack>
+                          </Stack>
+                        ))
+                      }
+                  </Box>
+                 </Stack>
+      </Box>
       </Box>
       <Modal open={modalSlider} onClose={closeModalSlider}>
         <Box className="modal-images" sx={{ width: "100%" }}>
@@ -512,8 +718,6 @@ function DetailProduct() {
           )}
         </Box>
       </Modal>
-
-      <ReviewProduct product={product}/>
     </>
   );
 }

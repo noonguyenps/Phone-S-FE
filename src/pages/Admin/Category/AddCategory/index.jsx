@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import "./CruCategory.scss";
+import "./AddCategory.scss";
 import apiCategory from "../../../../apis/apiCategory";
 import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
@@ -19,35 +19,10 @@ import {
     styled
 } from "@mui/material";
 
-function CrudCategory(props) {
-    const [id, setId] = useState("");
+function AddCategory(props) {
     const [name, setName] = useState("")
     const [parent, setParent] = useState("")
     const [listType, setListType] = useState([]);
-    const [edit, setEdit] = useState(props.edit);
-    const params = useParams();
-    const navigate = useNavigate();
-    useEffect(() => {
-        const loaddata = () => {
-            if (edit === true) {
-                apiCategory.findCategoryById({ id: params.id })
-                    .then(res => {
-                        const category = res[0]
-                        if (category) {
-                            setName(category.name)
-                            setParent(category.parent)
-                        }
-                        else {
-                            navigate("/admin/category")
-                            toast.error("Sản phẩm này không tồn tại!")
-                        }
-                    }
-                    )
-                setId(params.id)
-            }
-        }
-        loaddata()
-    }, [edit])
 
     useEffect(() => {
         const getData = async () => {
@@ -62,44 +37,42 @@ function CrudCategory(props) {
     const handleChangeType = (event) => {
         setParent(event.target.value);
     };
-    const handleUpdate = () => {
-        const params = {
-            id: id,
-            "name": name,
-            parentId: parent
-        }
-        if (!(name)) {
-            toast.warning("Vui lòng nhập đầy đủ thông tin !!");
-            return
-        }
-        apiCategory.updateCategory(params)
-            .then(res => {
-                toast.success("Cập nhật thành công")
-            })
-            .catch(error => {
-                toast.error("Cập nhật thất bại!")
-            })
-    }
+
     const handleSave = () => {
-        const params = {
-            "name": name,
-            parentId: parent
-        }
         if (!(name)) {
-            toast.warning("Vui lòng nhập đầy đủ thông tin !!");
+            toast.warning("Hãy nhập tên danh mục !!");
             return
         }
         else {
-            console.log("parent",parent)   
-            apiCategory.insertCategory(params)
+            if(parent){
+                const params = {
+                    name : name,
+                    parentId: parent
+                }
+                apiCategory.insertCategoryChild(params)
                 .then(res => {
-                    toast.success("Thêm sản phẩm thành công")
+                    toast.success("Thêm danh mục thành công")
                     setName("")
                     setParent("")
                 })
                 .catch(error => {
-                    toast.error("Thêm sản phẩm thất bại!")
+                    toast.error("Thêm danh mục thất bại!")
                 })
+            }
+            else{
+                const params = {
+                    name : name,
+                }
+                apiCategory.insertCategoryRoot(params)
+                .then(res => {
+                    toast.success("Thêm danh mục thành công")
+                    setName("")
+                    setParent("")
+                })
+                .catch(error => {
+                    toast.error("Thêm danh mục thất bại!")
+                })
+            }
         }
     }
     return (
@@ -114,7 +87,7 @@ function CrudCategory(props) {
                             id="demo-simple-select-helper"
                             value={parent}
                             onChange={handleChangeType}
-                            input={<InputCustom placeholder="Chọn Loại" />}
+                            input={<InputCustom placeholder="Chọn Danh mục cha" />}
                         >
                             {
                                 listType.map(item => item.name !== name && <MenuItem value={item.id} >{item.name}</MenuItem>)
@@ -129,9 +102,7 @@ function CrudCategory(props) {
                     }} size="small" id="outlined-basic" variant="outlined" sx={{ flex: 1 }} />
                 </Stack>
                 <Stack justifyContent="center" alignItems="center">
-                    <Button onClick={
-                        edit ? handleUpdate
-                            : handleSave} sx={{ width: "30%" }} variant="contained">{edit ? "Cập nhật":"Thêm"}</Button>
+                    <Button onClick={handleSave} sx={{ width: "30%" }} variant="contained">Thêm</Button>
                 </Stack>
             </Stack>
         </Box>
@@ -158,4 +129,4 @@ const InputCustom = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-export default CrudCategory
+export default AddCategory

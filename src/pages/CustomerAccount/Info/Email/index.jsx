@@ -32,6 +32,7 @@ function Email() {
       .then((response) => {
         setColor("#2196f3")
         setMessage("Thay đổi thành công");
+        getUserProfile();
       })
       .catch((error) => {
         setColor("#ee0033")

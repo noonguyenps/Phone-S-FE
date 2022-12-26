@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./DetailOrder.scss";
-import { Box, Stack, Typography, Button } from "@mui/material";
+import { Box, Stack, Typography, Button, Modal } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import apiCart from "../../../../apis/apiCart";
 import { toast } from "react-toastify";
@@ -8,10 +8,19 @@ import { numWithCommas } from "../../../../constraints/Util";
 import { orderTabs } from "../../../../constraints/OrderItem";
 import apiNotify from "../../../../apis/apiNotify";
 import AddressVN from "../../../../components/AddressVN";
+import { useNavigate } from "react-router-dom"
 
 function DetailOrder() {
   const id = useParams().id;
   const [order, setOrder] = useState(null);
+  const [modalDelete, setModalDelete] = React.useState(false);
+
+
+  const openModalDelete = () => {
+    setModalDelete(true)
+}
+  const closeModalDelete = () => setModalDelete(false);
+  const navigate = useNavigate()
   
   useEffect(() => {
     const getData = async () => {
@@ -27,7 +36,7 @@ function DetailOrder() {
     getData();
   }, []);
 
-  const handleComfirm = () => {
+  const handleConfirm = () => {
     let params = {
       // ...order,
       type: {
@@ -55,28 +64,11 @@ function DetailOrder() {
       });
   };
   const handleCancel = () => {
-    let params = {
-      //...order,
-      type: {
-        id: orderTabs[5].id,
-        name: orderTabs[5].type,
-      },
-    };
     apiCart
-      .changeTypeOrder(params, id)
+      .changeTypeOrder(id,3)
       .then((res) => {
-        toast.success("Hủy thành công");
-        let notify = {
-          userId: order.idUser,
-          orderId: order.id,
-          type: "order",
-          text: "Đơn hàng của bạn đã bị hủy",
-          date: Date.now(),
-          seen: false,
-          link:"",
-        };
-       
-        apiNotify.postNotify(notify);
+        toast.success("Hủy đơn hàng thành công");
+        navigate('/admin/order')
       })
       .catch((error) => {
         toast.error("Hủy không thành công");
@@ -225,22 +217,12 @@ function DetailOrder() {
                     height: "30px",
                     padding: 0,
                   }}
+                  onClick={handleConfirm}
                 >
                   Vận chuyển
                 </Button>
                 ):(
-                  order?.orderStatus==0?(
-                    <Button
-                    variant="outlined"
-                    sx={{
-                      fontSize: "12px",
-                      width: "102px",
-                      height: "30px",
-                      padding: 0,
-                    }}
-                  >
-                    Vận chuyển
-                  </Button>):""
+                  <></>
                 )}
                   <Button
                     variant="outlined"
@@ -250,24 +232,41 @@ function DetailOrder() {
                       height: "30px",
                       padding: 0,
                     }}
+                    onClick={() => openModalDelete()}
                   >
                     Hủy đơn
                   </Button>
                 </Stack>
+                <Modal
+                sx={{ overflowY: "scroll" }}
+                open={modalDelete}
+                onClose={closeModalDelete}
+            >
+                <Stack
+                    className="modal-info"
+                    direction="row"
+                    spacing={2}
+                    justifyContent="center"
+                    width="26rem"
+                >
+                    <Stack spacing={3}>
+                        <Stack>
+                            <Typography sx={{ fontWeight: "bold" }}>
+                                Bạn có chắc muốn hủy đơn hàng này ?
+                            </Typography>
+                        </Stack>
+
+                        <Stack direction="row" justifyContent="flex-end" spacing={1}>
+                            <Button onClick={closeModalDelete} variant="outlined">
+                                Hủy bỏ thao tác
+                            </Button>
+                            <Button variant="contained" color="error" onClick={handleCancel}>Hủy đơn</Button>
+                        </Stack>
+                    </Stack>
+                </Stack>
+            </Modal>
         </Stack>
       )}
-      <Stack direction="row" spacing="16px" justifyContent="flex-end" p={2}>
-        {order?.type?.id === 2 && (
-          <>
-            <Button variant="contained" onClick={handleComfirm}>
-              Xác nhận
-            </Button>
-            <Button variant="contained" color="error" onClick={handleCancel}>
-              Hủy bỏ
-            </Button>
-          </>
-        )}
-      </Stack>
     </Box>
   );
 }

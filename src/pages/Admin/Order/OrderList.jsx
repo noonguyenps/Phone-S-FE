@@ -5,6 +5,8 @@ import { Link,Routes,Route } from "react-router-dom";
 import "./Order.scss";
 import {
     Stack,
+    Tabs,
+    Tab,
     Button,
     Typography,
     TextField,
@@ -23,8 +25,9 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import DetailOrder from "./DetailOrder";
+import { numWithCommas } from "../../../constraints/Util";
 
-const listStatus = ["Mã đơn hàng", "SKU", "Thông tin khách hàng"]
+const listStatus = ["Mã đơn hàng", "Nhãn đơn hàng"]
 const listOrderDate = ["Hôm nay", "7 ngày qua", "30 ngày qua", "Toàn thời gian"]
 const items = [
     { id: 0, label: 'Tất cả'},
@@ -38,27 +41,47 @@ function OrderList() {
     const [selected, setSelected] = React.useState(0)
     const [orders, setOrders] = useState([]);
     const [page, setPage] = useState(0);
+    const [value, setValue] = useState(0);
     const [totalPage, setTotalPage] = useState(1);
     const [sort, setSort] = useState('order_id');
+    const [status, setStatus] = useState(0);
+
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
     
     const size = 10;
 
     useEffect(() => {
         const getData = async () => {
-          let param = {
-            page: page,
-            limit: size,
-            sort: sort,
-            };
-        apiCart.getOrders(param)
-            .then(res=>{
-            setOrders(res.data.listOrder);
-            setTotalPage(Math.ceil(response.pagination._totalRows / size))        
-            })
-            .catch(setOrders([]))
+            if(Number(value) == 0||Number(value)>4){
+                let param = {
+                    page: page,
+                    size: size,
+                    sort: sort,
+                    };
+                apiCart.getOrders(param)
+                    .then(res=>{
+                    setOrders(res.data.listOrder);      
+                    })
+                    .catch(setOrders([]))
+            }
+            else{
+                let param = {
+                    page: page,
+                    size: size,
+                    status: status,
+                    };
+                apiCart.getOrdersByStatus(param)
+                    .then(res=>{
+                    setOrders(res.data.listOrder);      
+                    })
+                    .catch(setOrders([]))
+            }
         };
         getData();
-      }, [page, selected]);
+      }, [page, sort, status]);
 
     const handleDate = (timestamp) => {
         let date = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(timestamp)
@@ -69,7 +92,61 @@ function OrderList() {
         if (i !== selected)
             setSelected(i)
     }
-    const [status, setStatus] = useState(0);
+    
+
+
+    useEffect(() => {
+        const filterData = () => {
+          switch (value) {
+            case 1: {
+              setSort("default");
+              setPage(0);
+              setStatus(0);
+              break;
+            }
+            case 2: {
+              setSort("default");
+              setPage(0);
+              setStatus(1);
+              break;
+            }
+            case 3: {
+              setSort("default");
+              setPage(0);
+              setStatus(2);
+              break;
+            }
+            case 4: {
+              setSort("default");
+              setPage(0);
+              setStatus(3);
+              break;
+            }
+            case 5: {
+                setSort("total_up");
+                setPage(0);
+                setStatus(4);
+                break;
+            }
+            case 6: {
+                setSort("total_down");
+                setPage(0);
+                setStatus(4);
+                break;
+            }  
+            default: {
+              setSort("order_id");
+              setPage(0);
+              setStatus(4);
+              break;
+            }
+          }
+        };
+    
+        filterData();
+      }, [value]);
+
+
     const onChangeStatus = (e) => {
         setStatus(e.target.value)
     }
@@ -82,34 +159,17 @@ function OrderList() {
       };
     return (<>
     
-        <Stack p={3} bgcolor="#fff">
-            <Typography fontSize="26px">Danh sách đơn hàng</Typography>
-            {/* <Stack direction="row" spacing="2rem" p={2} alignItems="center">
-                <Typography>Vui lòng xem hướng dẫn và gửi góp ý:</Typography>
-                <a href="https://hocvien.tiki.vn/faq/gioi-thieu-giao-dien-quan-ly-don-hang-moi/">
-                    <Typography color= "#1890FF" fontSize="14px">Hướng dẫn xử lý đơn hàng</Typography></a>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdbp82PL58iyly_85SGcml8NcDYQEt1dK97QOJMZedVU7aVMA/viewform">
-                    <Typography color="#1890FF" fontSize="14px">Gửi góp ý</Typography></a>
-            </Stack> */}
-            <Stack direction="row" spacing={0.5} p={2}>
-                {
-                    items?.map((item, i) =>
-                        <Stack onClick={() => { handleClickTab(item.id)}} key={item.id || i}
-                        alignItems="center" justifyContent="center"
-                        className={`orderTab__item ${item.id === selected ? "selected" : ""}`}>
-                            <Typography fontWeight="500 !important">{item.label}</Typography>
-                            {/* <Typography>{item.value}</Typography> */}
-                        </Stack>)
-                }
-            </Stack>
-            <Stack direction="row" alignItems="center" spacing={1}>
+        <Stack bgcolor="#fff" p={3}>
+            <Stack spacing={2}>
+                <Typography>Danh sách đơn hàng</Typography>
+                <Stack direction="row" alignItems="center" spacing={1}>
                 <Stack width="256px">
                     <Select
                         value={status}
                         onChange={onChangeStatus}
                         input={<BootstrapInput />}
                     >{
-                            [0, 1, 2].map(item =>
+                            [0, 1].map(item =>
                                 <MenuItem value={item}>{listStatus[item]}</MenuItem>)
                         }
                     </Select>
@@ -119,79 +179,154 @@ function OrderList() {
                 <Stack direction="row" sx={{ width: "500px", position: "relative" }}>
                     <TextField
                         id="outlined-basic"
-                        label="Search"
+                        label="Tìm kiếm"
                         variant="outlined"
                         sx={{ width: "100%" }}
                         size="small"
                     />
-                    <span className="order__iconSearch">
+                    <Button>
                         <SearchIcon sx={{ fontSize: "28px" }} />
-                    </span>
+                    </Button>
                 </Stack>
-                {/* <Stack width="256px">
-                    <Select
-                        value={orderDate}
-                        onChange={onChangeOrderDate}
-                        input={<BootstrapInput />}
-                    >{
-                            [0, 1, 2, 3].map(item =>
-                                <MenuItem value={item}>{listOrderDate[item]}</MenuItem>)
-                        }
-                    </Select>
-                </Stack> */}
-            </Stack>
-
-            {/* <Stack direction="row" p={2} spacing="16px">
-                <Button variant="outlined" borderRadius="16px">Chưa in phiếu</Button>
-                <Button variant="outlined"  borderRadius="16px">Lấy hàng thất bại</Button>
-                <Button variant="outlined" borderRadius="16px">Giao hàng thất bại</Button>
-            </Stack> */}
-
-            <Table
-                className="tableCategory"
-                sx={{ minWidth: "650px" }}
-                stickyHeader
-                size="small"
-            >
-                <TableHead>
-                    <TableRow>
-                        <TableCell sx={{ width: "20%", top: "64px" }}>Mã đơn hàng/Ngày đặt hàng</TableCell>
-                        <TableCell sx={{ width: "15%", top: "64px" }}>Trạng thái&nbsp;</TableCell>
-                        <TableCell align="center" sx={{ width: "20%", top: "64px" }}>Ngày xác nhận/hạn xác nhận&nbsp;</TableCell>
-                        <TableCell align="center" sx={{ width: "20%", top: "64px" }}>Giá trị đơn hàng&nbsp;</TableCell>
-                        <TableCell sx={{ width: "15%", top: "64px" }}>Nhãn đơn hàng&nbsp;</TableCell>
-                        <TableCell sx={{ width: "10%", top: "64px" }}>Thao tác&nbsp;</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {orders.map((row) => (
-                        <TableRow
-                            key={row.id}
-                            sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                        >
-                            <TableCell component="th" scope="row">{row.orderId} <br/>/ {handleDate(row.createdDate)}</TableCell>
-                            <TableCell align="left">{row.orderStatus==0?"Đang xử lý":(
-                                row.orderStatus==1?"Đang vận chuyển":(
-                                    row.orderStatus==2?"Đã giao hàng":"Đã hủy"
-                                )
-                            )}</TableCell>
-                            <TableCell align="center">{handleDate(row.createdDate)}/ {handleDate(row.expectedDate)}</TableCell>
-                            <TableCell align="center">{row.total} đ</TableCell>
-                            <TableCell align="left">{row.name}</TableCell>
-                            <TableCell align="center">
-                                <Stack spacing={1} justifyContent="center" py={1}>
-                                    <Link to={`detail/${row.orderId}`}>
-                                        <Button sx={{ width: "100px" }} variant="outlined" >Xem chi tiết</Button>
-                                    </Link>
-                                </Stack>
-                            </TableCell>
+                </Stack>
+                <Tabs
+                    value={value}
+                    width={500}
+                    onChange={handleChange}
+                    sx={{
+                    width:'900px'
+                    }}
+                    padding = {1}
+                    textColor="primary"
+                    indicatorColor="primary"
+                    aria-label="basic tabs example"
+                >
+                    <Tab
+                        key='1'
+                        label='Tất cả'
+                        sx={{
+                        fontSize: "12px",
+                        textTransform: "none",
+                        fontWeight: "500",
+                        }}
+                    />
+                    <Tab
+                        key='2'
+                        label='Đang xử lý'
+                        sx={{
+                        fontSize: "12px",
+                        textTransform: "none",
+                        fontWeight: "500",
+                        }}
+                    />
+                    <Tab
+                        key='3'
+                        label='Đang vận chuyển'
+                        sx={{
+                        fontSize: "12px",
+                        textTransform: "none",
+                        fontWeight: "500",
+                        }}
+                    />
+                    <Tab
+                        key='4'
+                        label='Đã giao hàng'
+                        sx={{
+                        fontSize: "12px",
+                        textTransform: "none",
+                        fontWeight: "500",
+                        }}
+                    />
+                    <Tab
+                        key='5'
+                        label='Đã hủy'
+                        sx={{
+                        fontSize: "12px",
+                        textTransform: "none",
+                        fontWeight: "500",
+                        }}
+                    />
+                    <Tab
+                        key='6'
+                        label='Giá trị Cao-Thấp'
+                        sx={{
+                        fontSize: "12px",
+                        textTransform: "none",
+                        fontWeight: "500",
+                        }}
+                    />
+                    <Tab
+                        key='7'
+                        label='Giá trị Thấp-Cao'
+                        sx={{
+                        fontSize: "12px",
+                        textTransform: "none",
+                        fontWeight: "500",
+                        }}
+                    />
+                    <Tab
+                        key='8'
+                        label='Đến hạn'
+                        sx={{
+                        fontSize: "12px",
+                        textTransform: "none",
+                        fontWeight: "500",
+                        }}
+                    />
+                </Tabs>
+                <Table
+                    className="tableCategory"
+                    sx={{ minWidth: "650px" }}
+                    stickyHeader
+                    size="small"
+                >
+                    <TableHead>
+                        <TableRow>
+                            <TableCell sx={{ width: "20%", top: "64px" }}>Mã đơn hàng/Ngày đặt hàng</TableCell>
+                            <TableCell sx={{ width: "15%", top: "64px" }}>Trạng thái&nbsp;</TableCell>
+                            <TableCell align="center" sx={{ width: "20%", top: "64px" }}>Ngày xác nhận/hạn xác nhận&nbsp;</TableCell>
+                            <TableCell align="center" sx={{ width: "20%", top: "64px" }}>Giá trị đơn hàng&nbsp;</TableCell>
+                            <TableCell sx={{ width: "15%", top: "64px" }}>Nhãn đơn hàng&nbsp;</TableCell>
+                            <TableCell sx={{ width: "10%", top: "64px" }}>Thao tác&nbsp;</TableCell>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-            {totalPage > 1 ? <Stack spacing={2} mt="10px">
-                <Pagination count={totalPage} page={page} onChange={handleChangePage} color="primary"/>
-            </Stack > : <></>}
+                    </TableHead>
+                    <TableBody>
+                        {orders?.map((row) => (
+                            <TableRow
+                                key={row.id}
+                                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                            >
+                                <TableCell component="th" scope="row">{row.orderId} <br/>/ {handleDate(row.createdDate)}</TableCell>
+                                <TableCell align="left">{row.orderStatus==0?"Đang xử lý":(
+                                    row.orderStatus==1?"Đang vận chuyển":(
+                                        row.orderStatus==2?"Đã giao hàng":"Đã hủy"
+                                    )
+                                )}</TableCell>
+                                <TableCell align="center">{handleDate(row.createdDate)}/ {handleDate(row.expectedDate)}</TableCell>
+                                <TableCell align="center">{numWithCommas(row.total)} đ</TableCell>
+                                <TableCell align="left">{row.name}</TableCell>
+                                <TableCell align="center">
+                                    <Stack spacing={1} justifyContent="center" py={1}>
+                                        <Link to={`detail/${row.orderId}`}>
+                                            <Button sx={{ width: "100px" }} variant="outlined" >Xem chi tiết</Button>
+                                        </Link>
+                                    </Stack>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+                {orders?(<></>):(<><Typography align="center" sx={{fontSize:'19px'}}>Chưa có đơn hàng</Typography></>)}
+                <Stack direction='row' spacing={2} justifyContent="center">
+                    {
+                        page==0?(<></>):(<Button sx={{backgroundColor:'#EEEEEE', color:'red'}} onClick={() => { setPage(page-1) }}>Trước</Button>)
+                    }
+                    <Button sx={{backgroundColor:'#EEEEEE'}}>Trang {page+1}</Button>
+                    {
+                        orders?.length<10?(<></>):(<Button sx={{backgroundColor:'#EEEEEE', color:'red'} } onClick={() => { setPage(page+1) }}>Sau</Button>)
+                    }
+                </Stack>
+            </Stack>
         </Stack>
         <Routes>
             <Route path='detail' element={<DetailOrder />} />

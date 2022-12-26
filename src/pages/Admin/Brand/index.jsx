@@ -20,33 +20,37 @@ function Brand() {
   const closeModalDelete = () => setModalDelete(false);
   const [itemdelete, setItemdelete] = useState("")
   const [brand, setBrand] = useState([])
+  const [page, setPage] = useState(0)
+  const size = 10
   const openModalDelete = (itemdelete) => {
     setItemdelete(itemdelete)
     setModalDelete(true)
   }
   useEffect(() => {
+    let params = {
+      page:page,
+      size:size
+    }
     const getData = async () => {
-      apiBrand.getAllBrand()
+      apiBrand.getAllBrand(params)
         .then(res => {
           setBrand(res.data.listBrand);
         })
     };
     getData();
-  }, []);
+  }, [page]);
   const handleDelete = () => {
-    const newbrand = brand.filter(item => {
-      return itemdelete.id !== item.id
-    }
-    )
     apiBrand.deleteBrandById({id:itemdelete.id})
     .then(res=>{
       toast.success("Xóa thành công")
+      const newbrand = brand.filter(item => {
+        return itemdelete.id !== item.id
+      })
+      setBrand(newbrand)
     })
     .catch(error=>{
       toast.error("Xóa không thành công!")
     })
-    setBrand(newbrand)
-    console.log(newbrand)
     closeModalDelete()
   }
   return (
@@ -137,6 +141,15 @@ function Brand() {
             ))}
           </TableBody>
         </Table>
+        <Stack direction='row' spacing={2} justifyContent="center">
+          {
+            page==0?(<></>):(<Button sx={{backgroundColor:'#EEEEEE', color:'red'}} onClick={() => { setPage(page-1) }}>Trước</Button>)
+          }
+          <Button sx={{backgroundColor:'#EEEEEE'}}>Trang {page+1}</Button>
+          {
+            brand.length<10?(<></>):(<Button sx={{backgroundColor:'#EEEEEE', color:'red'} } onClick={() => { setPage(page+1) }}>Sau</Button>)
+          }
+        </Stack>
       </Stack>
 
       <Modal

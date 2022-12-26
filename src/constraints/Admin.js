@@ -20,51 +20,52 @@ export const sidebar = [
     },
     {
         id: 2,
-        text: 'Đơn hàng',
-        icon: ShoppingCartOutlinedIcon,
-        link: '/admin/order'
-    },
-    {
-        id: 3,
-        text: 'Sản phẩm',
-        icon: LaptopChromebookOutlinedIcon,
-        link: '/admin/product'
-    },
-    {
-        id: 4,
         text: 'Danh mục sản phẩm',
         icon: CategoryOutlinedIcon,
         link: '/admin/category'
     },
     {
-        id: 5,
+        id: 3,
         text: 'Thương hiệu',
         icon: CardTravelOutlinedIcon,
         link: '/admin/brand'
     },
     {
-        id: 7,
+        id: 4,
         text: 'Công cụ khuyến mãi',
         icon: LoyaltyOutlinedIcon,
         link: '/admin/coupon'
     },
     {
+        id: 5,
+        text: 'Sản phẩm',
+        icon: LaptopChromebookOutlinedIcon,
+        link: '/admin/product'
+    },
+    {
+        id: 6,
+        text: 'Thuộc tính',
+        icon: ListIcon,
+        link: '/admin/attribute'
+    },
+    {
+        id: 7,
+        text: 'Đơn hàng',
+        icon: ShoppingCartOutlinedIcon,
+        link: '/admin/order'
+    },
+    {
         id: 8,
+        text: 'Quản lý đánh giá',
+        icon: RateReviewOutlinedIcon,
+        link: '/admin/rating'
+    },
+    {
+        id: 9,
         text: 'Quản lý người dùng',
         icon: GroupOutlinedIcon,
         link: '/admin/user'
     },
-    {
-        id: 9,
-        text: 'Quản lý đánh giá',
-        icon: RateReviewOutlinedIcon,
-        link: '/admin/review'
-    },
-    {
-        id: 11,
-        text: 'Thuộc tính',
-        icon: ListIcon,
-        link: '/admin/attribute'
-    }
+
 
 ]

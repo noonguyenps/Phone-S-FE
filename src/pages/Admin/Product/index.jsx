@@ -1,66 +1,85 @@
 import React from 'react'
 import {
-    Box,
     Typography,
     Stack,
     Button,
     TextField,
+    Tabs,
+    Tab,
     Table,
     TableBody,
     TableCell,
     TableHead,
     TableRow,
-    Pagination,
-    MenuItem,
-    FormControl,
-    Select,
-    Checkbox,
     Modal
 } from '@mui/material';
 import "./Product.scss"
 import { Link } from 'react-router-dom';
-import EditIcon from '@mui/icons-material/Edit';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import SearchIcon from "@mui/icons-material/Search";
-import ImageUploading from "react-images-uploading";
+import SearchIcon from '@mui/icons-material/Search';
 import apiProduct from '../../../apis/apiProduct';
+import { toast } from "react-toastify";
 import { useState , useEffect} from 'react';
-import { DriveFileMoveRounded } from '@mui/icons-material';
+import { numWithCommas } from '../../../constraints/Util';
 
 function Product() {
     const [modalDelete, setModalDelete] = React.useState(false);
-    const openModalDelete = () => setModalDelete(true);
+    const openModalDelete = (itemdelete) => {
+        setItemdelete(itemdelete)
+        setModalDelete(true)
+    }
     const closeModalDelete = () => setModalDelete(false);
-    const [countProduct, setCountProduct] = useState(0);
-    const [print, setPrint] = React.useState('');
     const [listProducts, setListProducts] = useState([]);
+    const [value, setValue] = useState(0)
+    const [page, setPage] = useState(0)
+    const [sort, setSort] = useState("product_id")
+    const [refesh, setRefesh] = useState(0)
+    const [status, setStatus] = useState(1)
+    const [itemdelete, setItemdelete] = useState("")
     const size = 10;
-
     useEffect(() => {
         const getData = async () => {
-            apiProduct.getCountProducts()
-                .then(res => {
-                    setCountProduct(res.data.countProduct);
-                })
-        };
-        getData();
-      }, []);
-    useEffect(() => {
-        const getData = async () => {
-            let params ={
-                page:0,
-                size:size,
-                sort:"product_id"
+            if(Number(value)<5){
+                let params ={
+                    page:page,
+                    size:size,
+                    sort:sort
+                }
+                apiProduct.getProducts(params)
+                    .then(res => {
+                        setListProducts(res.data.listProduct);
+                    })
             }
-            apiProduct.getProducts()
-                .then(res => {
-                    setListProducts(res.data.listProduct);
-                })
+            else{
+                if(Number(value) == 5){
+                    let params ={
+                        page:page,
+                        size:size,
+                        status:status
+                    }
+                    apiProduct.getProductsByStatus(params)
+                        .then(res => {
+                            setListProducts(res.data.listProduct);
+                        })
+                }
+                else{
+                    let params ={
+                        page:page,
+                        size:size,
+                        status:status
+                    }
+                    apiProduct.getProductsByStatus(params)
+                        .then(res => {
+                            setListProducts(res.data.listProduct);
+                        })
+                }
+            }
         };
         getData();
-      }, []);
-    const handleChangePrint = (event) => {
-        setPrint(event.target.value);
+    }, [page, sort, status, refesh]);
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
     };
     const [update, setUpdate] = React.useState('');
 
@@ -76,107 +95,169 @@ function Product() {
         var dateNew = new Date(date)
         return String(dateNew)
     };
+    useEffect(() => {
+        const filterData = () => {
+          switch (value) {
+            case 1: {
+              setSort("product_sell_amount");
+              setPage(0);
+              setStatus(2);
+              break;
+            }
+            case 2: {
+              setSort("create_at");
+              setPage(0);
+              setStatus(2);
+              break;
+            }
+            case 3: {
+              setSort("product_price_down");
+              setPage(0);
+              setStatus(2);
+              break;
+            }
+            case 4: {
+              setSort("product_price_up");
+              setPage(0);
+              setStatus(2);
+              break;
+            }
+            case 5: {
+                setPage(0);
+                setStatus(1);
+                setSort('default');
+                break;
+            }
+            case 6: {
+                setPage(0);
+                setStatus(0);
+                setSort('default');
+                break;
+            }
+            default: {
+              setSort("product_id");
+              setPage(0);
+              setStatus(2);
+              break;
+            }
+          }
+        };
+    
+        filterData();
+      }, [value]);
+
+      const handleDelete = () => {
+        apiProduct.deleteProductById(itemdelete.id)
+        .then(res=>{
+            toast.success("Xóa sản phẩm thành công")
+            setRefesh(refesh+1)
+        })
+        .catch(error=>{
+        toast.error("Xóa sản phẩm không thành công!")
+        })
+        closeModalDelete()
+      }
     
     return (
         <>
-            <Box className="productAdmin">
-                <Stack direction="row" mb={1} justifyContent="space-between" alignItems="center" sx={{ backgroundColor: "#FFF", height: "80px" }} px={2}>
-                    <Typography >Quản lý sản phẩm</Typography>
-                    <Link to='/admin/product/create'>
-                        <Button variant="outlined" pr={2}>Tạo sản phẩm</Button>
+        <Stack bgcolor="#fff" p={3}>
+        <Stack direction="row">
+            <Stack spacing={2} width="100%">
+                <Stack direction="row" justifyContent="space-between">
+                    <Typography>Danh sách sản phẩm</Typography>
+                    <Link to="/admin/product/create">
+                        <Button variant="contained">Thêm Sản phẩm</Button>
                     </Link>
                 </Stack>
-                <Box sx={{ backgroundColor: "#fff" }} p={2}>
-                    <Stack direction="row">
-                        <FormControl sx={{ m: 1, minWidth: 120, flex: 1 }}>
-                            <Select
-                                value={print}
-                                onChange={handleChangePrint}
-                                displayEmpty
-                                inputProps={{ 'aria-label': 'Without label' }}
-                                cursor="pointer"
-                            >
-                                <MenuItem value="">
-                                    Xuất danh sách tất cả sản phẩm
-                                </MenuItem>
-                                <MenuItem value={10}>Hạn sử dụng</MenuItem>
-                                <MenuItem value={20}>Xuất nhập tồn</MenuItem>
-                                <MenuItem value={30}>Thông tin chi tiết</MenuItem>
-                            </Select>
-                        </FormControl>
-
-                        <FormControl sx={{ m: 1, minWidth: 120, flex: 1 }}>
-                            <Select
-                                value={select}
-                                onChange={handleChangeSelect}
-                                displayEmpty
-                                inputProps={{ 'aria-label': 'Without label' }}
-                                disabled
-                            >
-                                <MenuItem value="">
-                                    Xuất danh sách sản phẩm đã chọn
-                                </MenuItem>
-                            </Select>
-                        </FormControl>
-
-                        <FormControl sx={{ m: 1, minWidth: 120, flex: 1 }}>
-                            <Select
-                                value={update}
-                                onChange={handleChangeUpdate}
-                                displayEmpty
-                                inputProps={{ 'aria-label': 'Without label' }}
-                                cursor="pointer"
-                            >
-                                <MenuItem value="">
-                                    Cập nhật danh sách sản phẩm
-                                </MenuItem>
-                                <MenuItem value={10}>Thay đổi giá, trạng thái sản phẩm</MenuItem>
-                                <MenuItem value={20}>Thay đổi kiểu nhập kho, số lượng</MenuItem>
-                                <MenuItem value={30}>Thêm mincode của sản phẩm</MenuItem>
-                                <MenuItem value={40} disabled>Ẩn sản phẩm</MenuItem>
-                                <MenuItem value={50} disabled>Bật sản phẩm hàng loạt</MenuItem>
-                                <MenuItem value={60} disabled>Tắt sản phẩm hàng loạt</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Stack>
-                    <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} py={2}>
-                        <Typography sx={{ fontSize: "16px", fontWeight: "bold" }}>Tổng cộng có: {(countProduct/size).toFixed(0)} bản ghi</Typography>
-                        <Pagination count={(countProduct/size).toFixed(0)} color="primary" variant="outlined" shape="rounded" />
-                        {/* <TextField id="outlined-basic" label="Nhập số trang" variant="outlined" size='small' />
-                        <Typography sx={{ fontSize: "16px", fontWeight: "bold" }}>Hiển thị: </Typography>
-                        <FormControl sx={{ flex: 1 }} >
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={page}
-                                onChange={handleChange}
-                                size="small"
-                            >
-                                <MenuItem value={10} defaultValue>10/Trang</MenuItem>
-                                <MenuItem value={20}>20/Trang</MenuItem>
-                                <MenuItem value={30}>30/Trang</MenuItem>
-                            </Select>
-                        </FormControl> */}
-                        <Stack direction="row" sx={{ width: "500px", position: "relative" }}>
-                            <TextField
-                                id="outlined-basic"
-                                label="Search"
-                                variant="outlined"
-                                sx={{ width: "100%" }}
-                                size="small"
-                            />
-                            <span className="order__iconSearch">
-                                <SearchIcon sx={{ fontSize: "28px" }} />
-                            </span>
-                        </Stack>
-                    </Stack>
-                    <Table className="productTable" sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            </Stack>
+        </Stack>
+        <Stack direction='row'>
+            <TextField
+            label='Tìm sản phẩm'></TextField>
+            <Button><SearchIcon/></Button>
+        </Stack>
+        <Tabs
+            value={value}
+            width={500}
+            onChange={handleChange}
+            sx={{
+              width:'790px'
+            }}
+            padding = {1}
+            textColor="primary"
+            indicatorColor="primary"
+            aria-label="basic tabs example"
+          >
+              <Tab
+                key='1'
+                label='Xem nhiều'
+                sx={{
+                  fontSize: "12px",
+                  textTransform: "none",
+                  fontWeight: "500",
+                }}
+              />
+              <Tab
+                key='2'
+                label='Mua nhiều'
+                sx={{
+                  fontSize: "12px",
+                  textTransform: "none",
+                  fontWeight: "500",
+                }}
+              />
+              <Tab
+                key='3'
+                label='Hàng mới'
+                sx={{
+                  fontSize: "12px",
+                  textTransform: "none",
+                  fontWeight: "500",
+                }}
+              />
+              <Tab
+                key='4'
+                label='Giá Thấp-Cao'
+                sx={{
+                  fontSize: "12px",
+                  textTransform: "none",
+                  fontWeight: "500",
+                }}
+              />
+              <Tab
+                key='5'
+                label='Giá Cao-Thấp'
+                sx={{
+                  fontSize: "12px",
+                  textTransform: "none",
+                  fontWeight: "500",
+                }}
+              />
+              <Tab
+                key='6'
+                label='Đang mở bán'
+                sx={{
+                  fontSize: "12px",
+                  textTransform: "none",
+                  fontWeight: "500",
+                }}
+              />
+              <Tab
+                key='7'
+                label='Đang tạm ẩn'
+                sx={{
+                  fontSize: "12px",
+                  textTransform: "none",
+                  fontWeight: "500",
+                }}
+              />
+          </Tabs>
+          <Stack padding ={1}>
+          <Table className="productTable" sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
                         <TableHead>
                             <TableRow>
-                                <TableCell justifyContent="center">
-                                    <Checkbox></Checkbox>
-                                </TableCell>
                                 <TableCell>Tên sản phẩm</TableCell>
+                                <TableCell sx ={{width:'100px'}}>Hình ảnh</TableCell>
                                 <TableCell>Giá bán</TableCell>
                                 <TableCell>Nhà cung cấp</TableCell>
                                 <TableCell>Danh mục</TableCell>
@@ -187,20 +268,20 @@ function Product() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {listProducts.map(row => (
+                            {listProducts?.map(row => (
                                 <TableRow key={row} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                    <TableCell>
-                                        <Checkbox></Checkbox>
-                                    </TableCell>
                                     <TableCell>
                                         <Stack>
                                             <Typography sx={{ color: "#1890ff" }}>{row.name}</Typography>
                                             <Typography>{row.id}</Typography>
                                         </Stack>
                                     </TableCell>
+                                    <TableCell sx ={{width:'100px'}} align='center'>
+                                        <img style={{width:'100px', height:'100px'}} src = {row.img[0]?row.img[0]:'https://res.cloudinary.com/duk2lo18t/image/upload/v1667887284/frontend/R_zzr2lm.png'}></img>
+                                    </TableCell>
                                     <TableCell>
                                         <Stack direction="row" justifyContent="center">
-                                            <Typography sx={{ margin: "auto 0" }}>{row.price} VND</Typography>
+                                            <Typography sx={{ margin: "auto 0" }}>{numWithCommas(row.price)} VND</Typography>
                                         </Stack>
                                     </TableCell>
                                     <TableCell align='center'>
@@ -213,9 +294,9 @@ function Product() {
                                         <Typography>{row.brand}</Typography>
                                     </TableCell>
                                     <TableCell align='center'>
-                                        {row.status === 0 ?(
+                                        {row.status === 1 ?(
                                             <Typography>Đang bán</Typography>
-                                        ):(<Typography>Tạm ngưng</Typography>)}
+                                        ):(<Typography>Đang ẩn</Typography>)}
                                     </TableCell>
                                     <TableCell>
                                         <Typography>{convertDate(row.createAt)}</Typography>
@@ -223,7 +304,9 @@ function Product() {
                                     <TableCell align='center'>
                                         <Stack spacing={1} justifyContent="center" py={1}>
                                             <Button variant="contained">Sửa</Button>
-                                            <Button onClick={openModalDelete} variant="outlined" color="error">
+                                            <Button 
+                                            onClick={()=>openModalDelete(row)} 
+                                            variant="outlined" color="error">
                                                 Xóa
                                             </Button>
                                         </Stack>
@@ -232,7 +315,17 @@ function Product() {
                             ))}
                         </TableBody>
                     </Table>
-                    <Modal
+        </Stack>
+        <Stack direction='row' spacing={2} justifyContent="center">
+          {
+            page==0?(<></>):(<Button sx={{backgroundColor:'#EEEEEE', color:'red'}} onClick={() => { setPage(page-1) }}>Trước</Button>)
+          }
+          <Button sx={{backgroundColor:'#EEEEEE'}}>Trang {page+1}</Button>
+          {
+            listProducts?.length<10?(<></>):(<Button sx={{backgroundColor:'#EEEEEE', color:'red'} } onClick={() => { setPage(page+1) }}>Sau</Button>)
+          }
+        </Stack>
+        <Modal
                         sx={{ overflowY: "scroll" }}
                         open={modalDelete}
                         onClose={closeModalDelete}
@@ -251,15 +344,12 @@ function Product() {
 
                                 <Stack direction="row" justifyContent="flex-end" spacing={1}>
                                     <Button onClick={closeModalDelete} variant="outlined">Hủy</Button>
-                                    <Button variant="contained">Xóa bỏ</Button>
+                                    <Button variant="contained" onClick={handleDelete}>Xóa bỏ</Button>
                                 </Stack>
                             </Stack>
                         </Stack>
                     </Modal>
-                </Box>
-            </Box>
-
-
+        </Stack>
         </>
     )
 }

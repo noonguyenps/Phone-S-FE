@@ -34,6 +34,7 @@ import apiNotify from "../../apis/apiNotify";
 import HomePage from "./HomePage";
 import { deleteAll } from "../../slices/cartSlice";
 import { clearAll } from "../../slices/paymentSlice"
+import Ratting from "../CustomerAccount/Ratting"
 
 function CustomerAccount() {
   const location = useLocation();
@@ -151,6 +152,7 @@ function CustomerAccount() {
                 <Routes>
                   <Route path="history" element={<Orders />} />
                   <Route path="detail/:id" element={<DetailOrder />} />
+                  <Route path="ratting/:id" element={<Ratting/>}/>
                 </Routes>
               }
             />

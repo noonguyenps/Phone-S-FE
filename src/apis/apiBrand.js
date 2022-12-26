@@ -2,7 +2,11 @@ import { axiosClientWithToken } from "./axiosClient";
 
 const apiBrand = {
     getAllBrand : async (params) =>{
-        const res = await axiosClientWithToken.get('/admin/brand/all') 
+        const res = await axiosClientWithToken.get(`/admin/brand/all?page=${params.page}&size=${params.size}`,params) 
+        return res.data;
+    },
+    getListBrand : async () =>{
+        const res = await axiosClientWithToken.get(`/admin/brand/all`) 
         return res.data;
     },
     getBrandByID : async (params) =>{

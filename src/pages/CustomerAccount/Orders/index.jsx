@@ -33,28 +33,81 @@ function Orders() {
   const [orders, setOrders] = useState([]);
   const theme = useTheme();
   const [value, setValue] = useState(0);
-  const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
+  const [page, setPage] = useState(0);
+  const [sort, setSort] = useState('order_id');
+  const [status, setStatus] = useState(0);
   const user = useSelector(state => state.auth.user)
   
   const size = 10;
 
   useEffect(() => {
     const getData = async () => {
-      let params = {
-        page: page,
-        size: size,
-        sort:'order_id',
-      };
-      apiCart.getOrdersByUser(params)
-        .then(response=>{
-          setOrders(response.data.listOrder);
-          setTotalPage(Math.ceil(response.pagination._totalRows / size));
-        })
-        .catch(setOrders([]))
+      if(Number(value)== 0){
+        let params = {
+          page: page,
+          size: size,
+          sort:sort,
+        };
+        apiCart.getOrdersByUser(params)
+          .then(response=>{
+            setOrders(response.data.listOrder);
+          })
+          .catch(setOrders([]))
+      }
+      else{
+        let params = {
+          page: page,
+          size: size,
+          status:status
+        };
+        apiCart.getOrdersByUserAndStatus(params)
+          .then(response=>{
+            setOrders(response.data.listOrder);
+          })
+          .catch(setOrders([]))
+      }
     };
     getData();
-  }, [page,user]);
+  }, [page, user, sort, status]);
+
+  useEffect(() => {
+    const filterData = () => {
+      switch (value) {
+        case 1: {
+          setSort("default");
+          setPage(0);
+          setStatus(0);
+          break;
+        }
+        case 2: {
+          setSort("default");
+          setPage(0);
+          setStatus(1);
+          break;
+        }
+        case 3: {
+          setSort("default");
+          setPage(0);
+          setStatus(2);
+          break;
+        }
+        case 4: {
+          setSort("default");
+          setPage(0);
+          setStatus(3);
+          break;
+        }
+        default: {
+          setSort("product_id");
+          setPage(0);
+          setStatus(4);
+          break;
+        }
+      }
+    };
+
+    filterData();
+  }, [value]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -147,38 +200,16 @@ function Orders() {
                 <Typography>Chưa có đơn hàng</Typography>
               </Box>
             )}
-          {/* </TabPanel>
-          {orderTabs.slice(1, orderTabs.length).map((item) => {
-            const tmp = getOrderByType(orders, item.id);
-            if (tmp.length === 0)
-              return (
-                <TabPanel key={item.id} value={value} index={item.id} dir={theme.direction}>
-                  <Box className="myorder__none">
-                    <img
-                      height="200px"
-                      width="200px"
-                      src="https://res.cloudinary.com/duk2lo18t/image/upload/v1665719834/frontend/S-Phone_cpfelx.png"
-                      alt=""
-                    />
-                    <Typography>Chưa có đơn hàng</Typography>
-                  </Box>
-                </TabPanel>
-              );
-            else
-              return (
-                <TabPanel key={item.id} value={value} index={item.id} dir={theme.direction}>
-                  {tmp.map((item) => (
-                    <OrderItem key={item.id} order={item} />
-                  ))}
-                </TabPanel>
-              );
-          })} */}
-
-          {totalPage > 1 ? <Stack spacing={2}>
-            <Typography>Page: {page}</Typography>
-            <Pagination count={totalPage} page={page} onChange={handleChangePage} />
-          </Stack> : <></>}
         </Box>
+        <Stack direction='row' spacing={2} justifyContent="center">
+          {
+            page==0?(<></>):(<Button sx={{backgroundColor:'#EEEEEE', color:'red'}} onClick={() => { setPage(page-1) }}>Trước</Button>)
+          }
+          <Button sx={{backgroundColor:'#EEEEEE'}}>Trang {page+1}</Button>
+          {
+            orders?.length<10?(<></>):(<Button sx={{backgroundColor:'#EEEEEE', color:'red'} } onClick={() => { setPage(page+1) }}>Sau</Button>)
+          }
+        </Stack>
       </Box>
     </>
   );

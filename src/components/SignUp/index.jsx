@@ -195,15 +195,6 @@ function SignUp(props) {
           alignItems="center"
           spacing={2}
         >
-          <a href={`https://nhom3-tiki.herokuapp.com/oauth2/authorization/facebook?redirect_uri=${client_url}oauth2/redirect`} className="hre">
-            <FacebookRoundedIcon
-              sx={{
-                cursor: 'pointer',
-                color: "#4267b2",
-                fontSize: "3rem"
-              }} />
-          </a>
-
           <a href={`https://nhom3-tiki.herokuapp.com/oauth2/authorization/google?redirect_uri=${client_url}oauth2/redirect`} className="hre">
             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
               width="48" height="48"

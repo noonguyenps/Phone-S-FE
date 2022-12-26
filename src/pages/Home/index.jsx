@@ -80,10 +80,6 @@ function Home() {
             />
           </Box>
         </Box>
-        <Box id="section2">
-          <SectionFlashsale />
-        </Box>
-
         <Box id="section3">
           <Box width="20%">
             <img
@@ -178,85 +174,6 @@ function SlideKhuyenMai() {
             </SwiperSlide>
           ))}
         </Swiper>
-    </>
-  );
-}
-
-function SectionFlashsale() {
-  const [sales, setSales] = useState([]);
-  const [countDown, setCountDown] = useState({ hour: 0, minute: 0, second: 0 });
-
-  useEffect(() => {
-    const countDownFlashsale = () => {
-      let initTime = new Date()
-      let hourFlashsale = Math.ceil((initTime.getHours() + initTime.getMinutes() / 60) / 3) * 3
-
-      initTime.setHours(hourFlashsale)
-      initTime.setMinutes(0)
-      initTime.setSeconds(0)
-      var x = setInterval(function () {
-
-        // Get today's date and time
-        var now = new Date().getTime();
-
-        // Find the distance between now and the count down date
-        var distance = initTime - now;
-
-        // Time calculations for days, hours, minutes and seconds
-        setCountDown({
-          hour: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          minute: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-          second: Math.floor((distance % (1000 * 60)) / 1000)
-        })
-        if (distance < 0) {
-          clearInterval(x);
-        }
-      }, 1000);
-    }
-    countDownFlashsale()
-  }, [])
-
-  useEffect(() => {
-    const getData = async () => {
-      const response = await apiProduct.getProducts({page:0,size:20,sort:"product_discount"});
-      if (response) {
-        setSales(response.data.listProduct);
-      }
-    };
-    getData();
-  }, []);
-  return (
-    <>
-      <Box
-        width="100%"
-        height="330px"
-        bgcolor="#fff"
-        borderRadius="4px"
-      >
-        <Box id="section2__heading">
-          <Box id="section2__title">
-            <img alt="" src="https://res.cloudinary.com/duk2lo18t/image/upload/v1670316903/frontend/R-removebg-preview_gzgdem.png" height='80px'/>
-            <span className="flashsale__time">{("0" + countDown.hour).slice(-2)}</span>
-            <span>:</span>
-            <span className="flashsale__time">{("0" + countDown.minute).slice(-2)}</span>
-            <span>:</span>
-            <span className="flashsale__time">{("0" + countDown.second).slice(-2)}</span>
-          </Box>
-        </Box>
-        <Swiper
-          slidesPerView={6}
-          slidesPerGroup={6}
-          navigation={true}
-          modules={[Navigation]}
-          className="mySwiper slider-sale"
-        >
-          {sales.map((item) => (
-            <SwiperSlide key={`sale-${item.id}`} style={{ minWidth: "150px" }}>
-              <CardFlashsale data={item} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </Box>
     </>
   );
 }

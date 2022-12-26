@@ -3,7 +3,6 @@ import "./Dashboard.scss";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import GroupsIcon from "@mui/icons-material/Groups";
 import apiAdmin from "../../../apis/apiAdmin";
 import {
   Chart as ChartJS,
@@ -33,7 +32,6 @@ function Dashboard() {
   const [countRevenue, setCountRevenue]=useState(0);
   const [orderPerMonth, setOrderPerMonth] = useState([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
   const [userPerMonth, setUserPerMonth] = useState([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
-  const [dataTest, setDataTest] = useState([15,20]);
   const options = {
     responsive: true,
     plugins: {
@@ -80,13 +78,16 @@ function Dashboard() {
   }, []);
   return (
     <Box>
-      <Stack spacing={3} pl="5rem" mt="2rem">
-        <Stack direction="row" spacing={4}>
+      <Stack direction='row' spacing={5} margin='2rem' alignItems="center"  justifyContent="center">
+      <Box width="700px" height="300px">
+            <Stack alignItems="center" justifyContent="center">
+              <Typography sx={{ fontSize: "18px", fontWeight: "500" }}>Thống kê người dùng</Typography>
+            </Stack>
+            <Bar options={options} data={data}/>
+      </Box>
+        <Stack spacing={2}>
         <Stack className="dashboard__item" key={1} direction="row" >
-                  <Stack className="dashboard__icon" bgcolor={"#b9ffd3"}>
-                    <GroupsIcon sx={{ fontSize: 40, color: "#22ad56" }} />
-                  </Stack>
-                  <Stack alignItems="center" justifyContent="center">
+                  <Stack alignItems="center" justifyContent="center" margin='1rem'>
                     <Typography className="dashboard__title">
                       {"Tổng khách hàng"}
                     </Typography>
@@ -96,10 +97,7 @@ function Dashboard() {
                   </Stack>
         </Stack>
         <Stack className="dashboard__item" key={2} direction="row" >
-                  <Stack className="dashboard__icon" bgcolor={"#adcbf3"}>
-                    <GroupsIcon sx={{ fontSize: 40, color: "#1d5aab" }} />
-                  </Stack>
-                  <Stack alignItems="center" justifyContent="center">
+        <Stack alignItems="center" justifyContent="center" margin='1rem'>
                     <Typography className="dashboard__title">
                       {"Tổng sản phẩm"}
                     </Typography>
@@ -108,10 +106,7 @@ function Dashboard() {
                     </Typography>
                   </Stack>
         </Stack><Stack className="dashboard__item" key={3} direction="row" >
-                  <Stack className="dashboard__icon" bgcolor={"#fde1c3"}>
-                    <GroupsIcon sx={{ fontSize: 40, color: "#ff8b07" }} />
-                  </Stack>
-                  <Stack alignItems="center" justifyContent="center">
+        <Stack alignItems="center" justifyContent="center" margin='1rem'>
                     <Typography className="dashboard__title">
                       {"Tổng đơn hàng"}
                     </Typography>
@@ -120,10 +115,7 @@ function Dashboard() {
                     </Typography>
                   </Stack>
         </Stack><Stack className="dashboard__item" key={4} direction="row" >
-                  <Stack className="dashboard__icon" bgcolor={"#f9baba"}>
-                    <GroupsIcon sx={{ fontSize: 40, color: "#de2222" }} />
-                  </Stack>
-                  <Stack alignItems="center" justifyContent="center">
+                  <Stack alignItems="center" justifyContent="center" margin='1rem'>
                     <Typography className="dashboard__title">
                       {"Tổng doanh thu"}
                     </Typography>
@@ -133,12 +125,6 @@ function Dashboard() {
                   </Stack>
         </Stack>
         </Stack>
-        <Box width="95%" height="65%">
-          <Stack alignItems="center" justifyContent="center">
-            <Typography sx={{ fontSize: "18px", fontWeight: "500" }}>Thống kê doanh thu</Typography>
-          </Stack>
-          <Bar options={options} data={data}/>
-        </Box>
       </Stack>
     </Box>
   );
