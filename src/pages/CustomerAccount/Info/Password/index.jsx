@@ -17,8 +17,8 @@ function Password() {
   const [confirmPassword, setconfirmPassword] = React.useState("");
   const [newPassword, setnewPassword] = React.useState("");
   const [oldPassword, setoldPassword] = React.useState("");
-  const [message, setMessage] = React.useState("*");
-  const [newMessage, setNewMessage] = React.useState("*")
+  const [message, setMessage] = React.useState("");
+  const [newMessage, setNewMessage] = React.useState("")
   const [fontSizeMessage, setFontSizeMessage] = React.useState("")
   //const [valid, setValid] = React.useState({ new: false, cf: false });
   
@@ -91,21 +91,8 @@ function Password() {
         onChange = {onChange}
         size="small"
         label={placeHolder }
-        type={showPass ? "text" : "password"} autoComplete="new-password"
+        type="password" autoComplete="new-password"
         name="pass"
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end" >
-              <IconButton onClick={() => setShowPass(!showPass)}>
-                {showPass ? (
-                  <VisibilityOutlinedIcon />
-                ) : (
-                  <VisibilityOffOutlinedIcon />
-                )}
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
       />
     );
   };
