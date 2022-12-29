@@ -263,7 +263,7 @@ function PaymentPending() {
             </Box>
             <Button variant="contained" onClick={handleSubmitOrder}
                 sx={{ width: "585px", height: "42px", backgroundColor: "#ff424e", "&:hover": { opacity: 0.8, backgroundColor: "#ff424e" } }}>
-                Tiếp tục
+                Đặt hàng
               </Button>
               <br/><br/>
               <Button variant="contained" href="/"

@@ -45,7 +45,7 @@ function Product() {
                     size:size,
                     sort:sort
                 }
-                apiProduct.getProducts(params)
+                apiProduct.getProductsWithAdmin(params)
                     .then(res => {
                         setListProducts(res.data.listProduct);
                     })

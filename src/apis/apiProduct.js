@@ -80,6 +80,10 @@ const apiProduct = {
     getProductsByStatus: async (params)=>{
         const res = await axiosClientWithToken.get('/admin/product/all/status',{params})
         return res.data
+    },
+    getProductsWithAdmin: async (params)=>{
+        const res = await axiosClientWithToken.get('/admin/product/all',{params})
+        return res.data
     }
 
 }
