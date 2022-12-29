@@ -228,9 +228,7 @@ function Header() {
               spacing={1}
               sx={{ color: "white", width: "110px", maxWidth: "110px" }}
             >
-              <Badge color="warning" badgeContent={user?user.phone:cart.length} showZero>
-                <ShoppingBagIcon sx={{ fontSize: "32px" }} />
-              </Badge>
+              <ShoppingBagIcon sx={{ fontSize: "32px" }} />
               <Typography fontSize="12px">Giỏ hàng</Typography>
             </Stack>
           </Link>

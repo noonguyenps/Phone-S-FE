@@ -191,11 +191,9 @@ function Coupon() {
           <Button
             color="primary"
             size="large"
-            fontSize="15px"
-            startIcon={<LocalActivityIcon />}
-            endIcon={<KeyboardArrowRightIcon />}
+            fontSize="14px"
           >
-            Khám Phá Thêm
+            Nhận mã giảm giá
           </Button>
         </Stack>
       </Stack>

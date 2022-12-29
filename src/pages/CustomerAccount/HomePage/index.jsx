@@ -9,6 +9,7 @@ import {
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import { useSelector } from "react-redux";
+import { numWithCommas } from "../../../constraints/Util";
 
 function HomePage() {
   const user = useSelector(state => state.auth.user);
@@ -43,7 +44,7 @@ function HomePage() {
                 <Stack justifyContent="center" alignItems="center">
                     <AttachMoneyIcon sx={{ fontSize: "32px" }}/>
                     <Typography>Chi tiêu trong tháng</Typography>
-                    <Typography>{convertDate(createDate)}</Typography>
+                    <Typography>{numWithCommas(14500000)} đ</Typography>
                 </Stack>
             </Stack>
             </Stack>
@@ -59,7 +60,7 @@ function HomePage() {
                     src="https://cellphones.com.vn/smember/_nuxt/img/gift-box(1)1.ad696df.png"
             />
             <Typography>Ưu đãi của bạn</Typography>
-            <Typography>0 ưu đãi</Typography>
+            <Typography>3 ưu đãi</Typography>
                 <Stack justifyContent="center" alignItems="center" bgcolor="#EEEEEE" borderRadius={"10%"} width="100px" margin={50}>
                     <a href='/customer/voucher'>Xem chi tiết</a>
                 </Stack>
@@ -73,7 +74,7 @@ function HomePage() {
                     src="https://cellphones.com.vn/smember/_nuxt/img/Shipper_CPS%203.1905116.png"
             />
             <Typography>Đơn hàng của bạn</Typography>
-            <Typography>0 đơn hàng</Typography>
+            <Typography>3 đơn hàng</Typography>
                 <Stack justifyContent="center" alignItems="center" bgcolor="#EEEEEE" borderRadius={"10%"} width="100px" margin={50}>
                     <a href='/customer/order/history'>Xem chi tiết</a>
                 </Stack>
@@ -87,7 +88,7 @@ function HomePage() {
                     src="https://www.freeiconspng.com/thumbs/favorite-icon/favorite-icon-8.png"
             />
             <Typography>Sản phẩm yêu thích</Typography>
-            <Typography>0 sản phẩm</Typography>
+            <Typography>5 sản phẩm</Typography>
                 <Stack justifyContent="center" alignItems="center" bgcolor="#EEEEEE" borderRadius={"10%"} width="100px" margin={50}>
                     <a href='/customer/wishlist'>Xem chi tiết</a>
                 </Stack>
