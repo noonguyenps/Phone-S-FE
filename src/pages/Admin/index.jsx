@@ -3,7 +3,6 @@
 import * as React from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import { sidebar } from "../../constraints/Admin";
-import { Notifies } from "../../constraints/AdminNotify";
 import { styled } from "@mui/material/styles";
 import "./Admin.scss";
 
@@ -19,9 +18,6 @@ import {
   Divider,
   Stack,
   ClickAwayListener,
-  Button,
-  Badge,
-  SwipeableDrawer,
   IconButton,
   ListItemIcon,
   ListItemText,
@@ -31,10 +27,6 @@ import {
 
 import MenuIcon from "@mui/icons-material/Menu";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import CloseIcon from "@mui/icons-material/Close";
-import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import CreateCoupon from "./Coupon/CreateCoupon";
 import EditCoupon from "./Coupon/EditCoupon";
 import AdminLogin from "./Login";
@@ -127,7 +119,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 function Admin() {
-  const [openAccount, setOpenAccount] = React.useState(false);
+  const [setOpenAccount] = React.useState(false);
 
   const user = useSelector((state) => state.auth.user);
 
@@ -137,105 +129,6 @@ function Admin() {
 
   const handleClickAwayAccount = () => {
     setOpenAccount(false);
-  };
-
-  const [openNotify, setOpenNotify] = React.useState(false);
-
-  const CloseNotify = () => {
-    setOpenNotify(false);
-  };
-
-  const formNotify = () => {
-    return (
-      <Box sx={{ zIndex: "10", width: "400px", mt: "5rem" }} width='100%'>
-        <Stack width='100%'>
-          <Stack direction="row" justifyContent="space-between" width='100%'>
-            <Stack sx={{ padding: "12px" }} width='100%' >
-              <Typography sx={{ fontSize: "16px", fontWeight: "600" }}>
-                Cập nhật nhà bán
-              </Typography>
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Button
-                  size="medium"
-                  sx={{ fontWeight: "400" }}
-                  startIcon={<FormatListBulletedIcon fontSize="small" />}
-                >
-                  Xem tất cả
-                </Button>
-                <Divider
-                  orientation="vertical"
-                  sx={{
-                    height: "0.9rem",
-                    marginRight: "6px",
-                    marginLeft: "6px",
-                  }}
-                />
-                <Button
-                  size="medium"
-                  sx={{ fontWeight: "400" }}
-                  startIcon={<CheckCircleOutlineIcon fontSize="small" />}
-                >
-                  Đã đọc tất cả
-                </Button>
-              </Stack>
-            </Stack>
-            <IconButton onClick={CloseNotify}>
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </Stack>
-          <Divider light />
-          <Stack sx={{ padding: "12px" }}>
-            {Notifies.map((item) => (
-              <Stack>
-                <Stack direction="row" spacing={2} sx={{ padding: "12px" }}>
-                  <Stack width="56px" height="56px">
-                    <img
-                      style={{ borderRadius: "8px" }}
-                      src="https://salt.tikicdn.com/ts/sellercenterFE/bb/d5/88/7898a8f9179435d5cf3f28bb3d99a82c.jpeg"
-                    />
-                  </Stack>
-                  <Stack sx={{ overflow: "auto" }}>
-                    <Stack>
-                      <a href={item.link}>
-                        <Typography
-                          sx={{ fontSize: "14px", fontWeight: "bold" }}
-                        >
-                          {item.title}
-                        </Typography>
-                        {item.info.map((itemI) => (
-                          <Typography sx={{ fontSize: "14px" }}>
-                            {itemI.text}
-                          </Typography>
-                        ))}
-                      </a>
-                    </Stack>
-                    <Typography sx={{ fontSize: "12px" }}>
-                      {item.datetime}
-                    </Typography>
-                  </Stack>
-                </Stack>
-                <Divider light />
-              </Stack>
-            ))}
-          </Stack>
-        </Stack>
-      </Box>
-    );
-  };
-
-  const stylesAccount = {
-    position: "absolute",
-    top: 48,
-    right: 0,
-    zIndex: 1,
-    border: "1px solid #333",
-    bgcolor: "background.paper",
-    width: "16rem",
-    paddingTop: "4px",
   };
 
   const [selectedTabId, setSelectedTabId] = React.useState(0);

@@ -22,53 +22,9 @@ import {
 import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
 import EmailIcon from "@mui/icons-material/Email";
 import CakeIcon from "@mui/icons-material/Cake";
-
-import LinearProgress from "@mui/material/LinearProgress";
+import AddressVN from "../../../../components/AddressVN";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-
-const dataChart = {
-  labels: ["Thời trang", "Gia dụng", "Thiết bị điện tử"],
-  datasets: [
-    {
-      label: "# of Votes",
-      data: [120000, 600000, 100000],
-      backgroundColor: [
-        "rgba(255, 99, 132, 0.2)",
-        "rgba(54, 162, 235, 0.2)",
-        "rgba(255, 206, 86, 0.2)",
-      ],
-      borderColor: [
-        "rgba(255, 99, 132, 1)",
-        "rgba(54, 162, 235, 1)",
-        "rgba(255, 206, 86, 1)",
-      ],
-      borderWidth: 1,
-    },
-  ],
-};
-
-const data = [
-  {
-    id: "1",
-    method: "Thanh toán khi nhận hàng",
-    orderDate: "01/01/2022",
-    price: "1 tỷ",
-  },
-  {
-    id: "2",
-    method: "Thanh toán khi nhận hàng",
-    orderDate: "01/01/2022",
-    price: "1 tỷ",
-  },
-  {
-    id: "3",
-    method: "Thanh toán khi nhận hàng",
-    orderDate: "01/01/2022",
-    price: "1 tỷ",
-  },
-];
-
 
 function DetailUser() {
   const [user, setUser] = useState([])
@@ -83,7 +39,6 @@ function DetailUser() {
       apiProfile.getUserByIDWithAdmin(param)
         .then(res => {
           setUser(res.data.user);
-          console.log(user)
         })
     };
     getUser();
@@ -94,7 +49,6 @@ function DetailUser() {
       apiAddress.getUserAddress()
         .then(res => {
           setAddresses(res.data.addressList);
-          console.log(res.data.addressList)
         })
     };
     getData();
@@ -105,8 +59,7 @@ function DetailUser() {
     <Box p="2rem" bgcolor="#fff">
       <Typography variant="h6">Chi tiết thông tin khách hàng</Typography>
       <Stack p="1rem" spacing={3}>
-        <Stack direction="row" spacing={3}>
-          <Stack className="detailUser__infowrap" spacing={5}>
+      <Stack justifyContent="center"  spacing={5}>
             <Typography fontWeight="bold">
               Thông tin người dùng
             </Typography>
@@ -144,8 +97,9 @@ function DetailUser() {
               </Stack>
             </Stack>
           </Stack>
+        <Stack direction="row" spacing={3}>
 
-          <Stack className="detailUser__infowrap" alignItem="center">
+          {/* <Stack className="detailUser__infowrap" alignItem="center">
             <Typography fontWeight="bold">Thống kê mua hàng</Typography>
 
             <Stack width="50%" height="50%" ml="7rem"
@@ -155,10 +109,10 @@ function DetailUser() {
               <Doughnut data={dataChart} />
               <Typography fontWeight="bold">Tổng cộng: 820.000 VNĐ</Typography>
             </Stack>
-          </Stack>
+          </Stack> */}
         </Stack>
 
-        <Stack className="detailUser__infowrap" width="100% !important" spacing={3}>
+        {/* <Stack className="detailUser__infowrap" width="100% !important" spacing={3}>
           <Typography fontWeight="bold">
             Thống kê hoạt động
           </Typography>
@@ -168,7 +122,7 @@ function DetailUser() {
               <Stack direction="row" justifyContent="space-between">
                 <Typography>Sản phẩm yêu thích</Typography>
                 <Typography>30</Typography>
-                {/* <Typography>{res.liked}</Typography> */}
+                <Typography>{res.liked}</Typography>
               </Stack>
 
               <Stack>
@@ -184,7 +138,7 @@ function DetailUser() {
               <Stack direction="row" justifyContent="space-between">
                 <Typography>Sản phẩm đã mua</Typography>
                 <Typography>30</Typography>
-                {/* <Typography>{res.bought}</Typography> */}
+                <Typography>{res.bought}</Typography>
               </Stack>
 
               <LinearProgress
@@ -198,7 +152,7 @@ function DetailUser() {
               <Stack direction="row" justifyContent="space-between">
                 <Typography>Sản phẩm đã đánh giá</Typography>
                 <Typography>30</Typography>
-                {/* <Typography>{res.rated}</Typography> */}
+                <Typography>{res.rated}</Typography>
               </Stack>
               <LinearProgress
                 color="warning"
@@ -207,7 +161,7 @@ function DetailUser() {
               />
             </Stack>
           </Stack>
-        </Stack>
+        </Stack> */}
 
         <Stack className="detailUser__infowrap" width="100% !important">
           <Typography fontWeight="bold">Sổ địa chỉ</Typography>
@@ -234,14 +188,15 @@ function DetailUser() {
               <Stack className="info" key={item.id} mb={2}>
                 <Typography className="name">{item.fullName}</Typography>
                 <Typography className="name">{item.companyName}</Typography>
-                <Typography className="address">Địa chỉ: {`${item.addressDetail}, ${item.commune.name}, ${item.district.name}, ${item.province.name}`}</Typography>
+                <Typography className="address">Địa chỉ cụ thể: {`${item.addressDetail}`}</Typography>
+                <Typography> Địa chỉ : <AddressVN province={item.province} district={item.district} commune={item.commune}/></Typography>
                 <Typography className="number">Điện thoại: {item.phoneNumber}</Typography>
               </Stack>
             )
           })}
         </Stack>
 
-        <Stack className="detailUser__infowrap" width="fit-content  !important">
+        {/* <Stack className="detailUser__infowrap" width="fit-content  !important">
           <Typography fontWeight="bold">
             Danh sách đơn hàng
           </Typography>
@@ -303,7 +258,7 @@ function DetailUser() {
               ))}
             </TableBody>
           </Table>
-        </Stack>
+        </Stack> */}
       </Stack>
     </Box>
   );

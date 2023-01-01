@@ -4,7 +4,6 @@ import fb from "../../assets/img/fb.jpg";
 import youtube from "../../assets/img/ytb.jpg";
 import zalo from "../../assets/img/zalo.jpg";
 import { Stack, Typography, Box } from "@mui/material";
-import { footerLink } from "../../constraints/Footer";
 
 function Footer() {
   return (

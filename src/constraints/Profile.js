@@ -1,7 +1,6 @@
 import PersonIcon from "@mui/icons-material/Person";
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import StarHalfIcon from '@mui/icons-material/StarHalf';
 import DiscountIcon from '@mui/icons-material/Discount';
 import HomeIcon from '@mui/icons-material/Home';
 

@@ -1,12 +1,10 @@
 import * as React from "react";
 import "./Coupon.scss";
-import { useState, useEffect } from "react";
-import apiMain from "../../../apis/apiMain";
+import { useState, useEffect, useCallback, } from "react";
 import apiCoupon from "../../../apis/apiCoupon";
 import PropTypes from "prop-types";
+import GetCoupon from "../../../components/GetCoupon";
 import {
-  Tabs,
-  Tab,
   Typography,
   Box,
   Stack,
@@ -14,11 +12,6 @@ import {
   Grid,
   Button,
 } from "@mui/material";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import LocalActivityIcon from "@mui/icons-material/LocalActivity";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import Pagination from "@mui/material/Pagination";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -45,25 +38,12 @@ TabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#189eff",
-    },
-    secondary: {
-      main: "#fffff",
-    },
-  },
-});
-
 function Coupon() {
   const [value, setValue] = React.useState(0);
+  const [open, setOpen] = useState(false);
+  const [refresh, setRefresh] = useState(0);
+  const handleOpen = useCallback(() => setOpen(true), []);
+  const handleClose = useCallback(() => {setOpen(false); setRefresh(refresh+1)}, []);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -83,7 +63,7 @@ function Coupon() {
       }
     };
     getCoupons();
-  }, [page]);
+  }, [page, refresh]);
 
   const handleChangePage = (event, value) => {
     setPage(value);
@@ -169,10 +149,6 @@ function Coupon() {
                       </Typography>
                     </Stack>
                   </Stack>
-                  <InfoOutlinedIcon
-                    sx={{ width: "20px", height: "20px" }}
-                    color="info"
-                  />
                 </Stack>
               </Grid>
             ))}
@@ -192,12 +168,15 @@ function Coupon() {
             color="primary"
             size="large"
             fontSize="14px"
+            onClick={handleOpen}
           >
             Nhận mã giảm giá
           </Button>
         </Stack>
       </Stack>
+      <GetCoupon handleOpen={handleOpen} handleClose={handleClose} open={open} />
     </Box>
+    
   );
 }
 

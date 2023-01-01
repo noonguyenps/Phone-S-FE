@@ -5,8 +5,6 @@ import { Link, useParams } from "react-router-dom";
 import apiCart from "../../../../apis/apiCart";
 import { toast } from "react-toastify";
 import { numWithCommas } from "../../../../constraints/Util";
-import { orderTabs } from "../../../../constraints/OrderItem";
-import apiNotify from "../../../../apis/apiNotify";
 import AddressVN from "../../../../components/AddressVN";
 import { useNavigate } from "react-router-dom"
 
@@ -34,35 +32,20 @@ function DetailOrder() {
         });
     };
     getData();
-  }, []);
+  }, [id]);
 
   const handleConfirm = () => {
-    let params = {
-      // ...order,
-      type: {
-        id: orderTabs[4].id,
-        name: orderTabs[4].type,
-      },
-    };
     apiCart
-      .changeTypeOrder(params, id)
+      .changeTypeOrder(id, 1)
       .then((res) => {
         toast.success("Xác nhận thành công");
-        let notify = {
-          userId: order.idUser,
-          orderId: order.id,
-          type: "order",
-          text: "Đơn hàng của bạn đã được giao",
-          date: Date.now(),
-          seen: false,
-          link:"",
-        };
-        apiNotify.postNotify(notify);
       })
       .catch((error) => {
         toast.error("Xác nhận không thành công");
       });
   };
+
+
   const handleCancel = () => {
     apiCart
       .changeTypeOrder(id,3)
@@ -84,9 +67,9 @@ function DetailOrder() {
       <Stack bgcolor="white" p={2}>
         <Typography mt={2.5} mx={2} fontSize="22px" fontWeight={300}>
           Chi tiết đơn hàng # {order?.name} {"    -    "}
-          <span style={{ fontWeight: 500 }}>{order?.orderStatus==0?"Đang xử lý":(
-                                order?.orderStatus==1?"Đang vận chuyển":(
-                                order?.orderStatus==2?"Đã giao hàng":"Đã hủy"
+          <span style={{ fontWeight: 500 }}>{order?.orderStatus===0?"Đang xử lý":(
+                                order?.orderStatus===1?"Đang vận chuyển":(
+                                order?.orderStatus===2?"Đã giao hàng":"Đã hủy"
                                 ))}</span>
         </Typography>
         <Typography sx={{ fontSize: "13px", textAlign: "end" }}>
@@ -154,7 +137,7 @@ function DetailOrder() {
                 </Link>
                 <Typography fontSize="14px">{item.name}</Typography>
                 <Typography fontSize="14px">{item.option}</Typography>
-                <Typography fontSize="13px">{order?.orderStatus==0}</Typography>
+                <Typography fontSize="13px">{order?.orderStatus===0}</Typography>
               </Stack>
             </Stack>
             <Box>{numWithCommas(item.price || 0)} ₫</Box>
@@ -208,7 +191,7 @@ function DetailOrder() {
             </Typography>
           </Stack>
           <Stack direction="row" spacing={6}>
-                {order?.orderStatus==0?(
+                {order?.orderStatus===0?(
                   <Button
                   variant="outlined"
                   sx={{

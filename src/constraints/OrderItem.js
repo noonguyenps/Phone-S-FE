@@ -3,8 +3,6 @@ import AutoModeIcon from '@mui/icons-material/AutoMode';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-
-
 export const orderTabs = [
     {
         id: 0,

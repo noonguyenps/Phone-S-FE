@@ -19,21 +19,12 @@ export const axiosProducts = axios.create({
     paramsSerializer: (params) => queryString.stringify(params)
 });
 const apiNotify = {
-
-    postNotify: async (params) => {
-        const res = await axiosClient.post("/notifications",params)
+    getNotification: async () => {
+        const res = await axiosClientWithToken.get('/user/notification')
         return res.data
-    },
-    getNotification: async (params) => {
-        const res = await axiosClientWithToken.get('/user/notification', {params})
-        return res.data
-    },
-    updateNotification: async (params) => {
-        const res = await axiosClientWithToken.put(`/user/notification?id=${params.id}`)
-        return res.success
     },
     deleteNotification: async (params) => {
-        const res = await axiosClientWithToken.delete(`/user/notification?id=${params.id}`)
+        const res = await axiosClientWithToken.delete(`/user/notification/id=${params.id}`)
         return res.success
     },
 }

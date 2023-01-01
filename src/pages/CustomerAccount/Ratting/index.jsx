@@ -126,39 +126,6 @@ export default function CreateProduct() {
   }
 
 
-//   useEffect(() => {
-//     const getData = async () => {
-//         apiCategory.showAllCategory()
-//             .then(res => {
-//                 setListType(res.data.listCategory);
-//             })
-//     };
-//     getData();
-//   }, []);
-
-
-//   useEffect(() => {
-//     const getData = async () => {
-//         apiAttribute.getAllAttribute()
-//             .then(res => {
-//               setListAttribute(res.data.listAttribute)
-//             })
-//     };
-//     getData();
-//   }, []);
-
-
-//   useEffect(() => {
-//     const getData = async () => {
-//         apiBrand.getListBrand()
-//             .then(res => {
-//                 setListBrand(res.data.listBrand);
-//             })
-//     };
-//     getData();
-//   }, []);
-
-
 
   return (
     <Stack sx={{backgroundColor:"#FFFFFF"}}>

@@ -40,7 +40,15 @@ const apiCoupon = {
     getCouponByUser: async (params)=>{
         const res = await axiosClientWithToken.get('/user/voucher/all',params)
         return res.data;
-    }
+    },
+    getAllCouponsPublic: async () => {
+        const res = await axiosClient.get('/voucher/all')
+        return res.data;
+    },
+    getCoupon: async (id) => {
+        const res = await axiosClientWithToken.post(`/user/get/voucher/${id}`)
+        return res.data;
+    },
      
 }
 export default apiCoupon;

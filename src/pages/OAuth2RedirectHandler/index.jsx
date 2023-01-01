@@ -82,6 +82,4 @@ function OAuth2RedirectHandler() {
     </Stack>
   )
 }
-
-
 export default OAuth2RedirectHandler
