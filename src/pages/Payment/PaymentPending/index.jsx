@@ -142,11 +142,65 @@ function PaymentPending() {
             })
         }
         else{
-    
+          const listCartId = []
+            for(const a in listCart){
+                if(listCart[a].choose)
+                    listCartId.push(listCart[a].id)
+            }
+            const params = {
+                nullVoucher: true,
+                voucher: 'd72404c2-47fc-42de-b073-4a704ed41fa3',
+                payment: 1,
+                ship: ship.shipId,
+                address: addressShip.id,
+                listCart: listCartId
+            }
+            apiCart.insertOrder(params)
+            .then((res)=>{
+                toast.info(res.message)
+            })
         }
+    }else if(payment === '2'){
+      if(voucher){
+          const listCartId = []
+          for(const a in listCart){
+              if(listCart[a].choose)
+                  listCartId.push(listCart[a].id)
+          }
+          const params = {
+              nullVoucher: false,
+              voucher: voucher.id,
+              payment: 1,
+              ship: ship.shipId,
+              address: addressShip.id,
+              listCart: listCartId
+          }
+          apiCart.insertOrderPaypal(params)
+          .then((res)=>{
+            window.location.replace(res.data.link);
+          })
+      }
+      else{
+        const listCartId = []
+          for(const a in listCart){
+              if(listCart[a].choose)
+                  listCartId.push(listCart[a].id)
+          }
+          const params = {
+              nullVoucher: true,
+              voucher: 'd72404c2-47fc-42de-b073-4a704ed41fa3',
+              payment: 1,
+              ship: ship.shipId,
+              address: addressShip.id,
+              listCart: listCartId
+          }
+          apiCart.insertOrderPaypal(params)
+          .then((res)=>{
+            window.location.replace(res.data.link);
+          })
+      }
     }
   }
-  console.log(voucher)
   return (
   <>
     <Box className="container" >
@@ -236,13 +290,6 @@ function PaymentPending() {
                 }
                 </Stack>
               </RadioGroup>
-            {
-                payment=='2'?(
-                    <>
-                    <Typography>Thanh toán bằng PayPal</Typography>
-                    </>
-                ):(<></>)
-            }
             <Box sx={{ width: "500px", backgroundColor: "#FFFFFF", margin:'0.5rem', padding:'10px', borderRadius:'2%'}}>
             <Stack direction='row' justifyContent="space-between" alignItems="center">
               <Typography>Tổng tiền sản phẩm: </Typography>

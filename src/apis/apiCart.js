@@ -85,6 +85,10 @@ const apiCart = {
         const res = await axiosClientWithToken.post(`/user/order/insert`,params);
         return res.data;
     },
+    insertOrderPaypal: async(params)=>{
+        const res = await axiosClientWithToken.post(`/user/order/paypal/insert`,params);
+        return res.data;
+    },
     
 }
 export default apiCart;

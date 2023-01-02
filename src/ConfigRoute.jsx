@@ -40,7 +40,7 @@ function ConfigRoute() {
       <Route path="*" element={<Error />} />
       <Route path="search/:id" element={<FilterProductSearch />} />
       <Route path="reset" element={<ChangePassword />} />
-      <Route path="result-payment" element={<SuccessPayment/>} />
+      <Route path="payment" element={<SuccessPayment/>} />
       <Route path="test" element={<Test/>}/>
     </Routes>
   );

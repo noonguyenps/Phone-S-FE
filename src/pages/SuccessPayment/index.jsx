@@ -1,30 +1,32 @@
 import { Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 function SuccessPayment() {
     const location = useLocation()
     const navigate = useNavigate()
-    const [count, setCount] = useState(6) //xử lý đếm ngược
+    const success = useParams().success
+    const orderId = useParams().orderId
+    const [count, setCount] = useState(10) //xử lý đếm ngược
     const [message, setMessage] = useState("")
 
-    const getUrlParameter = (name) => {
-        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');//eslint-disable-line
-        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    // const getUrlParameter = (name) => {
+    //     name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');//eslint-disable-line
+    //     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
 
-        var results = regex.exec(location.search);
-        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));//eslint-disable-line
-    };
-    let orderId = getUrlParameter('orderId')
-    useEffect(() => {
-        const getToken = () => {
-            let message = getUrlParameter('message')
-            setMessage(message)
+    //     var results = regex.exec(location.search);
+    //     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));//eslint-disable-line
+    // };
+    // let orderId = getUrlParameter('orderId')
+    // useEffect(() => {
+    //     const getToken = () => {
+    //         let message = getUrlParameter('message')
+    //         setMessage(message)
             
-        }
-        getToken()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location])
+    //     }
+    //     getToken()
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [location])
 
     useEffect(() => {
         const countDown = () => {//hàm xử lý đếm ngược 5s sau khi kích hoạt xong
@@ -46,7 +48,14 @@ function SuccessPayment() {
     return (
         <Stack height="400px" justifyContent={'center'} alignItems='center'>
             <Stack alignItems='center' spacing={2}>
-                <Typography>{message}</Typography>
+                {
+                    success?(<><Typography>Thanh toán thành công</Typography>
+                    <img src="https://res.cloudinary.com/duk2lo18t/image/upload/v1672657257/OIP__1_-removebg-preview_bqamdw.png" width='200px' height='200px'></img></>)
+                    :(<>
+                    <Typography>Thanh toán thành công</Typography>
+                    <img src="https://res.cloudinary.com/duk2lo18t/image/upload/v1672657456/OIP__2_-removebg-preview_zvbzt2.png" width='200px' height='200px'></img></>)
+                }
+                <Typography>Thanh toán thành công</Typography>
                 <Link to={`/customer/order/detail/${orderId}`}>Chuyển đến thông tin đơn hàng trong {count} giây</Link>
             </Stack>
         </Stack>
