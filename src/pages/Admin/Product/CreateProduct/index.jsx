@@ -30,6 +30,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import apiProduct from '../../../../apis/apiProduct';
 import apiAttribute from '../../../../apis/apiAttribute';
+import { useNavigate } from 'react-router-dom'
 import { func } from 'prop-types';
 
 const choose = [
@@ -67,6 +68,7 @@ export default function CreateProduct() {
   const [indexAttr, setIndexAttr] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [image, setImage] = useState([]);
+  const navigate = useNavigate()
   const onChange = (imageList,i) => {
     setListImage(prev=> [...prev,imageList]);
   };
@@ -124,18 +126,7 @@ export default function CreateProduct() {
     .then((res)=>{
       toast.info("Thêm sản phẩm thành công");
       setLoadingShowmore(false)
-      setListAttributeInsert([]);
-      setBrand("");
-      setCategory("");
-      setDescription("");
-      setDiscount(0);
-      setPrice(0);
-      setImgUrl([]);
-      setInventory(0);
-      setListValue([]);
-      setListAttributeOption([[],]);
-      setListImage([]);
-      setName("");
+      navigate('/admin/product')
     })
     .catch((err)=>{
       toast.warning("Đã xảy ra lỗi")

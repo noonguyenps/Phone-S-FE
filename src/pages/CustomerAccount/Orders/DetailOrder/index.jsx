@@ -53,7 +53,6 @@ function DetailOrder() {
     let date = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(timestamp)
     return date ;
   }
-
   return (
     <Box>
       <Stack bgcolor="white" p={2}>
@@ -104,7 +103,7 @@ function DetailOrder() {
           <Box p={1.25} className="detailOrder__content">
             <Typography>{order?.paymentOrder.paymentName}</Typography>
             <Typography style={{ color: "#fda223" }}>
-            {order?.statusPayment?"Đã thanh toán":"Chưa thanh toán"}
+            {order?.paymentStatus?"Đã thanh toán":"Chưa thanh toán"}
             </Typography>
           </Box>
         </Stack>

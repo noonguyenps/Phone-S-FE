@@ -112,7 +112,7 @@ function DetailOrder() {
           <Box p={1.25} className="detailOrder__content">
             <Typography>{order?.paymentOrder.paymentName}</Typography>
             <Typography style={{ color: "#fda223" }}>
-            {order?.statusPayment?"Đã thanh toán":"Chưa thanh toán"}
+            {order?.paymentStatus?"Đã thanh toán":"Chưa thanh toán"}
             </Typography>
           </Box>
         </Stack>
