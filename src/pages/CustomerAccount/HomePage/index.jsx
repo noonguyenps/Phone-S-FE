@@ -61,7 +61,7 @@ function HomePage() {
                 <Stack justifyContent="center" alignItems="center">
                     <AttachMoneyIcon sx={{ fontSize: "32px" }}/>
                     <Typography>Chi tiêu</Typography>
-                    <Typography>{numWithCommas(user?.countOrderTotal)} đ</Typography>
+                    <Typography>{numWithCommas(Number(user?.countOrderTotal))} đ</Typography>
                 </Stack>
             </Stack>
             </Stack>
