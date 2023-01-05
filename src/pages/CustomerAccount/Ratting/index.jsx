@@ -1,5 +1,6 @@
 import React from 'react'
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef} from "react"
+import {useParams } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -18,22 +19,12 @@ import {
 import "./Ratting.scss"
 import Loading from "../../../components/Loading";
 import AddIcon from '@mui/icons-material/Add';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import ImageUploading from "react-images-uploading";
 import apiRating from '../../../apis/apiRating';
-import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { toast } from "react-toastify";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import ErrorIcon from '@mui/icons-material/Error';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import { func } from 'prop-types';
 
-
-
-export default function CreateProduct() {
-
-
+export default function Rating() {
+  const cart = useParams().id;
   const buttonRef = useRef(null);
   const [loadingShowmore, setLoadingShowmore] = useState(false)
   const buttonRef1 = useRef(null);
@@ -88,10 +79,8 @@ export default function CreateProduct() {
       apiRating.uploadImgProductRating(listImage[index]).then((res)=>{
       listUrl[index] = res.data.url;
       setListUrl(prev =>[...prev]);
-      console.log(listUrl);
       })
       .catch((err)=>{
-        console.log(err);
         reject(err);
       })
       .finally(()=>{
@@ -107,12 +96,11 @@ export default function CreateProduct() {
       await uploadListImageBE(index);
     }
     let params = {
-      id:1,
       message:comment,
       imgUrl:listUrl,
-      ratingPoint:star,
+      ratingPoint:Number(star),
     }
-    apiRating.addNewRating(params)
+    apiRating.addNewRating(cart,params)
     .then((res)=>{
       toast.info("Thêm đánh giá thành công");
       setLoadingShowmore(false)

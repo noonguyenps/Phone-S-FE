@@ -38,7 +38,17 @@ const apiRating = {
     postComment: async (params) =>{
         const res = await axiosClientWithToken.post(`/user/rating/addComment/${params.id}`,params);
         return res.data;
-    }
+    },
+    uploadImgProductRating : async (params) =>{
+        const res = await axiosClientWithToken.post(`/user/product/ratting/uploadImg`,params,{headers: {
+            'Content-Type': 'multipart/form-data'
+          }});
+        return res.data;
+    },
+    addNewRating : async (id,params) =>{
+        const res = await axiosClientWithToken.post(`/user/product/rating/${id}`,params);
+        return res.data;
+    },
 
 }
 export default apiRating;

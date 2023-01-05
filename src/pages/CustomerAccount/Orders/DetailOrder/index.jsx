@@ -131,7 +131,7 @@ function DetailOrder() {
                 <Typography fontSize="13px">{order?.orderStatus==0}</Typography>
                 {
                   order.orderStatus===2?(<><Button variant="outlined"
-                    href = {`/customer/order/ratting/${item.productId}`}
+                    href = {`/customer/order/ratting/${item.id}`}
                     sx={{
                       fontSize: "12px",
                       width: "71px",
