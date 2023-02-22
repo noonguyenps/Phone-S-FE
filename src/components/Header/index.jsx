@@ -167,12 +167,10 @@ function Header() {
                     </Typography>
                   </Button>
                 </Stack>
-                <Box className="header__dropdown">
-                  {
+                <Box className="header__dropdown">{
                     categories.map((item)=>(
                       <a href={`/filter/${item.id}`}>{item.name}</a>
-                    ))
-                  }
+                    ))}
                 </Box>
             </Stack>
         </Stack>

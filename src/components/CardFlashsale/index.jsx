@@ -19,13 +19,13 @@ function CardFlashsale({ data }) {
                 <CardMedia
                     component="img"
                     alt="green iguana"
-                    width="75px"
-                    height="150px"
+                    width="6px"
+                    height="160px"
                     image={data?.image}
                 />
-                <Typography className="card__title" variant="h5" component="div" fontSize="14px">{data.name}</Typography>
+                <Typography className="card__title" variant="h5" component="div" fontSize="14px" padding={2}>{data.name}</Typography>
                 <CardContent className="card__content">
-                    <Typography className="card__price" color={`${data?.discount!==0 ? "#ff0000" : "#000000"}`} variant="h5" component="div">
+                    <Typography className="card__price" color={`${data?.discount!==0 ? "#ff0000" : "#000000"}`} variant="h5">
                     {
                         data?.discount!==0 ?
                         <>{numWithCommas(Math.round(data?.price*(1-0.01*data.discount)))} ₫ <Box className="card__sale">{data?.discount}%</Box>
@@ -35,7 +35,7 @@ function CardFlashsale({ data }) {
                     } 
                     </Typography>
                     <Box className='card-flashsale__sold' >
-                        <LinearProgress variant="determinate" value={data.sold + 20} />
+                        <LinearProgress variant="determinate" value={data.sold/data.inventory*100} />
                         <Box>Đã bán {data.sold}</Box>
                     </Box>
                 </CardContent>

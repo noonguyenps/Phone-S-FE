@@ -1,8 +1,10 @@
 @use "../../style/abstract/breakpoint" as *;
 .Footer {
     width: 100%;
-    background-color: white;
+    background-color: rgb(223, 125, 130);
+    margin: 15px;
     padding: 16px;
+    border-radius: 1rem;
     margin-top: 2rem;
     @include mobile {
         display: none;

@@ -144,7 +144,7 @@ function FilterProductSearch(props) {
         <Box>
           <Grid container spacing={1}>
             {products.map((item) => (
-              <Grid key={item.id} item xs={3}>
+              <Grid key={item.id} item lg={2} md={4} sm={6} xs={6}>
                 <CardProduct data={item} />
               </Grid>
             ))}

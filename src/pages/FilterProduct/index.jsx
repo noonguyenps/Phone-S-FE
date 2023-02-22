@@ -170,9 +170,7 @@ function FilterProduct(props) {
   return (
     <Stack className="filterProduct container" py={1} px={2} spacing={1}>
       <Stack direction="row" py ={2} alignItems="center" height='10px'>
-        <HomeIcon/><br/>
-        <a href="/" ><h3>Trang chủ </h3></a>
-        <Typography>/ {category?.name}</Typography>
+        <Typography>Danh mục hiện tại : {category?.name}</Typography>
       </Stack>
     <Stack className="filterProduct__sidebar" direction="row">
       <Box className='filterProduct__form'>
@@ -265,9 +263,9 @@ function FilterProduct(props) {
       </Stack>
       </Stack>
         <Box>
-          <Grid container spacing={1}>
+          <Grid container>
             {products.map((item) => (
-              <Grid key={item.id} item xs={3}>
+              <Grid key={item.id} item lg={2} md={4} sm={6} xs={6}>
                 <CardProduct data={item} />
               </Grid>
             ))}
