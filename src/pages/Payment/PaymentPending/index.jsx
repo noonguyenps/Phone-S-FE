@@ -121,85 +121,52 @@ function PaymentPending() {
     setPayment(event.target.value);
   }
   const handleSubmitOrder = () => {
-    if(payment == '1'){
-        if(voucher){
-            const listCartId = []
-            for(const a in listCart){
-                if(listCart[a].choose)
-                    listCartId.push(listCart[a].id)
-            }
-            const params = {
-                nullVoucher: false,
-                voucher: voucher.id,
-                payment: 1,
-                ship: ship.shipId,
-                address: addressShip.id,
-                listCart: listCartId
-            }
-            apiCart.insertOrder(params)
-            .then((res)=>{
-                toast.info(res.message)
-            })
-        }
+    console.log(payment)
+    if(voucher){
+      const listCartId = []
+      for(const a in listCart){
+          if(listCart[a].choose)
+              listCartId.push(listCart[a].id)
+      }
+      const params = {
+          nullVoucher: false,
+          voucher: voucher.id,
+          payment: payment,
+          ship: ship.shipId,
+          address: addressShip.id,
+          listCart: listCartId
+      }
+      apiCart.insertOrder(params)
+      .then((res)=>{
+        if(payment === '1')
+          toast.info('Đặt hàng thành công');
+        else
+          window.location.replace(res.data.url);
+      })
+  }
+  else{
+    const listCartId = []
+      for(const a in listCart){
+          if(listCart[a].choose)
+              listCartId.push(listCart[a].id)
+      }
+      const params = {
+          nullVoucher: true,
+          voucher: 'd72404c2-47fc-42de-b073-4a704ed41fa3',
+          payment: payment,
+          ship: ship.shipId,
+          address: addressShip.id,
+          listCart: listCartId
+      }
+      apiCart.insertOrder(params)
+      .then((res)=>{
+        if(payment === '1')
+          toast.info('Đặt hàng thành công');
         else{
-          const listCartId = []
-            for(const a in listCart){
-                if(listCart[a].choose)
-                    listCartId.push(listCart[a].id)
-            }
-            const params = {
-                nullVoucher: true,
-                voucher: 'd72404c2-47fc-42de-b073-4a704ed41fa3',
-                payment: 1,
-                ship: ship.shipId,
-                address: addressShip.id,
-                listCart: listCartId
-            }
-            apiCart.insertOrder(params)
-            .then((res)=>{
-                toast.info(res.message)
-            })
+          window.location.replace(res.data.url);
         }
-    }else if(payment === '2'){
-      if(voucher){
-          const listCartId = []
-          for(const a in listCart){
-              if(listCart[a].choose)
-                  listCartId.push(listCart[a].id)
-          }
-          const params = {
-              nullVoucher: false,
-              voucher: voucher.id,
-              payment: 1,
-              ship: ship.shipId,
-              address: addressShip.id,
-              listCart: listCartId
-          }
-          apiCart.insertOrderPaypal(params)
-          .then((res)=>{
-            window.location.replace(res.data.link);
-          })
-      }
-      else{
-        const listCartId = []
-          for(const a in listCart){
-              if(listCart[a].choose)
-                  listCartId.push(listCart[a].id)
-          }
-          const params = {
-              nullVoucher: true,
-              voucher: 'd72404c2-47fc-42de-b073-4a704ed41fa3',
-              payment: 1,
-              ship: ship.shipId,
-              address: addressShip.id,
-              listCart: listCartId
-          }
-          apiCart.insertOrderPaypal(params)
-          .then((res)=>{
-            window.location.replace(res.data.link);
-          })
-      }
-    }
+      })
+  }
   }
   return (
   <>
