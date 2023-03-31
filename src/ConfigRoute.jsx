@@ -14,6 +14,7 @@ import ChangePassword from "./components/ChangePassword";
 import OAuth2RedirectHandler from "./pages/OAuth2RedirectHandler";
 import SuccessPayment from "./pages/SuccessPayment";
 import Test from "./pages/Test";
+import AdminLogin from "./pages/AdminLogin"
 
 import FilterProductSearch from "./pages/FilterProductSearch";
 
@@ -42,6 +43,7 @@ function ConfigRoute() {
       <Route path="reset" element={<ChangePassword />} />
       <Route path="payment/:id" element={<SuccessPayment/>} />
       <Route path="test" element={<Test/>}/>
+      <Route path="login/admin" element={<AdminLogin/>}/>
     </Routes>
   );
 }

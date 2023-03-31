@@ -135,14 +135,12 @@ function Admin() {
 
   const [open, setOpen] = React.useState(true);
 
-  const handleDrawerClose = () => {
-    setOpen(false);
+  const handleDrawer = () => {
+    setOpen(!open);
   };
 
   return (
     <Stack direction="row">
-      <CssBaseline />
-
       <AppBar
         sx={{ backgroundColor: "white", color: "black" }}
         position="fixed"
@@ -152,50 +150,19 @@ function Admin() {
           <Stack
             width="100%"
             direction="row"
-            justifyContent="space-between"
+            justifyContent="flex-end"
             alignItems="center"
           >
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={() => setOpen(!open)}
-              edge="start"
-              sx={{
-                marginRight: 5,
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-
             <Stack direction="row" spacing={3} alignItems="center">
               <IconButton sx={{ border: "1px solid silver" }}>
                 <TextsmsOutlinedIcon sx={{ borderRadius: "50%" }} />
               </IconButton>
-
-              <ClickAwayListener onClickAway={handleClickAwayAccount}>
-                <Stack
-                  sx={{
-                    border: "1px solid #d9d9d9",
-                    borderRadius: "16px",
-                    position: "relative",
-                    height: "32px",
-                    padding: "4px",
-                    cursor: "pointer",
-                  }}
-                  className="admin__dropdown"
+              <Stack
                   direction="row"
                   alignItems="center"
                   spacing={1}
-                  onClick={handleClickAccount}
                 >
-                  <Box
-                    borderRadius="50%"
-                    alt=""
-                    component="img"
-                    src="https://salt.tikicdn.com/cache/w32/ts/sellercenterFE/93/76/03/2a08fa4ae6a024a752fbba87d145bce8.png"
-                    onClick={handleClickAccount}
-                    sx={{ width: "24px", height: "24px" }}
-                  />
+                  <Box borderRadius="50%" alt="" component="img" src={user.img} sx={{ width: "24px", height: "24px" }}/>
                   <Typography
                     variant="caption"
                     sx={{
@@ -207,7 +174,6 @@ function Admin() {
                     {user.fullName}
                   </Typography>
                 </Stack>
-              </ClickAwayListener>
             </Stack>
           </Stack>
         </Toolbar>
@@ -215,16 +181,15 @@ function Admin() {
 
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={handleDrawer}>
             <img
-              src="https://salt.tikicdn.com/cache/w32/ts/sellercenterFE/93/76/03/2a08fa4ae6a024a752fbba87d145bce8.png"
+              width={40}
+              height={50}
+              src="https://res.cloudinary.com/duk2lo18t/image/upload/v1665719834/frontend/S-Phone_cpfelx.png"
               alt=""
             />
           </IconButton>
-
-          <Typography sx={{ ml: "1rem", fontWeight: "bold" }} variant="h6">
-            Admin Center
-          </Typography>
+          <Typography variant="h5" fontFamily={'Roboto'}>eManage</Typography>
         </DrawerHeader>
 
         <Divider />

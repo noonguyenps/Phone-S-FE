@@ -44,7 +44,7 @@ function Login() {
                     <AccountCircleIcon sx={{ fontSize: "45px" }} />
                     <Typography conponent="h4" fontSize="24px"> ĐĂNG NHẬP </Typography>
                 </Stack>
-                <TextField id="outlined-basic" label="Nhập email hoặc sđt" variant="outlined" />
+                <TextField id="outlined-basic" label="Nhập Sdt" variant="outlined" />
                 <Stack direction="row" sx={{ width: "100%", position: "relative" }}>
                     <FormControl sx={{ width:"100%" }} variant="outlined">
                         <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
