@@ -88,6 +88,10 @@ const apiCart = {
     getPaymentStatus: async(id)=>{
         const res = await axiosClientWithToken.get(`/user/order/pay/status/${id}`);
         return res.data;
+    },
+    createShipping: async(params)=>{
+        const res = await axiosClientWithToken.post(`admin/shipping/create`,params);
+        return res.data;
     }
     
 }

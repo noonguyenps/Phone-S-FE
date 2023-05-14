@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./DetailOrder.scss";
-import { Box, Stack, Typography, Button, Modal } from "@mui/material";
+import { Box, Stack, Typography, Button, Modal, TextField } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import apiCart from "../../../../apis/apiCart";
 import { toast } from "react-toastify";
@@ -12,6 +12,12 @@ function DetailOrder() {
   const id = useParams().id;
   const [order, setOrder] = useState(null);
   const [modalDelete, setModalDelete] = React.useState(false);
+
+  const [shipperPhone,setShipperPhone] = useState('');
+  const [shipperName, setShipperName] = useState('');
+  const [shipperID, setShipperID] = useState('');
+
+  const [visiable,setVisiable] = useState(false);
 
 
   const openModalDelete = () => {
@@ -29,6 +35,7 @@ function DetailOrder() {
         .catch((error) => {
           setOrder(null);
           toast.warning("Không tìm thấy đơn hàng");
+          navigate('/admin/order');
         });
     };
     getData();
@@ -38,7 +45,12 @@ function DetailOrder() {
     apiCart
       .changeTypeOrder(id, 1)
       .then((res) => {
-        toast.success("Xác nhận thành công");
+
+        apiCart.createShipping({order:id,phone:shipperPhone,shipperName:shipperName,vnID:shipperID}).then((res=>{
+          toast.success("Xác nhận thành công");
+        })).catch((error)=>{
+          toast.error("Xác nhận không thành công");
+        })
       })
       .catch((error) => {
         toast.error("Xác nhận không thành công");
@@ -105,6 +117,7 @@ function DetailOrder() {
               {order?.shipOrder?.shipType}
             </Typography>
             <Typography>Phí vận chuyển: {order?.shipOrder.shipPrice}đ</Typography>
+            <Typography>Key: {order?.secretKey}</Typography>
           </Box>
         </Stack>
         <Stack className="detailOrder__boxInfo">
@@ -149,12 +162,46 @@ function DetailOrder() {
         ))}
       </Stack>
       {order && (
+        <Stack direction='row' justifyContent="space-between" alignItems="center" marginLeft={4} marginRight={4}>
+          {order?.orderStatus===0?(
+                  <>
+                  <Stack justifyContent="space-between" alignItems="center" margin={1} spacing={2}>
+                    <Typography className="detailOrder__summary-label">Giao Hàng</Typography>
+                    <TextField id="outlined-basic" label="Tên người giao hàng" variant="outlined" size="small" value={shipperName} onChange={(event) => {
+                          setShipperName(event.target.value)
+                        }} />
+                    <TextField id="outlined-basic" label="Số điện thoại" variant="outlined" size="small" value={shipperPhone} onChange={(event) => {
+                          setShipperPhone(event.target.value)
+                        }} />
+                    <TextField id="outlined-basic" label="Số CCCD" variant="outlined" size="small" value={shipperID} onChange={(event) => {
+                          setShipperID(event.target.value)
+                        }} />
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        fontSize: "12px",
+                        width: "102px",
+                        height: "30px",
+                        padding: 0,
+                          }}
+                      onClick={handleConfirm}
+                >
+                  Vận chuyển
+                </Button>
+                  </Stack>
+                  
+                </>
+                ):(
+                  <></>
+                )}
+        
         <Stack
           direction="column"
           justifyContent="center"
           alignItems="flex-end"
           mt={3.5}
         >
+          
           <Stack py={0.625} direction="row">
             <Typography className="detailOrder__summary-label">
               Tạm tính
@@ -190,23 +237,7 @@ function DetailOrder() {
               ₫
             </Typography>
           </Stack>
-          <Stack direction="row" spacing={6}>
-                {order?.orderStatus===0?(
-                  <Button
-                  variant="outlined"
-                  sx={{
-                    fontSize: "12px",
-                    width: "102px",
-                    height: "30px",
-                    padding: 0,
-                  }}
-                  onClick={handleConfirm}
-                >
-                  Vận chuyển
-                </Button>
-                ):(
-                  <></>
-                )}
+          <Stack spacing={6} justifyContent="center" alignItems='center'>
                   <Button
                     variant="outlined"
                     sx={{
@@ -248,6 +279,7 @@ function DetailOrder() {
                     </Stack>
                 </Stack>
             </Modal>
+        </Stack>
         </Stack>
       )}
     </Box>
