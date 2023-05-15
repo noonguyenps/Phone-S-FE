@@ -116,6 +116,7 @@ function Home() {
               </Grid>
             ))}
           </Grid>
+          {products&&products.length===(page+1)*size?(
           <Stack direction='row' justifyContent="center" mt={2}>
             <Button
               width="15rem"
@@ -126,7 +127,7 @@ function Home() {
             >{loadingShowmore && <Loading />}
               Xem thêm
             </Button>
-          </Stack>
+          </Stack>):<></>}
         </Box>
       </Stack>
     </>

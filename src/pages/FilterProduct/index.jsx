@@ -175,7 +175,8 @@ function FilterProduct(props) {
     <Stack className="filterProduct__sidebar" direction="row">
       <Box className='filterProduct__form'>
       <Stack direction="row" alignItems="center">
-      <Typography className='filterProduct__title' width='190px'>Danh mục liên quan : </Typography>
+      {categories.length>0?(
+      <Typography className='filterProduct__title' width='190px'>Danh mục liên quan : </Typography>):(<></>)}
         {
           categories.map((item) =>(
             <Box key={item.id} sx={{
@@ -192,6 +193,7 @@ function FilterProduct(props) {
       </Box>
       </Stack>
       <SectionFlashsale/><br/><br/><br/>
+      {products.length>0?(
       <Stack className="filterProduct__sidebar" direction="row">
       <Stack className='filterProduct__form' direction="row">
           <Typography className='filterProduct__title' width='180px'>Sắp xếp theo tiêu chí : </Typography>
@@ -261,7 +263,21 @@ function FilterProduct(props) {
           </Tabs>
         </Box>
       </Stack>
-      </Stack>
+      </Stack>):(<>
+        <Stack direction="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={2}>
+              <img
+              alt=""
+              style={{ width: "280px", height: "180px" }}
+              src="https://res.cloudinary.com/duk2lo18t/image/upload/v1684156973/frontend/Can_tfind_dx1zk3.png"
+            />
+              <Typography>Không tìm thấy sản phẩm ! Xin lỗi vì sự bất tiện này</Typography>
+              <a href="/"><Typography>Quay lại trang chủ</Typography></a>
+            </Stack>
+            </>)}
+
         <Box>
           <Grid container>
             {products.map((item) => (
@@ -271,6 +287,7 @@ function FilterProduct(props) {
             ))}
           </Grid>
         </Box>
+        {products.length===(page+1)*size?(
         <Stack direction='row' justifyContent="center" mt={2}>
             <Button
               width="15rem"
@@ -281,7 +298,8 @@ function FilterProduct(props) {
             >{loadingShowmore && <Loading />}
               Xem thêm
             </Button>
-          </Stack>
+          </Stack>):(<></>)
+          }
     </Stack>
   );
 }
@@ -330,7 +348,10 @@ function SectionFlashsale() {
     getData();
   }, []);
   return (
+    
     <>
+    {
+      sales.length!=0?(
       <Box
         width="100%"
         height="330px"
@@ -361,6 +382,10 @@ function SectionFlashsale() {
           ))}
         </Swiper>
       </Box>
+    ):(
+      <></>
+    )
+    }
     </>
   );
 }
