@@ -5,7 +5,7 @@ import { renderToString } from 'react-dom/server'
 import { toast } from 'react-hot-toast';
 import { loginSuccess } from '../../../slices/authSlice'
 import { useDispatch } from 'react-redux';
-
+import { useNavigate } from 'react-router-dom'
 import "./Info.scss";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import avatar from "../../../assets/img/avatar.png"
@@ -43,7 +43,7 @@ import Loading from "../../../components/Loading";
 
 
 function Info() {
-  const Gender = [{ id: "0", name: "Male", display:"Nam" }, { id: "1", name: "Female", display:"Nữ" }, { id: "2", name: "null", display:"Không xác định" }];
+  const Gender = [{ id: "0", name: "Male", display:"Nam" }, { id: "1", name: "Female", display:"Nữ" }, { id: "2", name: "Null", display:"Không xác định" }];
   const user = useSelector(state => state.auth.user);
   const dispatch = useDispatch();
   const [commune, setCommune] = useState(user?.address[0]?.commune);
@@ -67,6 +67,7 @@ function Info() {
   const [uploading, setUploading] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [createAt, setCreateAt] = useState(user.createAt);
+  const navigate = useNavigate();
 
   const openModalNational = () => setModalNational(true);
   const closeModalNational = () => setModalNational(false);
@@ -260,6 +261,7 @@ function Info() {
           value={nickname}
           onChange={onChangeNickName}/>
       </Stack>
+      {user?.phone?(
       <Stack direction="row" spacing={5} alignItems="center" justifyContent="space-between" width={'400px'}>
         <label>Số điện thoại*</label>
         <input
@@ -268,7 +270,21 @@ function Info() {
           type="number"
           value={phone}
           disabled="disabled"/>
-      </Stack>
+      </Stack>):(<>
+        <Stack direction="row" spacing={5} alignItems="center" justifyContent="space-between" width={'400px'}>
+        <label>Số điện thoại*</label>
+        <input
+          id="input-phone"
+          placeholder="Chỉnh sửa số điện thoại"
+          type="number"
+          value={phone}
+          onClick={()=>{
+            navigate('/')
+          }}
+          disabled="disabled"/>
+        </Stack>
+      </>)
+      }
       <Stack direction='row' justifyContent="center" paddingLeft={8}>
           <Stack direction="row" spacing={5} alignItems="center" justifyContent="space-between" width={'400px'}>
             <label>Email</label>
