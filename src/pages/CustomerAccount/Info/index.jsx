@@ -43,13 +43,13 @@ import Loading from "../../../components/Loading";
 
 
 function Info() {
-  const Gender = [{ id: "0", name: "Male", display:"Nam" }, { id: "1", name: "Female", display:"Nữ" }, { id: "2", name: "Không xác định", display:"Không xác định" }];
+  const Gender = [{ id: "0", name: "Male", display:"Nam" }, { id: "1", name: "Female", display:"Nữ" }, { id: "2", name: "null", display:"Không xác định" }];
   const user = useSelector(state => state.auth.user);
   const dispatch = useDispatch();
   const [commune, setCommune] = useState(user?.address[0]?.commune);
   const [district, setDistrict] = useState(user?.address[0]?.district);
   const [province, setProvince] = useState(user?.address[0]?.province);
-  const [country, setCountry] = useState(user.country ? user.country : null);
+  const [country, setCountry] = useState(user.country ? user.country : "1");
   const [gender, setGender] = useState(user.gender ? Gender.find(item => item.name === user.gender) : null);
   const [image, setImage] = useState([]);
   const [addressDetail, setAddressDetail] = useState(user?.address[0]?.addressDetail)
@@ -161,7 +161,7 @@ function Info() {
     }
     const params = {
       birthDate: birthDate,
-      country: "1",
+      country: country,
       fullName: fullname,
       gender: genderStr,
       nickName: nickname
