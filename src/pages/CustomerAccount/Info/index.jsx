@@ -262,16 +262,16 @@ function Info() {
           onChange={onChangeNickName}/>
       </Stack>
       <Stack direction='row' justifyContent="center" paddingLeft={8}>
-      <Stack direction="row" spacing={5} alignItems="center" justifyContent="space-between" width={'400px'}>
-        <label>Số điện thoại*</label>
-        <input
-          id="input-phone"
-          placeholder="Chỉnh sửa số điện thoại"
-          type="number"
-          value={phone}
-          disabled="disabled"/>
-          <Button><a href="edit/phone"><EditRoundedIcon/></a></Button>
-      </Stack>
+        <Stack direction="row" spacing={5} alignItems="center" justifyContent="space-between" width={'400px'}>
+          <label>Số điện thoại*</label>
+          <input
+            id="input-nickname"
+            placeholder="Chỉnh sửa số điện thoại"
+            type="text"
+            value={phone}
+            disabled="disabled"/>
+            </Stack>
+            <Button><a href="edit/phone"><EditRoundedIcon/></a></Button>
       </Stack>
       <Stack direction='row' justifyContent="center" paddingLeft={8}>
           <Stack direction="row" spacing={5} alignItems="center" justifyContent="space-between" width={'400px'}>
