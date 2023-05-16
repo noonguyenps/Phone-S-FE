@@ -25,7 +25,7 @@ function ConfigRoute() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="cart" element={<ShoppingCart />} />
-      <Route element={<PrivateRoute roles={["ADMIN", "USER"]} />}>
+      <Route element={<PrivateRoute roles={["ADMIN", "USER","MANAGER"]} />}>
         <Route path="customer/*" element={<CustomerAccount />} />
         <Route path="payment/info" element={<Payment />} />
         <Route path="payment/voucher" element={<PaymentVoucher />} />
@@ -47,7 +47,6 @@ function ConfigRoute() {
       <Route path="reset" element={<ChangePassword />} />
       <Route path="payment/:id" element={<SuccessPayment/>} />
       <Route path="test" element={<Test/>}/>
-      
     </Routes>
   );
 }

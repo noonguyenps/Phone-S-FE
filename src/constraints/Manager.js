@@ -13,25 +13,25 @@ export const sidebarManager = [
         link: '/manager'
     },
     {
-        id: 4,
+        id: 2,
         text: 'Công cụ khuyến mãi',
         icon: LoyaltyOutlinedIcon,
         link: '/manager/coupon'
     },
     {
-        id: 5,
+        id: 3,
         text: 'Sản phẩm',
         icon: LaptopChromebookOutlinedIcon,
         link: '/manager/product'
     },
     {
-        id: 7,
+        id: 4,
         text: 'Đơn hàng',
         icon: ShoppingCartOutlinedIcon,
         link: '/manager/order'
     },
     {
-        id: 8,
+        id: 5,
         text: 'Quản lý đánh giá',
         icon: RateReviewOutlinedIcon,
         link: '/manager/rating'
