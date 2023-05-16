@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import apiCategory from '../../../apis/apiCategory';
 import { useEffect, useState } from 'react';
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import "./Category.scss";
 import {
   Stack,

@@ -23,7 +23,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import apiCoupon from "../../../apis/apiCoupon";
 import Pagination from '@mui/material/Pagination';
 import { styled } from '@mui/material/styles';
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 function Coupon() {
     const [modalDelete, setModalDelete] = React.useState(false);

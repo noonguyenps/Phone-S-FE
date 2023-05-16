@@ -9,7 +9,7 @@ import { numWithCommas } from '../../../constraints/Util';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import apiCart from '../../../apis/apiCart';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import apiAddressVN from '../../../apis/apiAddressVN';
 import apiAddress from '../../../apis/apiAddress';
 import ChooseCoupon from '../../../components/ChooseCoupon';
@@ -47,17 +47,7 @@ function PaymentVoucher() {
             }
             setTotalPrice(totalTemp)
           })
-      }
-      fetchData();
-    }
-  },[])
-  useEffect(() => {
-    if(!(addressShip&&ship))
-      navigate('/payment/info')
-  },[])
-  useEffect(() => {
-    const getAddresses = () => {
-        apiAddress.getUserAddress()
+          await apiAddress.getUserAddress()
           .then(res => {
             if(!res.data){
               toast.info('Hãy thêm địa chỉ để thực hiện thanh toán bạn nhé')
@@ -68,9 +58,16 @@ function PaymentVoucher() {
             toast.info('Hãy thêm địa chỉ để thực hiện thanh toán bạn nhé')
             navigate('/customer/address/create')
           })
+      }
+      fetchData();
     }
-    getAddresses()
-  }, [])
+  },[])
+
+  useEffect(() => {
+    if(!(addressShip&&ship))
+      navigate('/payment/info')
+  },[])
+  
   useEffect( ()=>{
     const getAddresses = () => {
       if(addressShip){
@@ -90,7 +87,7 @@ function PaymentVoucher() {
   }, [addressShip])
   const convertDate = (date)=>{
     var dateNew = new Date(date)
-    return String(dateNew.getDay()+"/"+String(dateNew.getMonth()+1)+'/'+dateNew.getFullYear())
+    return String(dateNew.getDate()+"/"+String(dateNew.getMonth()+1)+'/'+dateNew.getFullYear())
   };
 
   useEffect(() => {
@@ -183,7 +180,19 @@ function PaymentVoucher() {
             :<Typography></Typography>
             }
             </Box>
-            <Box sx={{ width: "500px", height: "42px", backgroundColor: "#FFFFFF", margin:'0.5rem', padding:'10px', borderRadius:'2%'}}>
+            <Box sx={{ width: "500px", height: "100px", backgroundColor: "#FFFFFF", margin:'0.5rem', padding:'10px', borderRadius:'2%'}}>
+            <Stack direction='row' justifyContent="space-between" alignItems="center">
+              <Typography>Tổng tiền sản phẩm: </Typography>
+              <Typography>{numWithCommas(totalPrice)} ₫</Typography>
+            </Stack>
+            <Stack direction='row' justifyContent="space-between" alignItems="center">
+              <Typography>Chi phí vận chuyển: </Typography>
+              <Typography>{numWithCommas(Number(ship?ship.shipPrice:0))} ₫</Typography>
+            </Stack>
+            <Stack direction='row' justifyContent="space-between" alignItems="center">
+              <Typography>Giảm giá: </Typography>
+              <Typography>{numWithCommas(Number(voucher?voucher.value:0))} ₫</Typography>
+            </Stack>
             <Stack direction='row' justifyContent="space-between" alignItems="center">
               <Typography>Tổng tiền tạm tính: </Typography>
               <Typography>{numWithCommas(totalPrice - Number(voucher?voucher.value:0)+ Number(ship?ship.shipPrice:0))} ₫</Typography>

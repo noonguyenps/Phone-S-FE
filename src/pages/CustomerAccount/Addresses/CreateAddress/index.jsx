@@ -18,7 +18,7 @@ import { useState } from "react";
 import apiAddress from "../../../../apis/apiAddress";
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 function CreateAddress(props) {
 
@@ -100,7 +100,7 @@ function CreateAddress(props) {
 
     }
     if(!(addressDetail&& addressType && commune && companyName && district && fullName && phone && province)) {
-      toast.warning("Vui lòng nhập đầy đủ thông tin !!");
+      toast.error("Vui lòng nhập đầy đủ thông tin !!");
       return
     }
     else{
@@ -134,7 +134,7 @@ function CreateAddress(props) {
       "province": province
     }
     if(!(addressDetail&& addressType && commune && companyName && district && fullName && phone && province)) {
-      toast.warning("Vui lòng nhập đầy đủ thông tin !!");
+      toast.error("Vui lòng nhập đầy đủ thông tin !!");
       return
     }
     apiAddress.updateUserAddressById(params, addressid)
@@ -147,7 +147,9 @@ function CreateAddress(props) {
   }
 
   return (
+    
     <Box className="create-address" p={2} m={2}>
+      <div><Toaster/></div>
       <Typography variant="h6">Thêm địa chỉ</Typography>
       <Stack p='2rem' spacing={1.875} width='80%'>
         <Stack direction="row">

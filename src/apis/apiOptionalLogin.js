@@ -1,5 +1,3 @@
-
-//import { axiosClient, axiosInstance } from "./axiosClient";
 import axios from 'axios';
 import queryString from 'query-string';
 const baseURL = 'https://phone-s.herokuapp.com/oauth2/'

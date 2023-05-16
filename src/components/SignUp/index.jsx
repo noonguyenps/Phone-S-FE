@@ -20,7 +20,7 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
-import {toast} from 'react-toastify'
+import {toast} from 'react-hot-toast'
 
 function SignUp(props) {
   const [showPass, setShowPass] = React.useState(false);
@@ -55,7 +55,7 @@ function SignUp(props) {
 
   const onSubmit = async () => {
     if(loading){
-      toast.warning("Thao tác đang thực hiện. Vui lòng không thao tác quá nhanh")
+      toast.error("Thao tác đang thực hiện. Vui lòng không thao tác quá nhanh")
       return
     }
     setLoading(true)

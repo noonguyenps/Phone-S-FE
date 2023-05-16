@@ -21,7 +21,7 @@ import Loading from "../../../components/Loading";
 import AddIcon from '@mui/icons-material/Add';
 import ImageUploading from "react-images-uploading";
 import apiRating from '../../../apis/apiRating';
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 export default function Rating() {
   const cart = useParams().id;

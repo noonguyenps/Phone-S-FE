@@ -20,7 +20,7 @@ import {
   Input,
 } from "@mui/material";
 import Loading from "../Loading";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import apiCart from "../../apis/apiCart";
 import { deleteAll } from "../../slices/cartSlice";
 
@@ -44,7 +44,7 @@ function Login(props) {
 
   const onSubmit = (data) => {
     if (loading) {
-      toast.warning(
+      toast.error(
         "Thao tác đang thực hiện. Vui lòng không thao tác quá nhanh"
       );
       return;
@@ -84,7 +84,7 @@ function Login(props) {
 
 
   return (
-    <Stack direction="row" height='450px' width='300px'>
+    <Stack direction="row" height='480px' width='300px'>
       <Stack direction="column" sx={{ flex: 4 }} spacing={2}>
         <center>
         <h4 style={{ fontSize: "24px" }} text-align='center'>Đăng nhập</h4>

@@ -21,7 +21,7 @@ import DiscountIcon from '@mui/icons-material/Discount';
 import CloseIcon from '@mui/icons-material/Close';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { styled } from '@mui/material/styles';
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import apiCoupon from "../../../../apis/apiCoupon";
 
 const style = {

@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import ChooseAddress from '../../components/ChooseAddress';
 import { useNavigate } from 'react-router-dom'
 import apiCart from '../../apis/apiCart';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import {setAddress, setShipType} from '../../slices/paymentSlice';
 import apiAddress from '../../apis/apiAddress'
 import apiHome from '../../apis/apiHome';
@@ -53,6 +53,22 @@ function Payment() {
           }).catch((err)=>{
             toast.warning("Có lỗi xảy ra" + err);
           })
+        await apiAddress.getUserAddress()
+        .then(res => {
+          if(!res.data){
+            toast.info('Hãy thêm địa chỉ để thực hiện thanh toán bạn nhé')
+            navigate('/customer/address/create')
+          }
+          else{
+            if(!addressShip){
+              dispatch(setAddress(res.data.addressList[0]))
+            }
+          }
+        })
+        .catch((err)=>{
+          toast.info('Hãy thêm địa chỉ để thực hiện thanh toán bạn nhé')
+          navigate('/customer/address/create')
+        })
       }
       fetchData();
     }
@@ -72,28 +88,7 @@ function Payment() {
     }
   },[])
 
-  
-  useEffect(() => {
-    const getAddresses = () => {
-        apiAddress.getUserAddress()
-          .then(res => {
-            if(!res.data){
-              toast.info('Hãy thêm địa chỉ để thực hiện thanh toán bạn nhé')
-              navigate('/customer/address/create')
-            }
-            else{
-              if(!addressShip){
-                dispatch(setAddress(res.data.addressList[0]))
-              }
-            }
-          })
-          .catch((err)=>{
-            toast.info('Hãy thêm địa chỉ để thực hiện thanh toán bạn nhé')
-            navigate('/customer/address/create')
-          })
-    }
-    getAddresses()
-  }, [])
+
   useEffect( ()=>{
     const getAddresses = () => {
       if(addressShip){
@@ -181,11 +176,11 @@ function Payment() {
             </Stack>
             <Stack direction='row' width='590px' padding={1} justifyContent="space-between" alignItems="center" spacing={2}>
               <Typography>Tên khách hàng: </Typography>
-              <TextField value={user?.fullName} sx={{width:'400px'}} disabled='disable'/>
+              <TextField size='small' value={user?.fullName} sx={{width:'400px'}} disabled='disable'/>
             </Stack>
             <Stack direction='row' width='590px' padding={1} justifyContent="space-between" alignItems="center" spacing={2}>
               <Typography>Số điện thoại: </Typography>
-              <TextField value={user?.phone} sx={{width:'400px'}} disabled='disable'/>
+              <TextField size='small' value={user?.phone} sx={{width:'400px', }} disabled='disable'/>
             </Stack>
             <Typography>Cách thức giao hàng</Typography>
             <RadioGroup
@@ -219,7 +214,15 @@ function Payment() {
             :<Typography></Typography>
             }
             </Box>
-            <Box sx={{ width: "500px", height: "42px", backgroundColor: "#FFFFFF", margin:'0.5rem', padding:'10px', borderRadius:'2%'}}>
+            <Box sx={{ width: "500px", height: "79px", backgroundColor: "#FFFFFF", margin:'0.5rem', padding:'10px', borderRadius:'2%'}}>
+            <Stack direction='row' justifyContent="space-between" alignItems="center">
+              <Typography>Tổng tiền sản phẩm: </Typography>
+              <Typography>{numWithCommas(totalPrice)} ₫</Typography>
+            </Stack>
+            <Stack direction='row' justifyContent="space-between" alignItems="center">
+              <Typography>Chi phí vận chuyển: </Typography>
+              <Typography>{numWithCommas(Number(ship1?ship1.shipPrice:0))} ₫</Typography>
+            </Stack>
             <Stack direction='row' justifyContent="space-between" alignItems="center">
               <Typography>Tổng tiền tạm tính: </Typography>
               <Typography>{numWithCommas(totalPrice + Number(ship1?ship1.shipPrice:0))} ₫</Typography>

@@ -2,7 +2,7 @@ import {useState} from "react";
 import { Link } from "react-router-dom";
 import ImageUploading from "react-images-uploading";
 import { renderToString } from 'react-dom/server'
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { loginSuccess } from '../../../slices/authSlice'
 import { useDispatch } from 'react-redux';
 
@@ -49,9 +49,6 @@ function Info() {
   const [commune, setCommune] = useState(user?.address[0]?.commune);
   const [district, setDistrict] = useState(user?.address[0]?.district);
   const [province, setProvince] = useState(user?.address[0]?.province);
-  const [day, setDay] = useState(user.birth_day ? user.birth_day[2] : null);
-  const [month, setMonth] = useState(user.birth_day ? user.birth_day[1] : null);
-  const [year, setYear] = useState(user.birth_day ? user.birth_day[0] : null);
   const [country, setCountry] = useState(user.country ? user.country : null);
   const [gender, setGender] = useState(user.gender ? Gender.find(item => item.name === user.gender) : null);
   const [image, setImage] = useState([]);
@@ -141,9 +138,6 @@ function Info() {
   const onChangeNickName = (event) => {
     setNickName(event.target.value);
   }
-  const onChangePhone = (event) => {
-    setPhone(event.target.value);
-  }
   const onChangeBirthdayStatus = (event) => {
     setChangeBirthday(true);
   }
@@ -172,7 +166,6 @@ function Info() {
       gender: genderStr,
       nickName: nickname
     };
-    console.log(params)
     setUpdating(true)
     apiProfile
       .putChangeInfo(params)
@@ -188,7 +181,7 @@ function Info() {
   };
   const convertDate = (date)=>{
     var dateNew = new Date(date)
-    return String(dateNew.getDay()+"/"+String(dateNew.getMonth()+1)+'/'+dateNew.getFullYear())
+    return String(dateNew.getDate()+"/"+String(dateNew.getMonth()+1)+'/'+dateNew.getFullYear())
   };
   const getUserProfile = () => {
     apiProfile.getUserProfile()
@@ -308,8 +301,7 @@ function Info() {
              id="input-nickname"
              disabled="disabled"
              type="text"
-             value={convertDate(birthDate)}
-             onChange={onChangePhone}/>
+             value={convertDate(birthDate)}/>
           </Stack>
           <Button onClick={onChangeBirthdayStatus}><EditRoundedIcon/></Button>
           </Stack>

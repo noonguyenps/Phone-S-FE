@@ -22,7 +22,7 @@ import {
 import "./FilterProduct.scss";
 import CardProduct from "../../components/CardProduct";
 import apiProduct from "../../apis/apiProduct";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import HomeIcon from '@mui/icons-material/Home';
 import SellIcon from '@mui/icons-material/Sell';

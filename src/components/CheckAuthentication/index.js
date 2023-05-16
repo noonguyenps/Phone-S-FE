@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { logoutSuccess } from '../../slices/authSlice'
-import { toast } from 'react-toastify'
+import { toast } from 'react-hot-toast'
 import jwt_decode from 'jwt-decode'
 
 const privatePath = [
@@ -23,7 +23,7 @@ function CheckAuthentication() {
                     const tokenDecode = jwt_decode(user.refreshToken)
                     let date = new Date();
                     if (tokenDecode.exp < date.getTime() / 1000) {
-                        toast.warning("Phiên làm việc của bạn đã hết. Vui lòng đăng nhập lại")
+                        toast.error("Phiên làm việc của bạn đã hết. Vui lòng đăng nhập lại")
                         dispatch(logoutSuccess())
                         if (isPrivate)
                             navigate('/')
@@ -32,7 +32,7 @@ function CheckAuthentication() {
                 }
                 else {
                     dispatch(logoutSuccess())
-                    toast.warning("Phiên làm việc của bạn đã hết. Vui lòng đăng nhập lại")
+                    toast.error("Phiên làm việc của bạn đã hết. Vui lòng đăng nhập lại")
                     if (isPrivate)
                         navigate('/')
                 }

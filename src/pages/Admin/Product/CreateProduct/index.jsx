@@ -23,7 +23,7 @@ import ImageUploading from "react-images-uploading";
 import apiCategory from '../../../../apis/apiCategory';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import apiBrand from '../../../../apis/apiBrand';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ErrorIcon from '@mui/icons-material/Error';
@@ -33,14 +33,6 @@ import apiAttribute from '../../../../apis/apiAttribute';
 import { useNavigate } from 'react-router-dom'
 import { func } from 'prop-types';
 
-const choose = [
-  { label: 'The Shawshank Redemption' },
-  { label: 'The Godfather' },
-  { label: 'The Godfather: Part II' },
-  { label: 'The Dark Knight' },
-  { label: '12 Angry Men' },
-  { label: "Schindler's List" },
-  { label: 'Pulp Fiction' }];
 export default function CreateProduct() {
   const buttonRef = useRef(null);
   const [loadingShowmore, setLoadingShowmore] = useState(false)

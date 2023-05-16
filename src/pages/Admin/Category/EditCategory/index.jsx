@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import "./EditCategory.scss";
 import apiCategory from "../../../../apis/apiCategory";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { useParams, useNavigate } from "react-router-dom";
 
 

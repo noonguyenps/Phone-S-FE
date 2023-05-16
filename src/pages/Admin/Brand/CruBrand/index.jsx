@@ -33,7 +33,7 @@ import {
   Badge,
   ClickAwayListener,
 } from "@mui/material";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { styled } from '@mui/material/styles';
 import rev from "../../../../assets/img/test.png";
 import SelectBoxAddress from "../../../../components/SelectBoxAddress";

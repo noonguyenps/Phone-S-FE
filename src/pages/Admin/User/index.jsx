@@ -14,7 +14,7 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 import SearchIcon from "@mui/icons-material/Search";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";

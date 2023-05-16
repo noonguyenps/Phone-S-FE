@@ -3,7 +3,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 
 import { ErrorInput, ErrorAfterSubmit } from "../ErrorHelper";
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { Stack, IconButton, Button, Input, Typography} from "@mui/material";
 
 import Visibility from "@mui/icons-material/Visibility";
@@ -57,7 +57,7 @@ const token = getUrlParameter('token')
     if(!handleCheckPass())
       return
     if(token === ''){
-      toast.warning("Không có token đặt lại mật khẩu")
+      toast.error("Không có token đặt lại mật khẩu")
       return
     }
     const params = {

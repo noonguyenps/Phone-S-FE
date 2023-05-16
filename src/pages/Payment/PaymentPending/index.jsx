@@ -11,7 +11,7 @@ import { numWithCommas } from '../../../constraints/Util';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import apiCart from '../../../apis/apiCart';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import apiHome from '../../../apis/apiHome';
 import apiAddressVN from '../../../apis/apiAddressVN';
 import apiAddress from '../../../apis/apiAddress';
@@ -107,7 +107,7 @@ function PaymentPending() {
   }, [addressShip])
   const convertDate = (date)=>{
     var dateNew = new Date(date)
-    return String(dateNew.getDay()+"/"+String(dateNew.getMonth()+1)+'/'+dateNew.getFullYear())
+    return String(dateNew.getDate()+"/"+String(dateNew.getMonth()+1)+'/'+dateNew.getFullYear())
   };
 
   useEffect(() => {

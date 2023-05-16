@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import apiAttribute from "../../../../apis/apiAttribute";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { useParams, useNavigate } from "react-router-dom";
 import {
     Box,
@@ -21,7 +21,7 @@ function AddAttribute(props) {
             "name":name
         }
         if (!(name)&&!(id)) {
-            toast.warning("Vui lòng nhập đầy đủ thông tin !!");
+            toast.error("Vui lòng nhập đầy đủ thông tin !!");
             return
         }
         else {

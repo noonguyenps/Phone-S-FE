@@ -12,7 +12,7 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import AddressVN from "../../../components/AddressVN";
 
 function Brand() {

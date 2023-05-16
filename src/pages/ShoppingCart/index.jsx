@@ -7,7 +7,7 @@ import { numWithCommas } from "../../constraints/Util"
 import { useSelector, useDispatch } from 'react-redux'
 import { deleteAll } from '../../slices/cartSlice'
 import { useNavigate } from "react-router-dom"
-import {toast} from 'react-toastify'
+import {toast} from 'react-hot-toast'
 import apiCart from '../../apis/apiCart';
 
 function ShoppingCart() {

@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import CloseIcon from "@mui/icons-material/Close";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 function ForgetPassword(props) {
   //const dispatch = useDispatch();

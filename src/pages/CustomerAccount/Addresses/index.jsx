@@ -5,7 +5,7 @@ import { Typography, Button, Stack, Box, Dialog } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import apiAddress from '../../../apis/apiAddress';
 import EmptyNotify from '../../../components/EmptyNotify';
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import AddressVN from "../../../components/AddressVN";
 
 function Addresses() {

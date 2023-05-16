@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import jwt_decode from 'jwt-decode'
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { logoutSuccess } from '../../slices/authSlice';
 import { useEffect, useState } from 'react';
 
@@ -17,7 +17,7 @@ const PrivateRoute = ({
         const verify = async () => {
             if (user) {
                 if(!user.refreshToken){
-                    toast.warning("Phiên làm việc của bạn đã hết. Vui lòng đăng nhập lại")
+                    toast.error("Phiên làm việc của bạn đã hết. Vui lòng đăng nhập lại")
                     setAuth(false);
                     dispatch(logoutSuccess())
                     return
@@ -25,21 +25,21 @@ const PrivateRoute = ({
                 const tokenDecode = jwt_decode(user?.refreshToken)
                 let date = new Date();
                 if (tokenDecode.exp < date.getTime() / 1000) {
-                    toast.warning("Phiên làm việc của bạn đã hết. Vui lòng đăng nhập lại")
+                    toast.error("Phiên làm việc của bạn đã hết. Vui lòng đăng nhập lại")
                     setAuth(false);
                     dispatch(logoutSuccess())
                     return
                 }
                 const userHasRequiredRole = roles.includes(tokenDecode.roleNames[0]) ? true : false
                 if (!userHasRequiredRole) {
-                    toast.warning("Bạn không có quyền truy cập", { autoClose: 1000, pauseOnHover: false, hideProgressBar: true })
+                    toast.error("Bạn không có quyền truy cập", { autoClose: 1000, pauseOnHover: false, hideProgressBar: true })
                     setAuth(false);
                     return
                 }
                 setAuth(true)
             }
             else {
-                toast.warning("Bạn chưa đăng nhập", { autoClose: 1000, pauseOnHover: false })
+                toast.error("Bạn chưa đăng nhập", { autoClose: 1000, pauseOnHover: false })
                 setAuth(false)
                 return <Navigate to="/" state={{ from: location }} />;
             }

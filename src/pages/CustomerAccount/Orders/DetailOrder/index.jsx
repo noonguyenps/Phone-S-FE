@@ -3,7 +3,7 @@ import "./DetailOrder.scss";
 import { Box, Stack, Typography, Button, Modal } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import apiCart from "../../../../apis/apiCart";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { numWithCommas } from "../../../../constraints/Util";
 import { orderTabs } from "../../../../constraints/OrderItem";
 import apiNotify from "../../../../apis/apiNotify";

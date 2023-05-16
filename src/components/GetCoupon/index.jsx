@@ -24,7 +24,7 @@ function GetCoupon(props) {
     }, [])
     const convertDate = (date)=>{
         var dateNew = new Date(date)
-        return String(dateNew.getDay()+"/"+String(dateNew.getMonth()+1)+'/'+dateNew.getFullYear())
+        return String(dateNew.getDate()+"/"+String(dateNew.getMonth()+1)+'/'+dateNew.getFullYear())
       };
     const handleChooseCoupon = (item) => {
         apiCoupon.getCoupon(item.id).then((res)=>{
@@ -76,7 +76,7 @@ function GetCoupon(props) {
                                                 NHH: {convertDate(item.toDate)}
                                             </Typography>
                                             </Stack>
-                                            {item.status?(
+                                            {(item.toDate>new Date().getTime()&&item.fromDate<new Date().getTime())?(
                                                 <><Button onClick={() => handleChooseCoupon(item)} variant="contained" className="coupon-item__btn-apply">Nhận mã</Button></>
                                             ):(
                                                 <><Button disabled='disabled' variant="contained" className="coupon-item__btn-apply">Nhận mã</Button></>

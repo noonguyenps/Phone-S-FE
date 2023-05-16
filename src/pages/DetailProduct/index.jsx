@@ -32,10 +32,10 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import CardProduct from "../../components/CardProduct";
 import apiProduct from "../../apis/apiProduct";
 import { addItem } from "../../slices/cartSlice";
-
+import { Toaster } from "react-hot-toast";
 import { numWithCommas} from "../../constraints/Util";
 
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 import SliderImage from "./SliderImage";
 
@@ -145,7 +145,7 @@ function DetailProduct() {
 
   const handleClickFavorite = async () => {
     if (user === null) {
-      toast.warning("Vui lòng đăng nhập để thực hiện chức năng này");
+      toast.error("Vui lòng đăng nhập để thực hiện chức năng này");
     } else {
       let param = {
         userId: user.id,
@@ -304,7 +304,7 @@ function DetailProduct() {
         toast.success("Đã thêm vào giỏ hàng");
       }).catch((err)=>{
         console.log(err);
-        toast.warning("Có lỗi sảy ra " + err);
+        toast.error("Có lỗi sảy ra " + err);
       })
     }
   };
@@ -340,6 +340,7 @@ function DetailProduct() {
   };
   return (
     <>
+    <div><Toaster/></div>
       <Box className="container">
         <Box className="panelProduct">
         <Stack direction="row">

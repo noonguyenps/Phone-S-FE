@@ -147,6 +147,27 @@ function Coupon() {
                       >
                         {handleDate(item.fromDate)} - {handleDate(item.toDate)}
                       </Typography>
+                      {item.toDate>new Date().getTime()?(<Typography
+                        sx={{
+                          color: "#787878",
+                          fontSize: "13px",
+                          fontWeight: "400",
+                          marginBottom: "0px",
+                          marginTop: "auto",
+                        }}
+                      >
+                        Trạng thái : Còn hạn
+                      </Typography>):(<Typography
+                        sx={{
+                          color: "#787878",
+                          fontSize: "13px",
+                          fontWeight: "400",
+                          marginBottom: "0px",
+                          marginTop: "auto",
+                        }}
+                      >
+                        Trạng thái : Hết hạn
+                      </Typography>)}
                     </Stack>
                   </Stack>
                 </Stack>

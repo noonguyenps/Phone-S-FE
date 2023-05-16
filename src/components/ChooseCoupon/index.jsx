@@ -26,7 +26,7 @@ function ChooseCoupon(props) {
     }, [])
     const convertDate = (date)=>{
         var dateNew = new Date(date)
-        return String(dateNew.getDay()+"/"+String(dateNew.getMonth()+1)+'/'+dateNew.getFullYear())
+        return String(dateNew.getDate()+"/"+String(dateNew.getMonth()+1)+'/'+dateNew.getFullYear())
       };
     const handleChooseCoupon = (item) => {
         dispatch(setCoupon(item))
@@ -47,7 +47,7 @@ function ChooseCoupon(props) {
                         <span>Mã giảm giá</span>
                         <span>Áp dụng tối đa: 1</span>
                     </Stack>
-                    <Stack className="choose-coupon__list">
+                    <Stack className="choose-coupon__list" sx={{overflowY: "scroll", height:'400px'}}>
                         {
                             coupons.map(item =>
                                 <Box key={item.id} className="coupon-item">
@@ -74,7 +74,7 @@ function ChooseCoupon(props) {
                                                 NHH: {convertDate(item.toDate)}
                                             </Typography>
                                             </Stack>
-                                            {item.status?(
+                                            {(item.toDate>new Date().getTime()&&item.fromDate<new Date().getTime())?(
                                                 <><Button onClick={() => handleChooseCoupon(item)} variant="contained" className="coupon-item__btn-apply">Chọn mã</Button></>
                                             ):(
                                                 <><Button disabled='disabled' variant="contained" className="coupon-item__btn-apply">Chọn mã</Button></>

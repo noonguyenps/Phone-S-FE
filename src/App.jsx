@@ -1,5 +1,4 @@
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "react-hot-toast";
 import { BrowserRouter } from "react-router-dom";
 import "./style/App.scss";
 import Header from "./components/Header";
@@ -30,15 +29,7 @@ function App() {
           {isAdmin||isManager ? null : <Header />}
           <ConfigRoute />
           {isAdmin||isManager ? null : <Footer />}
-
-          <ToastContainer
-            autoClose={1200}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            pauseOnFocusLoss
-            pauseOnHover={false}
-          />
+          <div><Toaster/></div>
         </ScrollToTop>
       </BrowserRouter>
 

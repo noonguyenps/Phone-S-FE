@@ -18,7 +18,7 @@ import { Link } from 'react-router-dom';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import SearchIcon from '@mui/icons-material/Search';
 import apiProduct from '../../../apis/apiProduct';
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { useState , useEffect} from 'react';
 import { numWithCommas } from '../../../constraints/Util';
 
