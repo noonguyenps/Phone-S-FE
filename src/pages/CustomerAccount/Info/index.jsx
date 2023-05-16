@@ -261,6 +261,7 @@ function Info() {
           value={nickname}
           onChange={onChangeNickName}/>
       </Stack>
+      <Stack direction='row' justifyContent="center" paddingLeft={8}>
       <Stack direction="row" spacing={5} alignItems="center" justifyContent="space-between" width={'400px'}>
         <label>Số điện thoại*</label>
         <input
@@ -270,6 +271,7 @@ function Info() {
           value={phone}
           disabled="disabled"/>
           <Button><a href="edit/phone"><EditRoundedIcon/></a></Button>
+      </Stack>
       </Stack>
       <Stack direction='row' justifyContent="center" paddingLeft={8}>
           <Stack direction="row" spacing={5} alignItems="center" justifyContent="space-between" width={'400px'}>
