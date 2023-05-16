@@ -93,11 +93,11 @@ function Info() {
 
   const handleUploadAvatar = ()=>{
     if (image.length === 0) {
-      toast.warning("Vui lòng chọn ảnh")
+      toast.error("Vui lòng chọn ảnh")
       return
     }
     if(uploading){
-      toast.warning("Hình ảnh đang được cập nhật, vui lòng không thao tác quá nhiều lần")
+      toast.error("Hình ảnh đang được cập nhật, vui lòng không thao tác quá nhiều lần")
       return
     }
     setUploading(true)
@@ -149,7 +149,7 @@ function Info() {
   }
   const onSaveChange = () => {
     if (!(birthDate && country && fullname && gender && nickname)) {
-      toast.warning("Vui lòng nhập đầy đủ thông tin !!");
+      toast.error("Vui lòng nhập đầy đủ thông tin !!");
       return
     }
     let genderStr = 'Male'
