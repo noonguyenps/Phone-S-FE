@@ -37,19 +37,19 @@ const apiProduct = {
         return res.data
     },
     uploadListImageProduct : async (params) => {
-        const res = await axiosClientWithToken.post('admin/product/upload', params,{headers: {
+        const res = await axiosClientWithToken.post('manager/product/upload', params,{headers: {
             'Content-Type': 'multipart/form-data'
           }})
         return res.data;
     },
     uploadImgProduct : async (params) => {
-        const res = await axiosClientWithToken.post('admin/product/uploadImg', params,{headers: {
+        const res = await axiosClientWithToken.post('manager/product/uploadImg', params,{headers: {
             'Content-Type': 'multipart/form-data'
           }})
         return res.data;
     },
     addNewProduct : async (params) =>{
-        const res = await axiosClientWithToken.post('admin/product/insert/v1', params)
+        const res = await axiosClientWithToken.post('manager/product/insert/v1', params)
         return res.data;
     },
     getCountProducts : async () =>{
@@ -57,7 +57,7 @@ const apiProduct = {
         return res.data;
     },
     deleteProductById : async (id) =>{
-        const res = await axiosClientWithToken.delete(`admin/product/delete/${id}`);
+        const res = await axiosClientWithToken.delete(`manager/product/delete/${id}`);
         return res.data;
     },
     getCategoryFilterById: async (id) => {
@@ -77,11 +77,11 @@ const apiProduct = {
         return res.data
     },
     getProductsByStatus: async (params)=>{
-        const res = await axiosClientWithToken.get('/admin/product/all/status',{params})
+        const res = await axiosClientWithToken.get('/manager/product/all/status',{params})
         return res.data
     },
     getProductsWithAdmin: async (params)=>{
-        const res = await axiosClientWithToken.get('/admin/product/all',{params})
+        const res = await axiosClientWithToken.get('/manager/product/all',{params})
         return res.data
     }
 

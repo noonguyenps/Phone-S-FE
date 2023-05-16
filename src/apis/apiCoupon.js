@@ -14,22 +14,22 @@ export const axiosClient = axios.create({
 
 const apiCoupon = {
     getCoupons: async () => {
-        const res = await axiosClientWithToken.get('/admin/voucher/all')
+        const res = await axiosClientWithToken.get('/manager/voucher/all')
         return res.data;
     },
 
     postCoupon: async (params ) => {
-        const res = await axiosClientWithToken.post('/admin/add/voucher/insert', params)
+        const res = await axiosClientWithToken.post('/manager/add/voucher/insert', params)
         return res.data;
     },
 
     deleteCouponById: async (params) => {
-        const res = await axiosClientWithToken.delete(`/admin/voucher/${params.id}?message=${params.message}`)
+        const res = await axiosClientWithToken.delete(`/manager/voucher/${params.id}?message=${params.message}`)
         return res.data;
     },
 
     updateCoupon: async (params,id) => {
-        const res = await axiosClientWithToken.put(`/admin/voucher/update/${id}`,params)
+        const res = await axiosClientWithToken.put(`/manager/voucher/update/${id}`,params)
         return res.data;
     },
 

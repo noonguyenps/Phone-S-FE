@@ -16,19 +16,19 @@ export const axiosClient = axios.create({
 const apiRating = {
 
     getAllRating: async (params) =>{
-        const res = await axiosClientWithToken.get(`/admin/rating/all`,{params});
+        const res = await axiosClientWithToken.get(`/manager/rating/all`,{params});
         return res.data;
     },
     getAllRatingByStar: async (params) =>{
-        const res = await axiosClientWithToken.get(`/admin/rating/all/star`,{params});
+        const res = await axiosClientWithToken.get(`/manager/rating/all/star`,{params});
         return res.data;
     },
     getAllRatingByUser: async (params) =>{
-        const res = await axiosClientWithToken.get(`/admin/rating/all/user`,{params});
+        const res = await axiosClientWithToken.get(`/manager/rating/all/user`,{params});
         return res.data;
     },
     getAllRatingByProduct: async (params) =>{
-        const res = await axiosClientWithToken.get(`/admin/rating/all/product`,{params});
+        const res = await axiosClientWithToken.get(`/manager/rating/all/product`,{params});
         return res.data;
     },
     getAllRatingByProductClient: async (params) =>{

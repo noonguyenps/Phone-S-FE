@@ -22,11 +22,11 @@ export const axiosClientWithPayment = axios.create({
 
 const apiCart = {
     getOrders: async (params) => {
-        const res = await axiosClientWithToken.get('/admin/order', {params});
+        const res = await axiosClientWithToken.get('/manager/order', {params});
         return res.data;
     },
     getOrdersByStatus: async (params) => {
-        const res = await axiosClientWithToken.get('/admin/order/status', {params});
+        const res = await axiosClientWithToken.get('/manager/order/status', {params});
         return res.data;
     },
     deleteOrder: async (id) =>{
@@ -34,7 +34,7 @@ const apiCart = {
         return res.data;
     },
     changeTypeOrder: async (id, status) => {
-        const res = await axiosClientWithToken.put(`/admin/order/change/${id}?status=${status}`)
+        const res = await axiosClientWithToken.put(`/manager/order/change/${id}?status=${status}`)
         return res.data;
     },
     makePaymentMomo: async (params) => {
@@ -66,7 +66,7 @@ const apiCart = {
         return res.data;
     },
     getOrderByID: async(id) =>{
-        const res = await axiosClientWithToken.get(`/admin/order/${id}`);
+        const res = await axiosClientWithToken.get(`/manager/order/${id}`);
         return res.data;
     },
     getUserOrderByID: async(id) =>{
@@ -90,7 +90,7 @@ const apiCart = {
         return res.data;
     },
     createShipping: async(params)=>{
-        const res = await axiosClientWithToken.post(`admin/shipping/create`,params);
+        const res = await axiosClientWithToken.post(`manager/shipping/create`,params);
         return res.data;
     }
     

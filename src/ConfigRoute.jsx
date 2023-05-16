@@ -32,6 +32,8 @@ function ConfigRoute() {
       <Route element={<PrivateRoute roles={["USER",'ADMIN']} />}>
         <Route path="customer/*" element={<CustomerAccount />} />
       </Route>
+      <Route path="login/admin" element={<AdminLogin/>}/>
+      <Route path="login/manager" element={<AdminLogin/>}/>
       <Route element={<PrivateRoute roles={['ADMIN']} />}>
         <Route path="admin/*" element={<Admin />} />
       </Route>
@@ -43,7 +45,7 @@ function ConfigRoute() {
       <Route path="reset" element={<ChangePassword />} />
       <Route path="payment/:id" element={<SuccessPayment/>} />
       <Route path="test" element={<Test/>}/>
-      <Route path="login/admin" element={<AdminLogin/>}/>
+      
     </Routes>
   );
 }
