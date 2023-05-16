@@ -10,6 +10,10 @@ const apiAuth = {
         const myLogin = await axiosClient.post('/auth/login/admin', params)
         return myLogin.data;
     },
+    postManagerLogin: async (params) => {
+        const myLogin = await axiosClient.post('/auth/login/manager', params)
+        return myLogin.data;
+    },
     getUserBySocialToken: async (params) => {
         const myLogin = await axiosClient.get('/auth/social', {params})
         return myLogin.data;

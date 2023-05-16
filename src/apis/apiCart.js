@@ -90,7 +90,7 @@ const apiCart = {
         return res.data;
     },
     createShipping: async(params)=>{
-        const res = await axiosClientWithToken.post(`manager/shipping/create`,params);
+        const res = await axiosClientWithToken.post(`/manager/shipping/create`,params);
         return res.data;
     }
     

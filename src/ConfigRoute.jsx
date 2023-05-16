@@ -15,6 +15,8 @@ import OAuth2RedirectHandler from "./pages/OAuth2RedirectHandler";
 import SuccessPayment from "./pages/SuccessPayment";
 import Test from "./pages/Test";
 import AdminLogin from "./pages/AdminLogin"
+import ManagerLogin from "./pages/ManagerLogin"
+import Manager from "./pages/Manager";
 
 import FilterProductSearch from "./pages/FilterProductSearch";
 
@@ -24,18 +26,18 @@ function ConfigRoute() {
       <Route path="/" element={<Home />} />
       <Route path="cart" element={<ShoppingCart />} />
       <Route element={<PrivateRoute roles={["ADMIN", "USER"]} />}>
+        <Route path="customer/*" element={<CustomerAccount />} />
         <Route path="payment/info" element={<Payment />} />
         <Route path="payment/voucher" element={<PaymentVoucher />} />
         <Route path="payment/pending" element={<PaymentPending />} />
       </Route>
-      {/* Routing customer account */}
-      <Route element={<PrivateRoute roles={["USER",'ADMIN']} />}>
-        <Route path="customer/*" element={<CustomerAccount />} />
-      </Route>
       <Route path="login/admin" element={<AdminLogin/>}/>
-      <Route path="login/manager" element={<AdminLogin/>}/>
+      <Route path="login/manager" element={<ManagerLogin/>}/>
       <Route element={<PrivateRoute roles={['ADMIN']} />}>
         <Route path="admin/*" element={<Admin />} />
+      </Route>
+      <Route element={<PrivateRoute roles={['MANAGER']} />}>
+        <Route path="manager/*" element={<Manager />} />
       </Route>
       <Route path="filter/:id" element={<FilterProduct />} />
       <Route path="product/:id" element={<DetailProduct />} />

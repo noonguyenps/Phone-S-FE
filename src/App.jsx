@@ -15,6 +15,7 @@ import { MessengerChat } from "react-messenger-chat-plugin";
 
 function App() {
   const isAdmin = window.location.href.includes("admin");
+  const isManager = window.location.href.includes("manager");
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   if (user) {
@@ -26,9 +27,9 @@ function App() {
       <BrowserRouter>
         <CheckAuthentication />
         <ScrollToTop>
-          {isAdmin ? null : <Header />}
+          {isAdmin||isManager ? null : <Header />}
           <ConfigRoute />
-          {isAdmin ? null : <Footer />}
+          {isAdmin||isManager ? null : <Footer />}
 
           <ToastContainer
             autoClose={1200}
@@ -41,9 +42,9 @@ function App() {
         </ScrollToTop>
       </BrowserRouter>
 
-      {isAdmin ? null : (
+      {isAdmin||isManager ? null : (
         <MessengerChat
-          pageId="127440555556390"
+          pageId="104755285882431"
           language="vi_VN"
           //themeColor={"#2374E1"}
           bottomSpacing={30}

@@ -6,9 +6,9 @@ import {useNavigate} from 'react-router-dom';
 import { useDispatch , useSelector} from "react-redux";
 
 
-import "./AdminLogin.scss";
+import "./ManagerLogin.scss";
 
-function AdminLogin() {
+function ManagerLogin() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -24,21 +24,17 @@ function AdminLogin() {
       setMessage('Số điện thoại hoặc mật khẩu không được bỏ trống');
       return;
     }
-    if(phone!=10||passsword<6){
-      setMessage('Số điện thoại hoặc mật khẩu không đúng định dạng');
-      return;
-    }
     let params = {
       password: passsword,
       phone: phone,
     };
 
     apiAuth
-      .postAdminLogin(params)
+      .postManagerLogin(params)
       .then((res) => {
         let { accessToken, refreshToken, user } = res.data;
         dispatch(loginSuccess({ accessToken, refreshToken, ...user }));
-        navigate("/admin")
+        navigate("/manager/order")
       })
       .catch((error) => {
         setMessage('Số điện thoại hoặc mật khẩu không chính xác');
@@ -58,7 +54,7 @@ function AdminLogin() {
             />
           </Stack>
         </Link>
-          <div className="title">Page Admin</div>
+          <div className="title">Page Manager</div>
         </Stack>
         <Stack>
           <Box className="form">
@@ -94,4 +90,4 @@ function AdminLogin() {
   );
 }
 
-export default AdminLogin;
+export default ManagerLogin;

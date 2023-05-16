@@ -4,11 +4,9 @@ import * as React from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import { sidebar } from "../../constraints/Admin";
 import { styled } from "@mui/material/styles";
-import "./Admin.scss";
 
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
-import "./Admin.scss";
 import {
   Box,
   Toolbar,
@@ -27,28 +25,17 @@ import {
 
 import MenuIcon from "@mui/icons-material/Menu";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
-import CreateCoupon from "./Coupon/CreateCoupon";
-import EditCoupon from "./Coupon/EditCoupon";
-import AdminLogin from "./Login";
-import Brand from "./Brand";
-import CreateBrand from "./Brand/CruBrand";
-import UpdateBrand from "./Brand/UpdateBrand";
-import Category from "./Category";
-import AddCategory from "./Category/AddCategory/index";
-import EditCategory from "./Category/EditCategory/index";
-import CouponAdmin from "./Coupon";
-import Dashboard from "./Dashboard";
-import Order from "./Order";
-import Product from "./Product";
-import CreateProduct from "./Product/CreateProduct";
-import Rating from "./Rating";
-import User from "./User";
-import DetailUser from "./User/DetailUser";
-import Attribute from "./Attribute";
-import AddAttribute from "./Attribute/AddAttribute";
-import EditAttribute from "./Attribute/EditAttribute";
+import CreateCoupon from "../Admin/Coupon/CreateCoupon";
+import EditCoupon from "../Admin/Coupon/EditCoupon";
+import CouponAdmin from "../Admin/Coupon";
+import Dashboard from "../Admin/Dashboard";
+import Order from "../Admin/Order";
+import Product from "../Admin/Product";
+import CreateProduct from "../Admin/Product/CreateProduct";
+import Rating from "../Admin/Rating";
 
 import { useSelector } from "react-redux";
+import { sidebarManager } from "../../constraints/Manager";
 
 const drawerWidth = 240;
 
@@ -118,7 +105,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-function Admin() {
+function Manager() {
   const [setOpenAccount] = React.useState(false);
 
   const user = useSelector((state) => state.auth.user);
@@ -195,7 +182,7 @@ function Admin() {
         <Divider />
 
         <List>
-          {sidebar.map((item) => (
+          {sidebarManager.map((item) => (
             <Link to={item.link}>
               <ListItem
                 key={item.id}
@@ -241,7 +228,7 @@ function Admin() {
       >
         <DrawerHeader />
         <Routes>
-          <Route index element={<Dashboard />} />
+          {/* <Route index element={<Dashboard />} /> */}
           <Route path="order/*" element={<Order />} />
           <Route
             path="product/*"
@@ -249,41 +236,6 @@ function Admin() {
               <Routes>
                 <Route index element={<Product />} />
                 <Route path="create" element={<CreateProduct />} />
-              </Routes>
-            }
-          />
-
-          <Route
-            path="category/*"
-            element={
-              <Routes>
-                <Route index element={<Category />} />
-                <Route path="add" element={<AddCategory />} />
-                <Route
-                  path="edit/:id"
-                  element={<EditCategory/>}
-                />
-              </Routes>
-            }
-          />
-
-          <Route
-            path="brand/*"
-            element={
-              <Routes>
-                <Route path="create" element={<CreateBrand />} />
-                <Route path="edit/:id" element={<UpdateBrand />} />
-                <Route index element={<Brand />} />
-              </Routes>
-            }
-          />
-          <Route
-            path="attribute/*"
-            element={
-              <Routes>
-                <Route path="create" element={<AddAttribute />} />
-                <Route path="detail/:id" element={<EditAttribute />} />
-                <Route index element={<Attribute/>} />
               </Routes>
             }
           />
@@ -297,17 +249,6 @@ function Admin() {
               </Routes>
             }
           />
-
-          <Route
-            path="user/*"
-            element={
-              <Routes>
-                <Route index element={<User />} />
-                <Route path="detail/:id" element={<DetailUser />} />
-              </Routes>
-            }
-          />
-
           <Route path="rating" element={<Rating />} />
         </Routes>
       </Box>
@@ -315,4 +256,4 @@ function Admin() {
   );
 }
 
-export default Admin;
+export default Manager;
