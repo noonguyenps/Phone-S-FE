@@ -19,7 +19,7 @@ export const compareProduct = createSlice({
             {
                 if(!findIndexItem(state.items,newItem)){
                     toast.error("Sản phẩm đã được so sánh")
-                }else if(!rootEcept(state.items,newItem)){
+                }else if(rootEcept(state.items,newItem)){
                     toast.error("Hai sản phẩm khác loại với nhau")
                 }
                 else{
