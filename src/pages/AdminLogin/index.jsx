@@ -24,10 +24,6 @@ function AdminLogin() {
       setMessage('Số điện thoại hoặc mật khẩu không được bỏ trống');
       return;
     }
-    if(phone!=10||passsword<6){
-      setMessage('Số điện thoại hoặc mật khẩu không đúng định dạng');
-      return;
-    }
     let params = {
       password: passsword,
       phone: phone,
