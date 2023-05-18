@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import imgDefault from '../../assets/img/img_default.jpg'
 
@@ -42,10 +42,14 @@ import SliderImage from "./SliderImage";
 import apiAccount from "../../apis/apiAccount";
 import apiCart from "../../apis/apiCart";
 import apiRating from "../../apis/apiRating";
+import { addCompare } from "../../slices/compareProduct";
 
 function DetailProduct() {
   const user = useSelector((state) => state.auth.user);
   const [modalLogin, setModalLogin] = useState(false);
+  const [modalDetail, setModalDetail] = useState(false);
+  const openModalDetail = () => setModalDetail(true);
+  const closeModalDetail = () => setModalDetail(false);
   const openModalLogin = () => setModalLogin(true);
 
   const [isLoginForm, setIsLoginForm] = useState(true);
@@ -57,6 +61,7 @@ function DetailProduct() {
   const [sortRating,setSortRating] = useState('id');
   const [comment, setComment] = useState('');
   const [ratingid, setRatingid] = useState(0);
+  const navigate= useNavigate();
 
   const closeModalLogin = () => {
     setModalLogin(false);
@@ -105,7 +110,7 @@ function DetailProduct() {
 
   useEffect(() => {
     const getProduct = async () => {
-      apiProduct.getProductsById(id).then((res)=>{
+      await apiProduct.getProductsById(id).then((res)=>{
         setProduct(res.data.product);
         let newChoose = {...choose};
         let listOption = []
@@ -121,7 +126,11 @@ function DetailProduct() {
         setChoose(newChoose);
         setListOptionId(listOption);
         setListOptionValue(listOptionValueTemp);
+      }).catch((error)=>{
+        toast.error('Không tìm thấy sản phẩm')
+        navigate('/')
       });
+      
     };
     getProduct();
   }, [id]);
@@ -168,7 +177,7 @@ function DetailProduct() {
       } else {
         await apiAccount
           .deleteWishItem(param)
-          .then(toast.info("Đã xóa khỏi danh sách yêu thích"))
+          .then(toast.success("Đã xóa khỏi danh sách yêu thích"))
           .catch((err) => toast.error(err));
       }
     }
@@ -215,7 +224,7 @@ function DetailProduct() {
       comment:comment
     }
     apiRating.postComment(params).then(res=>{
-      toast.info("Thêm bình luận thành công")
+      toast.success("Thêm bình luận thành công")
     }).catch(err=>{
       console.log(err)
     })
@@ -307,6 +316,20 @@ function DetailProduct() {
         toast.error("Có lỗi sảy ra " + err);
       })
     }
+  };
+
+
+  const handleClickCompare = () => {
+    dispatch(
+      addCompare({
+        option:product.attributeDetailEntityList,
+        id: product.id,
+        root: product.categoryRoot,
+        name: product.name,
+        image: product.image,
+        price: Math.round(price * (1 - product.discount / 100))
+      })
+    );
   };
 
   const onChangeOption = (optionId, itemId) => {
@@ -435,7 +458,7 @@ function DetailProduct() {
             </Stack>
           </Box>
 
-          <Box flex={1}>
+          <Box sx={{width:400}}>
             <Box className="detailProduct__price">
               {product?.price ? (
                 <>
@@ -461,11 +484,7 @@ function DetailProduct() {
                         <Box
                           key={item.id}
                           onClick={() => onChangeOption(itemOpt.id, item.id)}
-                          className={`product-option__item ${
-                                              itemOpt.name === "Màu sắc"
-                                                ? "product-option__item--color"
-                                                : "product-option__item--size"
-                                            } ${selected ? "selected" : ""}`}
+                          className={`product-option__item product-option__item--size ${selected ? "selected" : ""}`}
                         >
 
                           {item.value}
@@ -482,7 +501,6 @@ function DetailProduct() {
               );
               })}
               <Box className="descriptionProduct"
-                    bgcolor="white"
                     p={2}
                     borderRadius="4px"
                   >
@@ -493,8 +511,8 @@ function DetailProduct() {
               sx={{ marginTop: "2rem" }}
               direction="row"
               alignItems="center"
-              justify="center"
-              spacing={3}
+              justifyContent="center"
+              spacing={2}
             >
               <Box>
                 <Button
@@ -504,7 +522,6 @@ function DetailProduct() {
                     width: "200px",
                     height: "48px",
                     backgroundColor: "#00CC99",
-                    "&:hover": { opacity: 0.8, backgroundColor: "#006699" },
                   }}
                 >
                   <AddShoppingCartIcon/>Thêm vào giỏ hàng
@@ -544,6 +561,67 @@ function DetailProduct() {
                   </Tooltip>
                 )}
               </IconButton></>)}
+            </Stack>
+          </Box>
+          <Box sx={{backgroundColor:'#ffffff',width:300, height:'fit-content',padding:1}}>
+            <Stack alignItems='center' justifyItems='center'>
+              <Typography>Thông số kỹ thuật</Typography>
+              <Box sx={{backgroundColor:'#dcdcdc',width:280, maxHeight:450, border:'1px solid', borderRadius:3, borderColor:'#dcdcdc',padding:1, margin:0.5}}>
+                { 
+                product?.attributeDetailEntityList.map((item) => (
+                <Box sx={{backgroundColor:'#ffffff',width:255, maxHeight:350, border:'1px solid', borderRadius:3, borderColor:'#dcdcdc',padding:1, margin:0.5}}spacing='1'>
+                  <Stack direction='row' justifyContent="space-between"
+                  alignItems="center"
+                  spacing={2}>
+                      <Typography sx={{fontSize:14}}>{item.name}</Typography>
+                      <Typography sx={{fontSize:14}}>{item.value}</Typography>  
+                  </Stack>
+                  </Box>
+                ))}
+                { 
+                product?.attributeDetailEntityList.length===0?(
+                <Box sx={{backgroundColor:'#ffffff',width:255, maxHeight:350, border:'1px solid', borderRadius:3, borderColor:'#dcdcdc',padding:1, margin:0.5}}spacing='1'>
+                  <Stack direction='row' justifyContent="center"
+                  alignItems="center"
+                  spacing={2}>
+                      <Typography sx={{fontSize:14}}>Sản phẩm chưa có thông số</Typography> 
+                  </Stack>
+                  </Box>
+                ):(<></>)}
+              </Box>
+                {
+                  product?.attributeDetailEntityList.length<=9?(
+                  <Box sx={{backgroundColor:'#dcdcdc',width:280, border:'1px solid', borderRadius:3, borderColor:'#dcdcdc',padding:1, margin:0.5}}>
+                  <Button disabled='disabled' sx={{
+                    width: "100%",
+                    height: "20px",
+                  }}>Xem thông số chi tiết</Button></Box>):(
+                    <Box sx={{backgroundColor:'#dcdcdc',width:280, border:'1px solid', borderRadius:3, borderColor:'#dcdcdc',padding:1, margin:0.5}}>
+                  <Button sx={{
+                    width: "100%",
+                    height: "20px",
+                  }}
+                  onClick={openModalDetail}>Xem thông số chi tiết</Button>
+                  </Box>)
+                }
+
+                {
+                  product?.attributeDetailEntityList.length===0?(
+                  <Box sx={{backgroundColor:'#dcdcdc',width:280, border:'1px solid', borderRadius:3, borderColor:'#dcdcdc',padding:1, margin:0.5}}>
+                  <Button disabled='disabled' sx={{
+                    width: "100%",
+                    height: "20px",
+                  }}>so sánh</Button></Box>):(
+                    <Box sx={{backgroundColor:'#dcdcdc',width:280, border:'1px solid', borderRadius:3, borderColor:'#dcdcdc',padding:1, margin:0.5}}>
+                  <Button sx={{
+                    width: "100%",
+                    height: "20px",
+                  }}
+                  onClick={openModalDetail}>So sánh</Button>
+                  </Box>)
+                }
+              
+              
             </Stack>
           </Box>
         </Box>
@@ -717,6 +795,54 @@ function DetailProduct() {
               handleReturnLogin={handleReturnLogin}
             />
           )}
+        </Box>
+      </Modal>
+
+      <Modal
+        sx={{ overflowY: "scroll" }}
+        open={modalDetail}
+        onClose={closeModalDetail}
+      >
+        <Box alignItems='center' justifyContent='center' sx={{width:'300', height:'100'}} position= 'absolute' left='35%' margin-top='50px' padding= '80px'>
+          <Stack alignItems='center' justifyContent='center'>
+            <Box sx={{ width: 400, height:600, backgroundColor:'#ffffff',maxHeight:'fit-content', borderRadius:3,}} alignContent='center' alignSelf='center'>
+              <Box sx={{width:400, height:60, backgroundColor:'#ff0000', borderTopLeftRadius:12, borderTopRightRadius:12}}>
+                <Stack direction='row' justifyContent="space-between" alignItems='center' padding={2}>
+                  <Typography color='#ffffff'>Thông số chi tiết</Typography>
+                  <Button onClick={closeModalDetail}><Typography color='#ffffff'>X</Typography></Button>
+                </Stack>
+              </Box>
+              <Box sx={{overflowY: "scroll", height:'470px'}} justifyContent='center' alignItems='center'>
+              { 
+                product?.attributeDetailEntityList.map((item) => (
+                <Box sx={{backgroundColor:'#ffffff',width:365, maxHeight:450, border:'1px solid', borderRadius:3, borderColor:'#dcdcdc',padding:1, margin:1}}spacing='1'>
+                  <Stack direction='row' justifyContent="space-between"
+                  alignItems="center"
+                  spacing={2}>
+                      <Typography sx={{fontSize:14}}>{item.name}</Typography>
+                      <Typography sx={{fontSize:14}}>{item.value}</Typography>  
+                  </Stack>
+                  </Box>
+                ))}
+              </Box>
+              {
+                  product?.attributeDetailEntityList.length===0?(
+                  <Box sx={{backgroundColor:'#dcdcdc',width:365, border:'1px solid', borderRadius:3, borderColor:'#dcdcdc',padding:1, margin:1}}>
+                  <Button disabled='disabled' sx={{
+                    width: "100%",
+                    height: "20px",
+                  }}
+                  onClick={handleClickCompare}>So sánh</Button></Box>):(
+                    <Box sx={{backgroundColor:'#dcdcdc',width:365, border:'1px solid', borderRadius:3, borderColor:'#dcdcdc',padding:1, margin:1}}>
+                  <Button sx={{
+                    width: "100%",
+                    height: "20px",
+                  }}
+                  onClick={handleClickCompare}>So sánh</Button>
+                  </Box>)
+                }
+            </Box>
+          </Stack>
         </Box>
       </Modal>
     </>

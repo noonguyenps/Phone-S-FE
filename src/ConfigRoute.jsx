@@ -17,7 +17,7 @@ import Test from "./pages/Test";
 import AdminLogin from "./pages/AdminLogin"
 import ManagerLogin from "./pages/ManagerLogin"
 import Manager from "./pages/Manager";
-
+import CompareProduct from "./pages/CompareProduct";
 import FilterProductSearch from "./pages/FilterProductSearch";
 
 function ConfigRoute() {
@@ -25,6 +25,7 @@ function ConfigRoute() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="cart" element={<ShoppingCart />} />
+      <Route path="compare" element={<CompareProduct />} />
       <Route element={<PrivateRoute roles={["ADMIN", "USER","MANAGER"]} />}>
         <Route path="customer/*" element={<CustomerAccount />} />
         <Route path="payment/info" element={<Payment />} />

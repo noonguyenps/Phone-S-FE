@@ -104,9 +104,9 @@ function Home() {
           </Box>
         </Box>
         <Box id="section9">
-          <Box className="suggestion">
+          <Box>
             <Box className="section__heading">
-              <Box className="section__title">Sản phẩm nổi bật</Box>
+              <Box>Danh sách sản phẩm</Box>
             </Box>
           </Box>
           <Grid container>

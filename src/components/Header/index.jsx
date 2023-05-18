@@ -19,7 +19,6 @@ import { addItem, removeAll } from "../../slices/searchSlice";
 import { logoutSuccess } from "../../slices/authSlice";
 import apiHome from "../../apis/apiHome";
 
-import SearchIcon from "@mui/icons-material/Search";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import PhoneIcon from '@mui/icons-material/Phone';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';

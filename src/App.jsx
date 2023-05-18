@@ -1,21 +1,25 @@
 import { Toaster } from "react-hot-toast";
+import {Fab} from "@mui/material";
 import { BrowserRouter } from "react-router-dom";
 import "./style/App.scss";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ConfigRoute from "./ConfigRoute";
-
 import { useDispatch, useSelector } from "react-redux";
 import { axiosInstance } from "./apis/axiosClient";
 import { loginSuccess, logoutSuccess } from "./slices/authSlice";
 import ScrollToTop from "./components/ScrollToTop";
 import CheckAuthentication from "./components/CheckAuthentication";
 import { MessengerChat } from "react-messenger-chat-plugin";
+import CompareOutlinedIcon from '@mui/icons-material/CompareOutlined';
+
 
 function App() {
   const isAdmin = window.location.href.includes("admin");
   const isManager = window.location.href.includes("manager");
   const user = useSelector((state) => state.auth.user);
+  const compare = useSelector((state)=> state.compare.items)
+
   const dispatch = useDispatch();
   if (user) {
     axiosInstance(user, dispatch, loginSuccess, logoutSuccess);
@@ -28,17 +32,22 @@ function App() {
         <ScrollToTop>
           {isAdmin||isManager ? null : <Header />}
           <ConfigRoute />
+          {isAdmin||isManager||compare.length!=2 ? null : <Fab style={{
+              margin: 0,
+              top: 'auto',
+              right: 20,
+              bottom: 20,
+              left: 'auto',
+              position: 'fixed',
+          }}><a href="/compare"><CompareOutlinedIcon/></a></Fab>}
           {isAdmin||isManager ? null : <Footer />}
           <div><Toaster/></div>
         </ScrollToTop>
       </BrowserRouter>
-
       {isAdmin||isManager ? null : (
         <MessengerChat
           pageId="104755285882431"
           language="vi_VN"
-          //themeColor={"#2374E1"}
-          bottomSpacing={30}
           loggedInGreeting="loggedInGreeting"
           loggedOutGreeting="loggedOutGreeting"
           greetingDialogDisplay={"show"}
