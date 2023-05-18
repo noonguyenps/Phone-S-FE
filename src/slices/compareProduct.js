@@ -8,14 +8,14 @@ export const compareProduct = createSlice({
     reducers: {
         addCompare:(state,action)=>{
             let newItem = action.payload
-            if(state.items.length=0)
+            if(state.items.length==0)
             {
                 toast.success("Đã thêm vào so sánh")
-                    let items = [...state.items]
-                    items.unshift(newItem)
-                    state.items = [...items]
+                let items = [...state.items]
+                items.unshift(newItem)
+                state.items = [...items]
             }
-            else if(state.items.length=1)
+            else if(state.items.length==1)
             {
                 if(!findIndexItem(state.items,newItem)){
                     toast.error("Sản phẩm đã được so sánh")

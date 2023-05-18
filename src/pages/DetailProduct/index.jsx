@@ -322,8 +322,8 @@ function DetailProduct() {
   const handleClickCompare = () => {
     dispatch(
       addCompare({
-        option:product.attributeDetailEntityList,
         id: product.id,
+        option:product.attributeDetailEntityList,
         root: product.categoryRoot,
         name: product.name,
         image: product.image,

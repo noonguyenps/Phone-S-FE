@@ -47,17 +47,23 @@ export default function CreateProduct() {
   const [attribute,setAttribute] = useState([]);
   const [listAttribute,setListAttribute] = useState([]);
   const [listAttributeInsert, setListAttributeInsert] = useState([]);
+  const [listAttributeInsertDetail, setListAttributeInsertDetail] = useState([]);
   const [imgUrl, setImgUrl] = useState([]);
   const [brand, setBrand] = useState([]);
   const [category, setCategory] = useState([]);
   const [listAddNewImage, setListAddNewImage]= useState([]);
   const [listAddNewAttribute, setListAddNewAttribute] = useState([]);
+  const [listAddNewAttributeDetail, setListAddNewAttributeDetail] = useState([]);
   const [listAttributeOption, setListAttributeOption]= useState([[],]);
+  const [listAttributeOptionDetail, setListAttributeOptionDetail]= useState([[],]);
   const [listImage, setListImage] = useState([]);
   const [listValue, setListValue] = useState([]);
+  const [listValueDetail, setListValueDetail] = useState([]);
   const [index,setIndex] = useState(0);
+  const [indexDetail,setIndexDetail] = useState(0);
   const [listUrl,setListUrl] = useState([]);
   const [indexAttr, setIndexAttr] = useState(0);
+  const [indexAttrDetail, setIndexAttrDetail] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [image, setImage] = useState([]);
   const navigate = useNavigate()
@@ -80,6 +86,10 @@ export default function CreateProduct() {
   const handleChangeAddNewAttribute = (index) => {
     setListAddNewAttribute(prev =>[...prev,{index:index,attribute:{id:"0",name:"",values:["1","2"],}}]);
     setIndexAttr(index+1);
+  };
+  const handleChangeAddNewAttributeDetail = (indexDetail) => {
+    setListAddNewAttributeDetail(prev =>[...prev,{index:indexDetail,attribute:{id:"0",name:"",values:["1","2"],}}]);
+    setIndexAttrDetail(indexDetail+1);
   };
   function uploadListImageBE(index){
     return new Promise((resolve, reject)=>{
@@ -112,16 +122,19 @@ export default function CreateProduct() {
       imgUrl:listUrl,
       inventory:inventory,
       price:price,
-      values:listValue
+      values:listValue,
+      detailValues:listValueDetail,
+      attributeDetails: listAttributeInsertDetail,
     }
     apiProduct.addNewProduct(params)
     .then((res)=>{
-      toast.info("Thêm sản phẩm thành công");
+      toast.success("Thêm sản phẩm thành công");
       setLoadingShowmore(false)
       navigate('/admin/product')
     })
     .catch((err)=>{
-      toast.warning("Đã xảy ra lỗi")
+      toast.error("Thêm sản phẩm thất bại")
+      setLoadingShowmore(false)
     })
   }
 
@@ -356,7 +369,8 @@ export default function CreateProduct() {
                               setListAddNewAttribute(prev =>[...prev]);
                               listAttributeOption[item.index]=event.target.value.values;
                               setListAttributeOption(prev =>[...prev,[]]);
-                            }} input={<InputCustom placeholder="Chọn Thuộc tính" />}>
+                            }} 
+                            input={<InputCustom placeholder="Chọn Thuộc tính" />}>
                             {
                                 listAttribute.map(item => item.name !== name && <MenuItem value={item} >{item.name}</MenuItem>)
                             }
@@ -386,7 +400,44 @@ export default function CreateProduct() {
         <Stack sx={{width:"100%"}}>
           <Button ref={buttonRef1} onClick={() => (handleChangeAddNewAttribute(indexAttr))}>
             <AddIcon sx={{color:"#1890ff"}} />
-            <Typography sx={{color:"#1890ff", width:"100%"}}>Thêm lựa chọn hàng để giúp khách hàng tìm kiếm sản phẩm và dễ dàng thêm mới lựa chọn</Typography>
+            <Typography sx={{color:"#1890ff", width:"100%"}}>Thêm lựa chọn hàng</Typography>
+          </Button>
+        </Stack>
+
+        <Typography>Thông tin chi tiết</Typography>
+        {
+          listAddNewAttributeDetail.map((item)=>(
+            <Stack sx={{ backgroundColor: "#FFF", height: "46px"}} px={2} py={3} direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+            <FormControl sx={{ width:'25%'}} className="create-address__input">
+                        <Select size="small" labelId="demo-simple-select-helper-label" 
+                            id="demo-simple-select-helper" value={listAddNewAttributeDetail[item.index].attribute}
+                            onChange={(event) => {
+                              listAddNewAttributeDetail[item.index].attribute = event.target.value;
+                              listAttributeInsertDetail[item.index] = event.target.value.id;
+                              setListAttributeInsertDetail(prev=>[...prev]);
+                              setListAddNewAttributeDetail(prev =>[...prev]);
+                              listAttributeOptionDetail[item.index]=event.target.value.values;
+                              setListAttributeOptionDetail(prev =>[...prev,[]]);
+                            }}
+                             input={<InputCustom placeholder="Chọn Loại" />}>
+                            {
+                                listAttribute.map(item => item.name !== name && <MenuItem value={item} >{item.name}</MenuItem>)
+                            }
+                        </Select>
+              </FormControl>
+              <TextField label= "Thông tin" sx={{ width:'50%'}} inputProps={{style: {height: "10px",},}} type={"text"} value={listValueDetail[item.index]} onChange={(event) => {
+                      if(event.target.value){
+                        listValueDetail[item.index]=event.target.value;
+                        setListValueDetail(prev=> [...prev]);
+                      }
+                    }}/>
+            </Stack>
+          ))
+        }
+        <Stack sx={{width:"100%"}}>
+          <Button ref={buttonRef1} onClick={() => (handleChangeAddNewAttributeDetail(indexAttrDetail))}>
+            <AddIcon sx={{color:"#1890ff"}} />
+            <Typography sx={{color:"#1890ff", width:"100%"}}>Thêm thông tin sản phẩm</Typography>
           </Button>
         </Stack>
         </Stack>

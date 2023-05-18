@@ -49,7 +49,7 @@ const apiProduct = {
         return res.data;
     },
     addNewProduct : async (params) =>{
-        const res = await axiosClientWithToken.post('manager/product/insert/v1', params)
+        const res = await axiosClientWithToken.post('manager/product/insert/v2', params)
         return res.data;
     },
     getCountProducts : async () =>{

@@ -36,16 +36,16 @@ function CompareProduct() {
       let arr1 =[],arr2=[],arr3=[];
       for(let a in item1.option){
         let itemTemp = item2.option.filter((item)=>item.idType===item1.option[a].idType);
-        if(itemTemp!=null){
+        if(itemTemp.length!=0){
           arr1.push(itemTemp)
         }else{
-          arr2.push(item1.option[a])
+          arr2.push([item1.option[a]])
         }
       }
       for(let a in item2.option){
         let itemTemp = item1.option.filter((item)=>item.idType===item2.option[a].idType);
-        if(itemTemp==null){
-          arr3.push(itemTemp)
+        if(itemTemp.length==0){
+          arr3.push([item2.option[a]])
         }
       }
       setArray1(arr1)
@@ -66,6 +66,9 @@ function CompareProduct() {
     }
     
   }
+  console.log(array1)
+  console.log(array2)
+  console.log(array3)
 
 
   const handleChangeCartData = (id, quantity, choose) =>{
@@ -175,7 +178,7 @@ function CompareProduct() {
                           >
                             <TableCell component="th" scope="row">{row[0].name}</TableCell>
                             <TableCell align="center">{(item1.option.filter((index)=>(index.idType===row[0].idType)))[0].value}</TableCell>
-                            <TableCell align="center"></TableCell>
+                            <TableCell align="center">---</TableCell>
                           </TableRow>
                         ))}
                         {array3.map((row) => (
@@ -184,7 +187,7 @@ function CompareProduct() {
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                           >
                             <TableCell component="th" scope="row">{row[0].name}</TableCell>
-                            <TableCell align="center"></TableCell>
+                            <TableCell align="center">---</TableCell>
                             <TableCell align="center">{(item2.option.filter((index)=>(index.idType===row[0].idType)))[0].value}</TableCell>
                           </TableRow>
                         ))}
