@@ -33,6 +33,10 @@ const apiProfile = {
         const res = await axiosClientWithToken.put('/user/profile/changePhone', params)
         return res.data;
     },
+    putChangePhonePassword: async (params) => {
+        const res = await axiosClientWithToken.put('/user/profile/changePhonePassword', params)
+        return res.data;
+    },
     getAllUser: async (params) => {
         const res = await axiosClientWithToken.get('admin/user/all', params)
         return res.data;
@@ -41,6 +45,10 @@ const apiProfile = {
         const res = await axiosClientWithToken.get(`admin/user/${params.id}`)
         return res.data;
     },
+    checkPassword: async () =>{
+        const res = await axiosClientWithToken.get(`user/phone/check`);
+        return res.data;
+    }
 
     
 

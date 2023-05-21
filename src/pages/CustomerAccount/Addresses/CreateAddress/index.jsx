@@ -149,18 +149,17 @@ function CreateAddress(props) {
   return (
     
     <Box className="create-address" p={2} m={2}>
-      <div><Toaster/></div>
       <Typography variant="h6">Thêm địa chỉ</Typography>
-      <Stack p='2rem' spacing={1.875} width='80%'>
+      <Stack p='2rem' spacing={1.875}>
         <Stack direction="row">
           <Typography className="create-address__label">
             Họ và tên:
           </Typography>
           <Stack className="create-address__input">
-            <InputCustom value={fullName} onChange={(event) => {
+            <InputCustom sx={{width:'153%'}} value={fullName} onChange={(event) => {
               setFullName(event.target.value)
             }}
-              placeholder="Nhập họ và tên"
+              placeholder="Họ và tên người nhận hàng"
               size="small"
             ></InputCustom>
           </Stack>
@@ -171,11 +170,11 @@ function CreateAddress(props) {
             Công ty:
           </Typography>
           <Stack className="create-address__input">
-            <InputCustom value={companyName} onChange={(event) => {
+            <InputCustom sx={{width:'153%'}} value={companyName} onChange={(event) => {
               setCompanyName(event.target.value)
             }}
               size="small"
-              placeholder="Nhập công ty"
+              placeholder="Tên công ty (nếu có)"
             ></InputCustom>
           </Stack>
         </Stack>
@@ -185,11 +184,11 @@ function CreateAddress(props) {
             Số điện thoại:
           </Typography>
           <Stack className="create-address__input">
-            <InputCustom value={phone} onChange={(event) => {
+            <InputCustom sx={{width:'153%'}} value={phone} onChange={(event) => {
               setPhone(event.target.value)
             }}
               size="small"
-              placeholder="Nhập số điện thoại"
+              placeholder="SĐT người nhận hàng"
             ></InputCustom>
           </Stack>
         </Stack>
@@ -204,12 +203,13 @@ function CreateAddress(props) {
             Địa chỉ
           </Typography>
           <Stack className="create-address__input">
-            <InputCustom value={addressDetail} onChange={(event) => {
+            <InputCustom sx={{width:'153%'}} value={addressDetail} onChange={(event) => {
               setAddressDetail(event.target.value)
             }}
               multiline
               rows={4}
-              placeholder="Nhập địa chỉ"
+              size='small'
+              placeholder="Địa chỉ cụ thể"
             ></InputCustom>
           </Stack>
         </Stack>
@@ -231,22 +231,10 @@ function CreateAddress(props) {
             />
           </RadioGroup>
         </Stack>
-
-        <Stack direction="row">
-          <Typography className="create-address__label"></Typography>
-          <Checkbox defaultChecked />
-          <Typography sx={{ margin: "auto 0" }}>
-            Đặt làm địa chỉ mặc định
-          </Typography>
-        </Stack>
-
-        <Stack direction="row">
-          <Typography className="create-address__label"></Typography>
+        <Stack direction="row" alignItems='center' justifyContent='center'>
           <Button
-            onClick={
-              edit ? handleUpdate
-                : handleSave} className="btn__Update" variant="contained">
-            Cập nhật
+            onClick={handleSave} className="btn__Update" variant="contained">
+            Thêm địa chỉ
           </Button>
         </Stack>
       </Stack>

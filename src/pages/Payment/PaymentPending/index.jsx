@@ -42,7 +42,7 @@ function PaymentPending() {
           .then((res)=>{
             setListCart(res.data.listCart);
             if(!listCart){
-              toast.info('Giỏ hàng của bạn đang trống. Hãy mua hàng bạn nhé')
+              toast.error('Giỏ hàng của bạn đang trống. Hãy mua hàng bạn nhé')
               navigate('/')
             }
             let totalTemp = 0;
@@ -77,12 +77,12 @@ function PaymentPending() {
         apiAddress.getUserAddress()
           .then(res => {
             if(!res.data){
-              toast.info('Hãy thêm địa chỉ để thực hiện thanh toán bạn nhé')
+              toast.error('Hãy thêm địa chỉ để thực hiện thanh toán bạn nhé')
               navigate('/customer/address/create')
             }
           })
           .catch((err)=>{
-            toast.info('Hãy thêm địa chỉ để thực hiện thanh toán bạn nhé')
+            toast.error('Hãy thêm địa chỉ để thực hiện thanh toán bạn nhé')
             navigate('/customer/address/create')
           })
     }
@@ -105,10 +105,6 @@ function PaymentPending() {
     getAddresses()
 
   }, [addressShip])
-  const convertDate = (date)=>{
-    var dateNew = new Date(date)
-    return String(dateNew.getDate()+"/"+String(dateNew.getMonth()+1)+'/'+dateNew.getFullYear())
-  };
 
   useEffect(() => {
     const loadTitle = () => {
@@ -121,7 +117,6 @@ function PaymentPending() {
     setPayment(event.target.value);
   }
   const handleSubmitOrder = () => {
-    console.log(payment)
     if(voucher){
       const listCartId = []
       for(const a in listCart){
@@ -139,7 +134,7 @@ function PaymentPending() {
       apiCart.insertOrder(params)
       .then((res)=>{
         if(payment === '1')
-          toast.info('Đặt hàng thành công');
+          toast.error('Đặt hàng thành công');
         else
           window.location.replace(res.data.url);
       })
@@ -161,7 +156,7 @@ function PaymentPending() {
       apiCart.insertOrder(params)
       .then((res)=>{
         if(payment === '1')
-          toast.info('Đặt hàng thành công');
+          toast.error('Đặt hàng thành công');
         else{
           window.location.replace(res.data.url);
         }

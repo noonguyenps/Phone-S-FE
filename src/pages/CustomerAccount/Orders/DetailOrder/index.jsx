@@ -55,7 +55,7 @@ function DetailOrder() {
   }
   return (
     <Box>
-      <Stack bgcolor="white" p={2}>
+      <Stack bgcolor="white" p={3} margin={2}>
         <Typography mt={2.5} mx={2} fontSize="22px" fontWeight={300}>
           Chi tiết đơn hàng # {order?.name} {"    -    "}
           <span style={{ fontWeight: 500 }}>{order?.orderStatus==0?"Đang xử lý":(
@@ -157,9 +157,12 @@ function DetailOrder() {
           direction="column"
           justifyContent="center"
           alignItems="flex-end"
+          bgcolor='white'
           mt={3.5}
+          padding={2}
+          margin={2}
         >
-          <Stack py={0.625} direction="row">
+          <Stack py={0.625} direction="row" >
             <Typography className="detailOrder__summary-label">
               Tạm tính
             </Typography>
@@ -183,7 +186,7 @@ function DetailOrder() {
               {numWithCommas(order?.shipOrder.shipPrice || 0)} ₫
             </Typography>
           </Stack>
-          <Stack py={0.625} direction="row">
+          <Stack direction="row">
             <Typography className="detailOrder__summary-label">
               Phí tổng cộng
             </Typography>
@@ -195,13 +198,13 @@ function DetailOrder() {
             </Typography>
           </Stack>
           { order?.orderStatus === 0?(
-            <Stack direction="row" spacing={6}>
+            <Stack direction="row" margin={2}>
               <Button
                 variant="outlined"
                 onClick={() => openModalDelete()}
                 sx={{
                   fontSize: "12px",
-                  width: "71px",
+                  width: "80px",
                   height: "30px",
                   padding: 0,
                 }}

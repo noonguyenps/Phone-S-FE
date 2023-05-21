@@ -8,9 +8,9 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import apiProfile from "../../../../apis/apiProfile"; 
+import apiProfile from "../../../../apis/apiProfile";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom"; 
 
 function Password() {
   const [showPass, setShowPass] = React.useState(false);
@@ -20,14 +20,11 @@ function Password() {
   const [message, setMessage] = React.useState("");
   const [newMessage, setNewMessage] = React.useState("")
   const [fontSizeMessage, setFontSizeMessage] = React.useState("")
-  //const [valid, setValid] = React.useState({ new: false, cf: false });
-  
+  const navigate = useNavigate();
   const Rcolor = "#2196f3"
   const Fcolor = "#ee0033"
   const [color, setColor] = React.useState("");
   const [newcolor, setNColor] = React.useState("");
-  
-  const strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");//regex kiểm tra mật khẩu hợp lệ
   
   const onChangeoldPassword = (event) => {
       setoldPassword(event.target.value)
@@ -35,16 +32,6 @@ function Password() {
   
   const onChangenewPassword = (event) => {
     setnewPassword(event.target.value)
-    if (strongRegex.test(event.target.value)) {
-      setColor(Rcolor)
-      setNewMessage("*Mật khẩu hợp lệ")
-      //setValid(pre => { return { ...pre, new: true } })
-    }
-    else {
-      setColor(Fcolor)
-      setNewMessage("*Mật khẩu phải có ít nhất 8 kí tự. Chứa kí tự thường, kí tự hoa và số")
-      //setValid(pre => { return { ...pre, new: false } })
-    }
   }
   
   const onChangeconfirmPassword = (event) => {
@@ -53,17 +40,14 @@ function Password() {
       setFontSizeMessage("13px")
       setNColor(Rcolor)
       setMessage("*Trùng khớp")
-      //setValid(pre => { return { ...pre, cf: true } })
     }
     else {
       setFontSizeMessage("14px")
       setNColor(Fcolor)
       setMessage("*Mật khẩu không trùng khớp!")
-      //setValid(pre => { return { ...pre, cf: false } })
     }
   }
   const handleChangePassword = () => {
-    //if (valid.new && valid.cf){
       const params = {
         "confirmPassword": confirmPassword,
         "newPassword": newPassword,
@@ -71,16 +55,14 @@ function Password() {
       }
       apiProfile.putChangePassword(params)
         .then(response => {
-          setFontSizeMessage("16px")
-          setNColor(Rcolor)
-          setMessage("Thay đổi thành công")
+          toast.success("Thay đổi mật khẩu thành công")
+          navigate('/customer/account/edit');
         })
         .catch(error => {
           setFontSizeMessage("16px")
           setNColor(Fcolor)
-        setMessage("Thay đổi không thành công!")
-      })
-    //}   
+        toast.error("Thay đổi không thành công!")
+      })  
   }
 
   const passwordInput = (placeHolder, value, onChange) => {

@@ -39,7 +39,6 @@ function SelectBoxAddress(props) {
         apiAddress.getDistrictInProvinceById(params)
           .then(res => {
             setListDistrict(res);
-            
           })
       };
       getData();

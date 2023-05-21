@@ -22,7 +22,7 @@ const apiCategory = {
         return res.data;
     },
     updateCategory: async (params) => {
-        const res = await axiosClientWithToken.put(`/admin/category/update/${params.id}`,params);
+        const res = await axiosClientWithToken.put(`/admin/category/update/${params.id}?parentId=${params.parentId}`,params);
         return res.data;
     }
 }

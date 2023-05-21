@@ -8,7 +8,6 @@ import ConfigRoute from "./ConfigRoute";
 import { useDispatch, useSelector } from "react-redux";
 import { axiosInstance } from "./apis/axiosClient";
 import { loginSuccess, logoutSuccess } from "./slices/authSlice";
-import ScrollToTop from "./components/ScrollToTop";
 import CheckAuthentication from "./components/CheckAuthentication";
 import { MessengerChat } from "react-messenger-chat-plugin";
 import CompareOutlinedIcon from '@mui/icons-material/CompareOutlined';
@@ -29,7 +28,6 @@ function App() {
     <>
       <BrowserRouter>
         <CheckAuthentication />
-        <ScrollToTop>
           {isAdmin||isManager ? null : <Header />}
           <ConfigRoute />
           {isAdmin||isManager||compare.length!=2 ? null : <Fab style={{
@@ -42,7 +40,6 @@ function App() {
           }}><a href="/compare"><CompareOutlinedIcon/></a></Fab>}
           {isAdmin||isManager ? null : <Footer />}
           <div><Toaster/></div>
-        </ScrollToTop>
       </BrowserRouter>
       {isAdmin||isManager ? null : (
         <MessengerChat

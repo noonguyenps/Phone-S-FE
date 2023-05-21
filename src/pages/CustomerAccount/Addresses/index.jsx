@@ -51,12 +51,14 @@ function Addresses() {
 
   return (
     <Stack spacing={2} className="addresses">
-      <Typography className="heading">Danh sách địa chỉ</Typography>
-      <Link to="/customer/address/create">
-        <Button className="new" variant="outlined" startIcon={<AddIcon />}>
-          Thêm địa chỉ mới
-        </Button>
-      </Link>
+      <Stack direction='row' justifyContent="space-between" alignItems="center">
+        <Typography className="heading">Danh sách địa chỉ</Typography>
+        <Link to="/customer/address/create">
+          <Button startIcon={<AddIcon />}>
+            Thêm địa chỉ mới
+          </Button>
+        </Link>
+      </Stack>
       <Stack spacing={5}>{
         addresses.length === 0 ?
           <Typography>Bạn chưa có địa chỉ</Typography>
@@ -68,8 +70,14 @@ function Addresses() {
                 className="items"
               >
                 <Stack className="info">
-                  <Typography className="name">{item.fullName}</Typography>
-                  <Typography className="name">{item.companyName}</Typography>
+                  <Stack direction='row'>
+                  <Typography>Tên người nhận</Typography>
+                  <Typography className="name">: {item.fullName}</Typography>
+                  </Stack>
+                  <Stack direction='row'>
+                  <Typography>Tên công ty</Typography>
+                  <Typography className="name">: {item.companyName}</Typography>
+                  </Stack>
                   <Typography className="address">Địa chỉ cụ thể: {`${item.addressDetail}`}</Typography>
                   <Typography className="address">Địa chỉ : <AddressVN province={Number(item.province)} district={item.district} commune={item.commune}/></Typography>
                   <Typography className="number">Điện thoại: {item.phoneNumber}</Typography>

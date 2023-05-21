@@ -42,26 +42,40 @@ function FavoriteProduct() {
   return (
     <Box>
       <Typography variant="h6">Danh sách yêu thích</Typography>
-
-      <Grid container sx={{ backgroundColor: "white", padding: "1rem" }}>
-        {myFavorites.map((item) => {
-          let data = {
-            id: item.id,
-            image: item.image,
-            name: item.name,
-            rate: item.rate,
-            sold: item.sold,
-            discount: item.discount,
-            price: item.price,
-            slug: item.slug,
-          };
-          return (
-            <Grid key={item.id} item lg={2} md={4} sm={4} xs={4}>
-              <CardProduct data={data} />
-            </Grid>
-          );
-        })}
-      </Grid>
+      {
+        myFavorites.length===0?(<>
+          <Box  className="myorder__none">
+                  <img
+                  height="200px"
+                  width="200px"
+                    src="https://res.cloudinary.com/duk2lo18t/image/upload/v1665719834/frontend/S-Phone_cpfelx.png"
+                    alt=""
+                  />
+                  <Typography>Danh sách yêu thích của bạn đang trống</Typography>
+          </Box>
+        </>):(
+        <>
+          <Grid container sx={{ backgroundColor: "white", padding: "1rem" }}>
+          {myFavorites.map((item) => {
+            let data = {
+              id: item.id,
+              image: item.image,
+              name: item.name,
+              rate: item.rate,
+              sold: item.sold,
+              discount: item.discount,
+              price: item.price,
+              slug: item.slug,
+            };
+            return (
+              <Grid key={item.id} item lg={2} md={4} sm={4} xs={4}>
+                <CardProduct data={data} />
+              </Grid>
+            );
+          })}
+        </Grid>
+        </>)
+      }
     </Box>
   );
 }

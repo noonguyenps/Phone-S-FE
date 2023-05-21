@@ -23,7 +23,9 @@ function EditCategory() {
     const [id, setId] = useState("");
     const [name, setName] = useState("")
     const [parent, setParent] = useState("")
+    const [parentName, setParentName] = useState("")
     const [listType, setListType] = useState([]);
+    const [update, setUpdate] = useState(false);
     const params = useParams();
     const navigate = useNavigate();
     
@@ -35,11 +37,12 @@ function EditCategory() {
                         const category = res[0]
                         if (category) {
                             setName(category.name)
-                            setParent(category.parent)
+                            setParentName(category.parentName)
+                            setParent(category.parentId)
                         }
                         else {
                             navigate("/admin/category")
-                            toast.error("Sản phẩm này không tồn tại!")
+                            toast.error("Danh mục này không tồn tại!")
                         }
                     }
                     )
@@ -61,6 +64,9 @@ function EditCategory() {
     const handleChangeType = (event) => {
         setParent(event.target.value);
     };
+    const handleChangeUpdate = (event) => {
+        setUpdate(!update);
+    };
     const handleUpdate = () => {
         const params = {
             id: id,
@@ -74,6 +80,7 @@ function EditCategory() {
         apiCategory.updateCategory(params)
             .then(res => {
                 toast.success("Cập nhật thành công")
+                navigate('/admin/category')
             })
             .catch(error => {
                 toast.error("Cập nhật thất bại!")
@@ -84,7 +91,9 @@ function EditCategory() {
             <Stack p={3} justifyContent="center" sx={{ width: "700px" }} spacing={3}>
                 <Stack direction="row" p={2} >
                     <Typography sx={{ width: "200px" }}>Danh mục cha</Typography>
-                    <FormControl className="create-address__input" sx={{ flex: 1 }}>
+                    {
+                        update?(<>
+                        <FormControl className="create-address__input" sx={{ flex: 1 }}>
                         <Select
                             size="small"
                             labelId="demo-simple-select-helper-label"
@@ -97,7 +106,11 @@ function EditCategory() {
                                 listType.map(item => item.name !== name && <MenuItem value={item.id} >{item.name}</MenuItem>)
                             }
                         </Select>
-                    </FormControl>
+                        </FormControl>
+                        </>):(<>
+                        <TextField onClick={handleChangeUpdate} disabled='disabled' size="small" value={parentName?parentName:"Đây là danh mục gốc"} sx={{width:430}}></TextField>
+                        </>)
+                    }
                 </Stack>
                 <Stack direction="row" p={2} >
                     <Typography sx={{ width: "200px" }}>Tên danh mục</Typography>

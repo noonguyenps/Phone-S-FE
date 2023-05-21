@@ -40,7 +40,7 @@ function AddCategory(props) {
 
     const handleSave = () => {
         if (!(name)) {
-            toast.warning("Hãy nhập tên danh mục !!");
+            toast.error("Hãy nhập tên danh mục !!");
             return
         }
         else {

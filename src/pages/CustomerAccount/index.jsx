@@ -34,7 +34,8 @@ import apiNotify from "../../apis/apiNotify";
 import HomePage from "./HomePage";
 import { deleteAll } from "../../slices/cartSlice";
 import { clearAll } from "../../slices/paymentSlice"
-import Ratting from "../CustomerAccount/Ratting"
+import Ratting from "../CustomerAccount/Ratting";
+import UpdateAddress from "./Addresses/UpdateAddress";
 
 function CustomerAccount() {
   const location = useLocation();
@@ -165,7 +166,7 @@ function CustomerAccount() {
                   <Route path="create" element={<CreateAddress />} />
                   <Route
                     path="edit/:id"
-                    element={<CreateAddress edit={true} />}
+                    element={<UpdateAddress/>}
                   ></Route>
                 </Routes>
               }

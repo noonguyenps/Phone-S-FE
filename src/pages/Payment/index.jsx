@@ -83,6 +83,7 @@ function Payment() {
           }).catch((err)=>{
             toast.warning("Có lỗi xảy ra" + err);
           })
+          listShip.find(item => item.shipId === Number(ship))
       }
       fetchData();
     }

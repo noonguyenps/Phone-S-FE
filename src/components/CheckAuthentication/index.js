@@ -4,6 +4,8 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { logoutSuccess } from '../../slices/authSlice'
 import { toast } from 'react-hot-toast'
 import jwt_decode from 'jwt-decode'
+import { deleteAll } from '../../slices/cartSlice'
+import { clearAll } from '../../slices/paymentSlice'
 
 const privatePath = [
     '/customer/', '/admin/', '/payment',
@@ -23,8 +25,10 @@ function CheckAuthentication() {
                     const tokenDecode = jwt_decode(user.refreshToken)
                     let date = new Date();
                     if (tokenDecode.exp < date.getTime() / 1000) {
-                        toast.error("Phiên làm việc của bạn đã hết. Vui lòng đăng nhập lại")
+                        toast.error("Đăng nhập để tiếp tục")
                         dispatch(logoutSuccess())
+                        dispatch(deleteAll())
+                        dispatch(clearAll())
                         if (isPrivate)
                             navigate('/')
 
@@ -32,7 +36,9 @@ function CheckAuthentication() {
                 }
                 else {
                     dispatch(logoutSuccess())
-                    toast.error("Phiên làm việc của bạn đã hết. Vui lòng đăng nhập lại")
+                    dispatch(deleteAll())
+                    dispatch(clearAll())
+                    toast.error("Đăng nhập để tiếp tục")
                     if (isPrivate)
                         navigate('/')
                 }
