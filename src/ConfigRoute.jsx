@@ -19,6 +19,7 @@ import ManagerLogin from "./pages/ManagerLogin"
 import Manager from "./pages/Manager";
 import CompareProduct from "./pages/CompareProduct";
 import FilterProductSearch from "./pages/FilterProductSearch";
+import Shipper from "./pages/Shipper";
 
 function ConfigRoute() {
   return (
@@ -39,6 +40,9 @@ function ConfigRoute() {
       </Route>
       <Route element={<PrivateRoute roles={['MANAGER']} />}>
         <Route path="manager/*" element={<Manager />} />
+      </Route>
+      <Route element={<PrivateRoute roles={['SHIPPER']} />}>
+        <Route path="shipping/*" element={<Shipper />} />
       </Route>
       <Route path="filter/:id" element={<FilterProduct />} />
       <Route path="product/:id" element={<DetailProduct />} />

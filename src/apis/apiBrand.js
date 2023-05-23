@@ -1,4 +1,4 @@
-import { axiosClientWithToken } from "./axiosClient";
+import { axiosClientWithToken, axiosClientWithTokenExcel } from "./axiosClient";
 
 const apiBrand = {
     getAllBrand : async (params) =>{
@@ -8,6 +8,10 @@ const apiBrand = {
     getListBrand : async () =>{
         const res = await axiosClientWithToken.get(`/admin/brand/all`) 
         return res.data;
+    },
+    exportBrand : async () =>{
+        const res = await axiosClientWithTokenExcel.get(`/admin/brand/export/excel`) 
+        return res;
     },
     getBrandByID : async (params) =>{
         const res = await axiosClientWithToken.get(`/admin/brand/${params.id}`)

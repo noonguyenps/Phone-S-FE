@@ -180,6 +180,7 @@ function UpdateBrand(props) {
     apiBrand.updateBrand(params,idBrand)
       .then(res => {
         toast.success("Sửa thương hiệu thành công")
+        navigate('/admin/brand')
       })
       .catch(error => {
         toast.error("Sửa thương hiệu thất bại!")

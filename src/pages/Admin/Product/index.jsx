@@ -146,6 +146,21 @@ function Product() {
         filterData();
       }, [value]);
 
+      const handleExport = () => {
+        apiProduct.exportProduct()
+        .then((res)=>{
+          const url = window.URL.createObjectURL(new Blob([res.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', `product_${Date.now()}.xlsx`);
+          document.body.appendChild(link);
+          link.click();
+        })
+        .catch(error=>{
+          toast.error("Xuất file không thành công")
+        })
+      }
+
       const handleDelete = () => {
         apiProduct.deleteProductById(itemdelete.id)
         .then(res=>{
@@ -160,21 +175,21 @@ function Product() {
     
     return (
         <>
-        <Stack bgcolor="#fff" p={3}>
+        <Stack bgcolor="#fff" p={3} spacing={1}>
         <Stack direction="row">
             <Stack spacing={2} width="100%">
                 <Stack direction="row" justifyContent="space-between">
                     <Typography>Danh sách sản phẩm</Typography>
                     <Link to="/admin/product/create">
-                        <Button variant="contained">Thêm Sản phẩm</Button>
+                        <Button sx={{width:160}} variant="contained">Thêm Sản phẩm</Button>
                     </Link>
                 </Stack>
             </Stack>
         </Stack>
-        <Stack direction='row'>
-            <TextField
+        <Stack direction='row' justifyContent='space-between'>
+            <TextField size='small'
             label='Tìm sản phẩm'></TextField>
-            <Button><SearchIcon/></Button>
+            <Button sx={{background:'green', width:160}} variant="contained" onClick={handleExport}>Xuất file Excel</Button>
         </Stack>
         <Tabs
             value={value}

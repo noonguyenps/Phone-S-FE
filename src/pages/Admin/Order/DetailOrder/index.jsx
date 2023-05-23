@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from "react";
 import "./DetailOrder.scss";
-import { Box, Stack, Typography, Button, Modal, TextField } from "@mui/material";
+import { Box, Stack, Typography, Button, Modal, TextField, Select, MenuItem } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import apiCart from "../../../../apis/apiCart";
 import { toast } from "react-hot-toast";
 import { numWithCommas } from "../../../../constraints/Util";
 import AddressVN from "../../../../components/AddressVN";
 import { useNavigate } from "react-router-dom"
+import apiShipping from "../../../../apis/apiShipping";
+import FormControl from '@mui/material/FormControl';
 
 function DetailOrder() {
   const id = useParams().id;
   const [order, setOrder] = useState(null);
   const [modalDelete, setModalDelete] = React.useState(false);
+  const [listShipper,setListShipper] = useState([]);
+  const [shipper,setShipper] = useState();
 
   const [shipperPhone,setShipperPhone] = useState('');
   const [shipperName, setShipperName] = useState('');
@@ -37,6 +41,13 @@ function DetailOrder() {
           toast.warning("Không tìm thấy đơn hàng");
           navigate('/admin/order');
         });
+        await apiShipping.getAllShipping()
+        .then((res) => {
+          setListShipper(res.data.listShipper);
+        })
+        .catch((error) => {
+         console.log(error)
+        });
     };
     getData();
   }, [id]);
@@ -45,8 +56,7 @@ function DetailOrder() {
     apiCart
       .changeTypeOrder(id, 1)
       .then((res) => {
-
-        apiCart.createShipping({order:id,phone:shipperPhone,shipperName:shipperName,vnID:shipperID}).then((res=>{
+        apiCart.createShipping({order:id,shipperID:shipper}).then((res=>{
           toast.success("Xác nhận thành công");
         })).catch((error)=>{
           toast.error("Xác nhận không thành công");
@@ -162,20 +172,27 @@ function DetailOrder() {
         ))}
       </Stack>
       {order && (
-        <Stack direction='row' justifyContent="space-between" alignItems="center" marginLeft={4} marginRight={4}>
+        <Stack direction='row' bgcolor='white' justifyContent="flex-end" alignItems="center" margin={2}>
           {order?.orderStatus===0?(
                   <>
-                  <Stack justifyContent="space-between" alignItems="center" margin={1} spacing={2}>
+                  <Stack justifyContent="flex-end" alignItems="center" margin={1} spacing={2} padding={3}>
                     <Typography className="detailOrder__summary-label">Giao Hàng</Typography>
-                    <TextField id="outlined-basic" label="Tên người giao hàng" variant="outlined" size="small" value={shipperName} onChange={(event) => {
-                          setShipperName(event.target.value)
-                        }} />
-                    <TextField id="outlined-basic" label="Số điện thoại" variant="outlined" size="small" value={shipperPhone} onChange={(event) => {
-                          setShipperPhone(event.target.value)
-                        }} />
-                    <TextField id="outlined-basic" label="Số CCCD" variant="outlined" size="small" value={shipperID} onChange={(event) => {
-                          setShipperID(event.target.value)
-                        }} />
+                    
+                    <FormControl fullWidth>
+                    <Select
+                      sx={{ flex: 0.65 , width:500, fontSize:14, color:'blue'}}
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={shipper}
+                      onChange={e=>setShipper(e.target.value)}
+                      placeholder="Chọn người giao hàng"
+                    >
+                      {
+                        listShipper.map((item)=>(<MenuItem value={item.id}>{item.id}-{item.name}</MenuItem>))
+                      }
+                      
+                    </Select>
+                    </FormControl>
                     <Button
                       variant="outlined"
                       sx={{

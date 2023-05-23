@@ -1,7 +1,7 @@
 
 //import { axiosClient, axiosInstance } from "./axiosClient";
 import axios from 'axios';
-import { axiosClientWithToken } from "./axiosClient";
+import { axiosClientWithToken, axiosClientWithTokenExcel } from "./axiosClient";
 import queryString from 'query-string';
 const baseURL = 'https://phone-s.herokuapp.com/api/'
 export const axiosClient = axios.create({
@@ -51,6 +51,10 @@ const apiProduct = {
     addNewProduct : async (params) =>{
         const res = await axiosClientWithToken.post('manager/product/insert/v2', params)
         return res.data;
+    },
+    exportProduct : async () =>{
+        const res = await axiosClientWithTokenExcel.get(`/manager/product/export/excel`) 
+        return res;
     },
     getCountProducts : async () =>{
         const res = await axiosClient.get('product/count')

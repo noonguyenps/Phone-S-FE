@@ -6,7 +6,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ConfigRoute from "./ConfigRoute";
 import { useDispatch, useSelector } from "react-redux";
-import { axiosInstance } from "./apis/axiosClient";
+import { axiosInstance, axiosInstanceExcel } from "./apis/axiosClient";
 import { loginSuccess, logoutSuccess } from "./slices/authSlice";
 import CheckAuthentication from "./components/CheckAuthentication";
 import { MessengerChat } from "react-messenger-chat-plugin";
@@ -22,6 +22,7 @@ function App() {
   const dispatch = useDispatch();
   if (user) {
     axiosInstance(user, dispatch, loginSuccess, logoutSuccess);
+    axiosInstanceExcel(user, dispatch, loginSuccess, logoutSuccess);
   }
 
   return (

@@ -53,26 +53,32 @@ function Brand() {
     })
     closeModalDelete()
   }
+
+  const handleExport = () => {
+    apiBrand.exportBrand()
+    .then((res)=>{
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `brand_${Date.now()}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+    })
+    .catch(error=>{
+      toast.error("Xuất file không thành công")
+    })
+  }
   return (
     <Stack direction="row" sx={{ backgroundColor: "#fff" }} p={3} width="100%">
       <Stack spacing={2} width="100%">
         <Stack direction="row" justifyContent="space-between" width="100%">
           <Typography>Danh sách thương hiệu</Typography>
           <Link to="/admin/brand/create">
-            <Button variant="contained">Thêm thương hiệu</Button>
+            <Button sx={{width:160}} variant="contained">Thêm thương hiệu</Button>
           </Link>
         </Stack>
-        <Stack direction="row" sx={{ width: "100%", position: "relative" }}>
-          <TextField
-            id="outlined-basic"
-            label="Search"
-            variant="outlined"
-            size="medium"
-            width="100%"
-          />
-          <span className="brand__iconSearch">
-            <SearchIcon sx={{ fontSize: "28px" }} />
-          </span>
+        <Stack direction="row" justifyContent="flex-end" sx={{ width: "100%", position: "relative" }}>
+          <Button sx={{background:'green', width:160}} variant="contained" onClick={handleExport}>Xuất file Excel</Button>
         </Stack>
 
         <Table
