@@ -25,10 +25,12 @@ function User() {
   const closeModalDelete = () => setModalDelete(false);
 
   const [users, setUsers] = useState([])
+  const [page, setPage] = useState(0);
+  const size = 10;
 
   useEffect(() => {
     const getData = async () => {
-      apiProfile.getAllUser()
+      apiProfile.getAllUser({page:page,size:size,sort:'user_id'})
         .then(res => {
           setUsers(res.data.listUser)
         })
@@ -37,7 +39,7 @@ function User() {
         })
     };
     getData();
-  }, []);
+  }, [page]);
 
   const convertDate = (date)=>{
     var dateNew = new Date(date)
@@ -45,6 +47,7 @@ function User() {
   }
 
   return (
+    <Stack direction='column' sx={{ backgroundColor: "#fff" }} p={3} width="100%">
     <Stack direction="row" sx={{ backgroundColor: "#fff" }} p={3} width="100%">
       <Stack spacing={2} width="100%">
         <Stack direction="row" justifyContent="space-between" width="100%">
@@ -155,6 +158,16 @@ function User() {
           </Stack>
         </Stack>
       </Modal>
+    </Stack>
+    <Stack direction='row' spacing={2} justifyContent="center">
+                    {
+                        page==0?(<></>):(<Button sx={{backgroundColor:'#EEEEEE', color:'red'}} onClick={() => { setPage(page-1) }}>Trước</Button>)
+                    }
+                    <Button sx={{backgroundColor:'#EEEEEE'}}>Trang {page+1}</Button>
+                    {
+                        users?.length<10?(<></>):(<Button sx={{backgroundColor:'#EEEEEE', color:'red'} } onClick={() => { setPage(page+1) }}>Sau</Button>)
+                    }
+      </Stack>
     </Stack>
   );
 }

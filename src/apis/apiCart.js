@@ -92,6 +92,9 @@ const apiCart = {
     createShipping: async(params)=>{
         const res = await axiosClientWithToken.post(`/manager/shipping/create`,params);
         return res.data;
+    },updatePaymentOrder: async (params)=>{
+        const res = await axiosClientWithToken.post(`/user/order/payment/${params.id}?paymentId=${params.paymentId}`);
+        return res.data;
     }
     
 }

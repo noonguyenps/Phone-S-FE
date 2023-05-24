@@ -697,7 +697,6 @@ function DetailProduct() {
                      />
                  </Tabs>
                  <Stack pading={1} margin={1}>
-                  <Typography>Đánh giá và nhận xét {product?.name?product.name:""}</Typography>
                   <Box>
                     <Stack justifyContent='center' alignItems='center'>
                       <Typography sx={{ fontSize: "30px", color: "red" }}>{product?.rate}/5</Typography>
@@ -707,22 +706,23 @@ function DetailProduct() {
                     </Stack>
                     {
                         ratings?.map(item=>(
-                          <Stack margin={1}>
-                            <Typography sx={{ fontSize: "20px"}}>Khách hàng: {item?.nickname}</Typography>
-                            <Stack margin ={1}>
+                          <Stack margin={1} borderRadius={1} border={1} padding={1} borderColor={'grey.600'}>
+                            <Stack direction='row' justifyContent='space-between' alignItems='center' margin={1}>
+                              <Typography sx={{ fontSize: "20px"}}>{item.comment}</Typography>
                               <Rating name="read-only" value={product?.rate || 0} sx={{ fontSize: "1.2rem" }} readOnly />
-                              <Typography sx={{ fontSize: "16px"}}>Đánh giá : {item.comment}</Typography>
                             </Stack>
                             <Stack margin ={1} spacing={1} direction='row'>
-                              <Typography>Hình ảnh </Typography>
                                 {
                                   item?.urls?.map(item=>(
                                     <img width='100px' height='100px' src={item}></img>
                                   ))
                                 }
                             </Stack>
+                            <Stack margin ={1} spacing={1} direction='row'>
+                              <Typography sx={{fontSize:13}}>Đăng tải bởi : {item.nickname}</Typography>
+                            </Stack>
                             <Stack margin ={1} spacing={1}>
-                              <Typography>Bình luận </Typography>
+                              <Typography>Danh sách bình luận</Typography>
                                 {
                                   item?.comments?.map(item=>(
                                     <Stack direction='row' spacing={2} paddingLeft={2}>
@@ -734,8 +734,9 @@ function DetailProduct() {
                                 }
                               <Stack direction='row' spacing={2} paddingLeft={2}>
                               <TextField
-                              sx={{ fontSize: "13px"}}
-                              label="Bình luận của bạn"
+                              sx={{ fontSize: "13px", width:400}}
+                              size="small"
+                              label="Hãy để lại bình luận của bạn"
                               value={comment}
                               onChange={event=>{
                                 setComment(event.target.value)
@@ -744,7 +745,7 @@ function DetailProduct() {
                               {user?(<>
                                 <Button
                               onClick={handlePostComment}>
-                                Thêm bình luận
+                                Thêm
                               </Button>
                               </>):(<>
                                 <Button

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./DetailOrder.scss";
-import { Box, Stack, Typography, Button, Modal } from "@mui/material";
+import { Box, Stack, Typography, Button, Modal,MenuItem,Select } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import apiCart from "../../../../apis/apiCart";
 import { toast } from "react-hot-toast";
@@ -8,7 +8,8 @@ import { numWithCommas } from "../../../../constraints/Util";
 import { orderTabs } from "../../../../constraints/OrderItem";
 import apiNotify from "../../../../apis/apiNotify";
 import AddressVN from "../../../../components/AddressVN";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import FormControl from '@mui/material/FormControl';
 
 function DetailOrder() {
   const id = useParams().id;
@@ -16,6 +17,8 @@ function DetailOrder() {
   const [modalDelete, setModalDelete] = React.useState(false);
   const closeModalDelete = () => setModalDelete(false);
   const navigate = useNavigate()
+  const [payment,setPayment] = useState(1);
+  const listPayment = [{id:2,name:"Thanh toán bằng Paypal"},{id:3,name:"Thanh toán bằng Momo QR"},{id:4,name:"Thanh toán bằng Momo ATM"},]
 
 
   const openModalDelete = () => {
@@ -46,6 +49,21 @@ function DetailOrder() {
       })
       .catch((error) => {
         toast.error("Đơn hàng hủy không thành công");
+      });
+  };
+
+  const handleConfirm = () => {
+    let params = {
+      id:id,
+      paymentId:payment
+    }
+    apiCart
+      .updatePaymentOrder(params)
+      .then((res) => {
+        window.location.replace(res.data.url)
+      })
+      .catch((error) => {
+        console.log(error)
       });
   };
 
@@ -197,8 +215,41 @@ function DetailOrder() {
               ₫
             </Typography>
           </Stack>
+          <Stack direction="row" margin={2} spacing={2} alignItems="center">
+          { !order?.paymentStatus?(
+            <Stack justifyContent="flex-start" alignItems="center" direction='row'>
+            <FormControl fullWidth>
+            <Select
+              sx={{ flex: 0.65 , width:250, fontSize:14, color:'blue'}}
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              size='small'
+              value={payment}
+              onChange={e=>setPayment(e.target.value)}
+              placeholder="Chọn người giao hàng"
+            >
+              {
+                listPayment.map((item)=>(<MenuItem value={item.id}>{item.name}</MenuItem>))
+              }
+              
+            </Select>
+            </FormControl>
+            <Button
+              variant="outlined"
+              sx={{
+                fontSize: "12px",
+                width: "122px",
+                height: "30px",
+                padding: 0,
+                  }}
+              onClick={handleConfirm}
+        >
+          Thanh toán
+        </Button>
+          </Stack>):(<></>)
+          }
           { order?.orderStatus === 0?(
-            <Stack direction="row" margin={2}>
+            
               <Button
                 variant="outlined"
                 onClick={() => openModalDelete()}
@@ -211,8 +262,9 @@ function DetailOrder() {
               >
                 Hủy đơn
               </Button>
-            </Stack>):(<></>)
+            ):(<></>)
           }
+          </Stack>
           <Modal
                 sx={{ overflowY: "scroll" }}
                 open={modalDelete}

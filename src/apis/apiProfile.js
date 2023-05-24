@@ -38,7 +38,7 @@ const apiProfile = {
         return res.data;
     },
     getAllUser: async (params) => {
-        const res = await axiosClientWithToken.get('admin/user/all', params)
+        const res = await axiosClientWithToken.get(`admin/user/all?page=${params.page}&size=${params.size}`)
         return res.data;
     },
     getUserByIDWithAdmin: async (params) => {

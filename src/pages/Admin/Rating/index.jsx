@@ -296,8 +296,8 @@
                                 <TableCell align="center">{row.star}</TableCell>
                                  <TableCell align="center">
                                      <Stack spacing={1} justifyContent="center" py={1}>
-                                         <Link to={`detail/${row.id}`}>
-                                             <Button sx={{ width: "100px" }} variant="outlined" >Xem chi tiết</Button>
+                                         <Link to={`/product/${row.productResponse.id}`}>
+                                             <Button sx={{ width: "100px" }} variant="outlined" >Xem đánh giá</Button>
                                          </Link>
                                      </Stack>
                                  </TableCell>

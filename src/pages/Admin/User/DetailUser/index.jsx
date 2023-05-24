@@ -5,7 +5,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import "./DetailUser.scss"
 import apiProfile from "../../../../apis/apiProfile";
-import apiAddress from '../../../../apis/apiAddress';
+import { numWithCommas } from "../../../../constraints/Util";
 import {
   Stack,
   Button,
@@ -23,13 +23,15 @@ import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
 import EmailIcon from "@mui/icons-material/Email";
 import CakeIcon from "@mui/icons-material/Cake";
 import AddressVN from "../../../../components/AddressVN";
+import apiAdmin from "../../../../apis/apiAdmin";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function DetailUser() {
   const [user, setUser] = useState([])
   const [addresses, setAddresses] = useState([]);
-  const idUser = useParams().id
+  const idUser = useParams().id;
+  const [orders,setOrders] = useState();
 
   useEffect(() => {
     const getUser = async () => {
@@ -46,24 +48,29 @@ function DetailUser() {
 
   useEffect(() => {
     const getData = async () => {
-      apiAddress.getUserAddress()
+      apiAdmin.getUserAddressByID(idUser)
         .then(res => {
           setAddresses(res.data.addressList);
+        })
+      apiAdmin.getUserOrdersByID(idUser)
+        .then(res => {
+          setOrders(res.data.listOrder);
         })
     };
     getData();
   }, []);
 
+  const convertDate = (date)=>{
+    var dateNew = new Date(date)
+    return String(dateNew.getDate()+"/"+String(dateNew.getMonth()+1)+'/'+dateNew.getFullYear())
+  };
+
 
   return (
     <Box p="2rem" bgcolor="#fff">
-      <Typography variant="h6">Chi tiết thông tin khách hàng</Typography>
+      <Typography variant="h6">Chi tiết khách hàng</Typography>
       <Stack p="1rem" spacing={3}>
       <Stack justifyContent="center"  spacing={5}>
-            <Typography fontWeight="bold">
-              Thông tin người dùng
-            </Typography>
-
             <Stack alignItems="center">
               <Avatar
                 sx={{ width: 100, height: 100 }}
@@ -93,97 +100,14 @@ function DetailUser() {
 
               <Stack direction="row" alignItem="center">
                 <CakeIcon />
-                <Typography ml={1}>{user.birth_day && `${user.birth_day[2]}/${user?.birth_day[1]}/${user?.birth_day[0]}`}</Typography>
+                <Typography ml={1}>{convertDate(user.birthDate)}</Typography>
               </Stack>
             </Stack>
           </Stack>
-        <Stack direction="row" spacing={3}>
-
-          {/* <Stack className="detailUser__infowrap" alignItem="center">
-            <Typography fontWeight="bold">Thống kê mua hàng</Typography>
-
-            <Stack width="50%" height="50%" ml="7rem"
-              alignItems="center"
-              spacing={3}
-            >
-              <Doughnut data={dataChart} />
-              <Typography fontWeight="bold">Tổng cộng: 820.000 VNĐ</Typography>
-            </Stack>
-          </Stack> */}
-        </Stack>
-
-        {/* <Stack className="detailUser__infowrap" width="100% !important" spacing={3}>
-          <Typography fontWeight="bold">
-            Thống kê hoạt động
-          </Typography>
-
-          <Stack flexGrow={1} spacing={3}>
-            <Stack>
-              <Stack direction="row" justifyContent="space-between">
-                <Typography>Sản phẩm yêu thích</Typography>
-                <Typography>30</Typography>
-                <Typography>{res.liked}</Typography>
-              </Stack>
-
-              <Stack>
-                <LinearProgress
-                  color="primary"
-                  variant="determinate"
-                  value={30}
-                />
-              </Stack>
-            </Stack>
-
-            <Stack>
-              <Stack direction="row" justifyContent="space-between">
-                <Typography>Sản phẩm đã mua</Typography>
-                <Typography>30</Typography>
-                <Typography>{res.bought}</Typography>
-              </Stack>
-
-              <LinearProgress
-                color="secondary"
-                variant="determinate"
-                value={60}
-              />
-            </Stack>
-
-            <Stack>
-              <Stack direction="row" justifyContent="space-between">
-                <Typography>Sản phẩm đã đánh giá</Typography>
-                <Typography>30</Typography>
-                <Typography>{res.rated}</Typography>
-              </Stack>
-              <LinearProgress
-                color="warning"
-                variant="determinate"
-                value={10}
-              />
-            </Stack>
-          </Stack>
-        </Stack> */}
 
         <Stack className="detailUser__infowrap" width="100% !important">
-          <Typography fontWeight="bold">Sổ địa chỉ</Typography>
+          <Typography>Danh sách địa chỉ</Typography>
           {addresses.map((item) => {
-            // return (
-            //   <Stack
-            //     width="50rem"
-            //     direction="row"
-            //     justifyContent="space-between"
-            //     className="items"
-            //   >
-            //     <Stack className="info">
-            //       <Typography className="name">{item.name}</Typography>
-            //       <Typography className="address">
-            //         Địa chỉ: {item.address}
-            //       </Typography>
-            //       <Typography className="number">
-            //         Điện thoại: {item.phone}
-            //       </Typography>
-            //     </Stack>
-            //   </Stack>
-            // );
             return (
               <Stack className="info" key={item.id} mb={2}>
                 <Typography className="name">{item.fullName}</Typography>
@@ -195,70 +119,53 @@ function DetailUser() {
             )
           })}
         </Stack>
-
-        {/* <Stack className="detailUser__infowrap" width="fit-content  !important">
-          <Typography fontWeight="bold">
-            Danh sách đơn hàng
-          </Typography>
-
-          <Table
-            className="tableBrand"
-            sx={{ minWidth: "50rem" }}
-            stickyHeader
-            size="small"
-          >
-            <TableHead>
-              <TableRow>
-                <TableCell align="center" sx={{ width: "20%", top: "64px" }}>
-                  ID
-                </TableCell>
-
-                <TableCell align="center" sx={{ width: "20%", top: "64px" }}>
-                  Phương thức thanh toán
-                </TableCell>
-
-                <TableCell align="center" sx={{ width: "20%", top: "64px" }}>
-                  Ngày đặt hàng
-                </TableCell>
-
-                <TableCell align="center" sx={{ width: "20%", top: "64px" }}>
-                  Tổng thanh toán
-                </TableCell>
-
-                <TableCell align="center" sx={{ width: "20%", top: "64px" }}>
-                  Thao tác
-                </TableCell>
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {data.map((item) => (
-                <TableRow
-                  key={item.id}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+        <Stack spacing={3} Stack className="detailUser__infowrap" width="100% !important">
+          <Stack alignItem="center">
+            <Typography>Danh sách đơn hàng</Typography>
+            <Table
+                    className="tableCategory"
+                    sx={{ minWidth: "650px" }}
+                    stickyHeader
+                    size="small"
                 >
-                  <TableCell align="center">{item.id}</TableCell>
-
-                  <TableCell align="center">{item.method}</TableCell>
-
-                  <TableCell align="center">{item.orderDate}</TableCell>
-
-                  <TableCell align="center">
-                    <Typography>{item.price}</Typography>
-                  </TableCell>
-
-                  <TableCell align="center">
-                    <Stack spacing={1} justifyContent="center" py={1}>
-                      <Link to="/admin/user/detail">
-                        <Button variant="contained">Xem</Button>
-                      </Link>
-                    </Stack>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Stack> */}
+                    <TableHead>
+                        <TableRow>
+                            <TableCell sx={{ width: "20%", top: "64px" }}>Mã đơn hàng/Ngày đặt hàng</TableCell>
+                            <TableCell sx={{ width: "15%", top: "64px" }}>Trạng thái&nbsp;</TableCell>
+                            <TableCell align="center" sx={{ width: "20%", top: "64px" }}>Ngày xác nhận/hạn xác nhận&nbsp;</TableCell>
+                            <TableCell align="center" sx={{ width: "20%", top: "64px" }}>Giá trị đơn hàng&nbsp;</TableCell>
+                            <TableCell sx={{ width: "15%", top: "64px" }}>Nhãn đơn hàng&nbsp;</TableCell>
+                            <TableCell sx={{ width: "10%", top: "64px" }}>Thao tác&nbsp;</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {orders?.map((row) => (
+                            <TableRow
+                                key={row.id}
+                                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                            >
+                                <TableCell component="th" scope="row">{row.orderId} <br/>/ {convertDate(row.createdDate)}</TableCell>
+                                <TableCell align="left">{row.orderStatus==0?"Đang xử lý":(
+                                    row.orderStatus==1?"Đang vận chuyển":(
+                                        row.orderStatus==2?"Đã giao hàng":"Đã hủy"
+                                    )
+                                )}</TableCell>
+                                <TableCell align="center">{convertDate(row.createdDate)}/ {convertDate(row.expectedDate)}</TableCell>
+                                <TableCell align="center">{numWithCommas(row.total)} đ</TableCell>
+                                <TableCell align="left">{row.name}</TableCell>
+                                <TableCell align="center">
+                                    <Stack spacing={1} justifyContent="center" py={1}>
+                                        <Link to={`/admin/order/detail/${row.orderId}`}>
+                                            <Button sx={{ width: "100px" }} variant="outlined" >Xem chi tiết</Button>
+                                        </Link>
+                                    </Stack>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+          </Stack>
+        </Stack>
       </Stack>
     </Box>
   );
