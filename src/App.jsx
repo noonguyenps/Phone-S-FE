@@ -35,7 +35,7 @@ function App() {
               margin: 0,
               top: 'auto',
               right: 20,
-              bottom: 60,
+              bottom: 80,
               left: 'auto',
               position: 'fixed',
           }}><a href="/compare"><CompareOutlinedIcon/></a></Fab>}

@@ -58,7 +58,7 @@ function ShippingList() {
                                 <TableCell>Tên người nhận</TableCell>
                                 <TableCell>Số điện thoại</TableCell>
                                 <TableCell>Địa chỉ cụ thể</TableCell>
-                                <TableCell>Địa chỉ</TableCell>
+                                <TableCell sx ={{width:'100px', minWidth:'100px'}}>Địa chỉ</TableCell>
                                 <TableCell>Giá trị</TableCell>
                                 <TableCell>Thanh toán</TableCell>
                                 <TableCell>Thao tác</TableCell>
@@ -83,7 +83,7 @@ function ShippingList() {
                                     <TableCell align='center'>
                                         <Typography>{row.addressDetail}</Typography>
                                     </TableCell>
-                                    <TableCell align='center'>
+                                    <TableCell align='center' sx ={{width:'100px', minWidth:'100px'}}>
                                         <Typography><AddressVN province={Number(row.province)} district={row.district} commune={row.commune}/></Typography>
                                     </TableCell>
                                     <TableCell align='center'>

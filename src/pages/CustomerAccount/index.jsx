@@ -4,7 +4,7 @@ import { Routes, Route, Link, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import "./CustomerAccount.scss";
-
+import jwt_decode from 'jwt-decode';
 import { sidebarTab } from "../../constraints/Profile";
 import LogoutIcon from '@mui/icons-material/Logout';
 import { logoutSuccess } from "../../slices/authSlice";
@@ -36,10 +36,14 @@ import { deleteAll } from "../../slices/cartSlice";
 import { clearAll } from "../../slices/paymentSlice"
 import Ratting from "../CustomerAccount/Ratting";
 import UpdateAddress from "./Addresses/UpdateAddress";
+import PrivateRoute from "../../components/PrivateRoute";
+import Shipper from "../Shipper";
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 
 function CustomerAccount() {
   const location = useLocation();
   const dispatch = useDispatch();
+  
   const tabId = sidebarTab.find((item) =>
     location.pathname.includes(item.link)
   );
@@ -47,6 +51,9 @@ function CustomerAccount() {
   const [selectedTabId, setSelectedTabId] = React.useState(tabId?.id || 0);
   const [badge, setBadge] = React.useState(0);
   const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
+  const tokenDecode = jwt_decode(user?.refreshToken);
+  const getRole = tokenDecode.roleNames[0];
   const getData = React.useCallback(async () => {
     let count = 0;
     let param = {
@@ -117,6 +124,26 @@ function CustomerAccount() {
                 </Link>
               );
             })}
+            {
+              getRole==="SHIPPER"?(<>
+              <Link key={9} to={'shipping'}>
+                  <ListItem
+                    disablePadding
+                    onClick={() => setSelectedTabId(9)}
+                    selected={selectedTabId === 9}
+                  >
+                    <ListItemButton>
+                      <ListItemIcon>{<LocalShippingIcon/>}</ListItemIcon>
+
+                      <ListItemText
+                        primary={'Giao hàng'}
+                        sx={{ "&>span": { fontSize: "13px" } }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                </Link>
+            </>):(<></>)
+            }
             <ListItem
                     disablePadding
                     onClick={handleLogout}
@@ -173,6 +200,9 @@ function CustomerAccount() {
             />
             <Route path="/wishlist" element={<FavoriteProduct />} />
             <Route path="/coupons" element={<DiscountCode />} />
+            <Route element={<PrivateRoute roles={['SHIPPER']} />}>
+              <Route path="/shipping/*" element={<Shipper />} />
+            </Route>
           </Routes>
         </Box>
       </Box>

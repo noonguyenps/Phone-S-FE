@@ -27,30 +27,14 @@ const apiShipping = {
         const res = await axiosClientWithToken.get(`/manager/shipper/all`,);
         return res.data;
     },
-    getAllRatingByUser: async (params) =>{
-        const res = await axiosClientWithToken.get(`/manager/rating/all/user`,{params});
+    updateShipping: async (id,img1,img2,img3) =>{
+        const res = await axiosClientWithToken.put(`/shipper/update/${id}?img1=${img1}&img2=${img2}&img3=${img3}`);
         return res.data;
     },
-    getAllRatingByProduct: async (params) =>{
-        const res = await axiosClientWithToken.get(`/manager/rating/all/product`,{params});
-        return res.data;
-    },
-    getAllRatingByProductClient: async (params) =>{
-        const res = await axiosClient.get(`/rating/all/product`,{params});
-        return res.data;
-    },
-    postComment: async (params) =>{
-        const res = await axiosClientWithToken.post(`/user/rating/addComment/${params.id}`,params);
-        return res.data;
-    },
-    uploadImgProductRating : async (params) =>{
-        const res = await axiosClientWithToken.post(`/user/product/ratting/uploadImg`,params,{headers: {
+    uploadImg : async (id,params) =>{
+        const res = await axiosClientWithToken.post(`/shipper/uploadImg/${id}`,params,{headers: {
             'Content-Type': 'multipart/form-data'
           }});
-        return res.data;
-    },
-    addNewRating : async (id,params) =>{
-        const res = await axiosClientWithToken.post(`/user/product/rating/${id}`,params);
         return res.data;
     },
 

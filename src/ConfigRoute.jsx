@@ -27,7 +27,7 @@ function ConfigRoute() {
       <Route path="/" element={<Home />} />
       <Route path="cart" element={<ShoppingCart />} />
       <Route path="compare" element={<CompareProduct />} />
-      <Route element={<PrivateRoute roles={["ADMIN", "USER","MANAGER"]} />}>
+      <Route element={<PrivateRoute roles={["ADMIN", "USER","MANAGER","SHIPPER"]} />}>
         <Route path="customer/*" element={<CustomerAccount />} />
         <Route path="payment/info" element={<Payment />} />
         <Route path="payment/voucher" element={<PaymentVoucher />} />
@@ -40,9 +40,6 @@ function ConfigRoute() {
       </Route>
       <Route element={<PrivateRoute roles={['MANAGER']} />}>
         <Route path="manager/*" element={<Manager />} />
-      </Route>
-      <Route element={<PrivateRoute roles={['SHIPPER']} />}>
-        <Route path="shipping/*" element={<Shipper />} />
       </Route>
       <Route path="filter/:id" element={<FilterProduct />} />
       <Route path="product/:id" element={<DetailProduct />} />
