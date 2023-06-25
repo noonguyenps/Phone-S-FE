@@ -180,7 +180,7 @@ function Product() {
             <Stack spacing={2} width="100%">
                 <Stack direction="row" justifyContent="space-between">
                     <Typography>Danh sách sản phẩm</Typography>
-                    <Link to="/admin/product/create">
+                    <Link to="create">
                         <Button sx={{width:160}} variant="contained">Thêm Sản phẩm</Button>
                     </Link>
                 </Stack>

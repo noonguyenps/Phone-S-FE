@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Doughnut } from "react-chartjs-2";
+import { toast } from "react-hot-toast";
 import "./DetailUser.scss"
 import apiProfile from "../../../../apis/apiProfile";
 import { numWithCommas } from "../../../../constraints/Util";
@@ -17,6 +17,8 @@ import {
   Table,
   TableHead,
   Avatar,
+  Select,
+  MenuItem,
 } from "@mui/material";
 
 import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
@@ -24,6 +26,8 @@ import EmailIcon from "@mui/icons-material/Email";
 import CakeIcon from "@mui/icons-material/Cake";
 import AddressVN from "../../../../components/AddressVN";
 import apiAdmin from "../../../../apis/apiAdmin";
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import SaveAsOutlinedIcon from '@mui/icons-material/SaveAsOutlined';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -32,6 +36,9 @@ function DetailUser() {
   const [addresses, setAddresses] = useState([]);
   const idUser = useParams().id;
   const [orders,setOrders] = useState();
+  const [edit, setEdit] = useState(false);
+  const [roles, setRoles] = useState([]);
+  const [role,setRole] = useState('');
 
   useEffect(() => {
     const getUser = async () => {
@@ -41,9 +48,17 @@ function DetailUser() {
       apiProfile.getUserByIDWithAdmin(param)
         .then(res => {
           setUser(res.data.user);
+          setRole(res.data.user.roleId);
+        })
+    };
+    const getRoles = async () => {
+      apiAdmin.getAllRoles()
+        .then(res => {
+          setRoles(res.data.roles);
         })
     };
     getUser();
+    getRoles();
   }, []);
 
   useEffect(() => {
@@ -64,6 +79,29 @@ function DetailUser() {
     var dateNew = new Date(date)
     return String(dateNew.getDate()+"/"+String(dateNew.getMonth()+1)+'/'+dateNew.getFullYear())
   };
+  const handleChange = (event) => {
+    setRole(event.target.value);
+  };
+  const handleChangeUpdate = (event) => {
+    if(edit){
+      let params={
+        id:user.id,
+        roleId:role
+      }
+      apiAdmin.putRole(params)
+        .then((res) => {
+          toast.success('Phân quyền thành công');
+          setEdit(false);
+        }).catch((err)=>{
+          toast.success('Phân quyền thất bại');
+          setEdit(false);
+        })
+    }
+    else{
+      setEdit(true);
+    }
+    
+  };
 
 
   return (
@@ -71,7 +109,9 @@ function DetailUser() {
       <Typography variant="h6">Chi tiết khách hàng</Typography>
       <Stack p="1rem" spacing={3}>
       <Stack justifyContent="center"  spacing={5}>
-            <Stack alignItems="center">
+        {
+          user?(<>
+          <Stack alignItems="center">
               <Avatar
                 sx={{ width: 100, height: 100 }}
                 alt=""
@@ -81,6 +121,44 @@ function DetailUser() {
               {user?.id}
               </Typography>
               <Typography variant="h6">{user?.fullName}</Typography>
+              {
+                !edit?(<>
+                <Stack direction='row' justifyContent="center" alignItems="center">
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  sx={{width:150}}
+                  value={role}
+                  size="small"
+                  onChange={handleChange}
+                  disabled='disabled'
+                >{
+                  roles.map((item) =>
+                    (
+                      <MenuItem value={item.id}>{item.name}</MenuItem>
+                    ))
+                }
+                </Select>
+                <Button onClick={handleChangeUpdate}><EditOutlinedIcon/></Button></Stack>
+                </>):(<>
+                <Stack direction='row' justifyContent="center" alignItems="center">
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  sx={{width:150}}
+                  value={role}
+                  size="small"
+                  onChange={handleChange}
+                >{
+                  roles.map((item) =>
+                    (
+                      <MenuItem value={item.id}>{item.name}</MenuItem>
+                    ))
+                }
+                </Select>
+                <Button onClick={handleChangeUpdate}><SaveAsOutlinedIcon/></Button>
+              </Stack></>)
+              }
             </Stack>
 
             <Stack
@@ -102,8 +180,9 @@ function DetailUser() {
                 <CakeIcon />
                 <Typography ml={1}>{convertDate(user.birthDate)}</Typography>
               </Stack>
-            </Stack>
-          </Stack>
+            </Stack></>):(<></>)
+        }
+        </Stack>
 
         <Stack className="detailUser__infowrap" width="100% !important">
           <Typography>Danh sách địa chỉ</Typography>

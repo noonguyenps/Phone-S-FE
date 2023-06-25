@@ -21,6 +21,14 @@ const apiAdmin = {
         const res = await axiosClientWithToken.get(`admin/user/order/${id}`)
         return res.data;
     },
+    getAllRoles: async (id) => {
+        const res = await axiosClientWithToken.get(`admin/role/all`)
+        return res.data;
+    },
+    putRole: async (params) => {
+        const res = await axiosClientWithToken.put(`admin/user/edit/role/${params.id}?roleId=${params.roleId}`)
+        return res.data;
+    }
 }
     
 export default apiAdmin;

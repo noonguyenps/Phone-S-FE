@@ -72,7 +72,7 @@ function Coupon() {
       <Stack spacing={2} width="100%">
         <Stack direction="row" justifyContent="space-between">
           <Typography>Danh sách Mã giảm giá</Typography>
-          <Link to="/admin/coupon/create">
+          <Link to="create">
             <Button variant="contained">Thêm Mã giảm giá</Button>
           </Link>
         </Stack>

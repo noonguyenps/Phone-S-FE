@@ -7,12 +7,6 @@ import RateReviewOutlinedIcon from '@mui/icons-material/RateReviewOutlined';
 
 export const sidebarManager = [
     {
-        id: 1,
-        text: 'Trang chủ',
-        icon: LeaderboardOutlinedIcon,
-        link: '/manager'
-    },
-    {
         id: 2,
         text: 'Công cụ khuyến mãi',
         icon: LoyaltyOutlinedIcon,

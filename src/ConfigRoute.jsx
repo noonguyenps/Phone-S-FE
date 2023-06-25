@@ -20,6 +20,7 @@ import Manager from "./pages/Manager";
 import CompareProduct from "./pages/CompareProduct";
 import FilterProductSearch from "./pages/FilterProductSearch";
 import Shipper from "./pages/Shipper";
+import ProductBrand from "./pages/ProductBrand";
 
 function ConfigRoute() {
   return (
@@ -43,6 +44,7 @@ function ConfigRoute() {
       </Route>
       <Route path="filter/:id" element={<FilterProduct />} />
       <Route path="product/:id" element={<DetailProduct />} />
+      <Route path="brand/:id" element={<ProductBrand />} />
       <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
       <Route path="*" element={<Error />} />
       <Route path="search/:id" element={<FilterProductSearch />} />

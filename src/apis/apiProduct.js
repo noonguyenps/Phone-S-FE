@@ -87,7 +87,16 @@ const apiProduct = {
     getProductsWithAdmin: async (params)=>{
         const res = await axiosClientWithToken.get('/manager/product/all',{params})
         return res.data
-    }
+    },
+    getProductByBrand: async (params) => {
+        const res = await axiosClient.get(`/product/brand/${params.id}`,{params})
+        return res.data;
+    },
+    getBrandById: async (id) => {
+        const res = await axiosClient.get(`/brand/${id}`)
+        return res.data;
+    },
+
 
 }
 export default apiProduct;

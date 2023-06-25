@@ -22,6 +22,7 @@ import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrow
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import FiberNewIcon from '@mui/icons-material/FiberNew';
 import {RemoveRedEye} from "@mui/icons-material";
+import apiBrand from "../../apis/apiBrand";
 
 function FilterProductSearch(props) {
 
@@ -29,6 +30,7 @@ function FilterProductSearch(props) {
 
   const [value, setValue] = useState(0);
   const [products, setProducts] = useState([]);
+  const [brands, setBrands] = useState([]);
   const [sort, setSort] = useState('product_id');
   const [page, setPage] = useState(0);
   const size = 16;
@@ -85,6 +87,7 @@ function FilterProductSearch(props) {
         page: page,
         sort: sort
       }
+
       apiProduct.getProductsBySearch(params)
         .then((res) => {
           setProducts(res.data.listProduct);
@@ -92,6 +95,17 @@ function FilterProductSearch(props) {
         .catch((err)=>{
           setProducts(null);
         })
+      let params1 ={
+          key:c,
+          size: size,
+          page: page,
+          sort: 'brand_id'
+        }
+      apiBrand.getBrandsBySearch(params1).then((res)=>{
+        setBrands(res.data.listBrand)
+      }).catch((err)=>{
+        setBrands(null)
+      })
     };
     getData();
   }, [query, sort]);
@@ -104,8 +118,29 @@ function FilterProductSearch(props) {
   return (
     <Stack className="filterProduct container" py={1} px={2} direction="column"
     justifyContent="center"
-    alignItems="center"
+    alignItems="flex-start"
     spacing={2}>
+      {brands?(
+      <Stack spacing={2}>
+        <Typography>Danh sách thương hiệu</Typography>
+        <Stack direction='row'>
+          {
+            brands.map((item) => (
+            <>
+            <a href={`/brand/${item.id}`}>
+              <Box width={150} height={180} border={1} borderRadius={2} borderColor='#d3d3d3' padding={1}>
+                <Stack justifyContent="center" alignItems="center">
+                  <img src={item.img} width={120} height={120} border={1}></img>
+                  <Typography>{item.name}</Typography>
+                </Stack>
+              </Box>
+            </a>
+            </>))
+          }
+        </Stack>
+      </Stack>):(<></>)
+        
+      }
       {products?(
         <Stack direction="row">
           <Stack  direction="row">
