@@ -54,5 +54,9 @@ const apiAttribute = {
           }})
         return res.data;
     },
+    deleteAttribute: async (id) => {
+        const res = await axiosClientWithToken.delete(`admin/attribute/delete/${id}`)
+        return res.data
+    }, 
 }
 export default apiAttribute;

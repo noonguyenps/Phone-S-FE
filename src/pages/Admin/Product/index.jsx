@@ -322,7 +322,7 @@ function Product() {
                                             <Button 
                                             onClick={()=>openModalDelete(row)} 
                                             variant="outlined" color="error">
-                                                Xóa
+                                                Ẩn
                                             </Button>
                                         </Stack>
                                     </TableCell>

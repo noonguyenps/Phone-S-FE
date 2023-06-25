@@ -36,8 +36,7 @@ function ForgetPassword(props) {
       .postCheckPhone(param)
       .then((res) => {
         if(res.status === 302){
-          setIsNoAccount(false);
-          toast.info('Đã gửi thông tin đăng nhập đến tài khoản của bạn');
+          apiAuth.forgetPassword({data:watch('phoneNumber')}).then((res)=>{toast.success('Đã gửi thông tin đăng nhập đến email của bạn');setIsNoAccount(false);})
         }
         if(res.status === 200){
           setIsNoAccount(true);

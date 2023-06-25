@@ -112,11 +112,11 @@ function CrudBrand(props) {
   };
   const handleUploadLogo = ()=>{
     if (image.length === 0) {
-      toast.warning("Vui lòng chọn ảnh")
+      toast.error("Vui lòng chọn ảnh")
       return
     }
     if(uploading){
-      toast.warning("Hình ảnh đang được cập nhật, vui lòng không thao tác quá nhiều lần")
+      toast.error("Hình ảnh đang được cập nhật, vui lòng không thao tác quá nhiều lần")
       return
     }
     setUploading(true)
@@ -161,7 +161,7 @@ function CrudBrand(props) {
       "province": province
     }
     if(!(addressDetails&& country && commune && description && district && name && phone && province)) {
-      toast.warning("Vui lòng nhập đầy đủ thông tin !!");
+      toast.error("Vui lòng nhập đầy đủ thông tin !!");
       return
     }
     else{
@@ -195,7 +195,7 @@ function CrudBrand(props) {
 
     }
     if(!(addressDetails&& country && commune && description && district && name && phone && province)) {
-      toast.warning("Vui lòng nhập đầy đủ thông tin !!");
+      toast.error("Vui lòng nhập đầy đủ thông tin !!");
       return
     }
     else{
@@ -214,7 +214,6 @@ function CrudBrand(props) {
         apiBrand.getBrandByID({id:idBrand})
           .then(res => {
             const brand = res.data.brand
-            console.log(brand)
               if (brand) {
                 setName(brand.name)
                 

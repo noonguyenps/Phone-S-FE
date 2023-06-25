@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, Stack, InputBase, Typography, Button } from "@mui/material";
+import { Box, Stack, InputBase, Typography, Button, TextField } from "@mui/material";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import apiProfile from "../../../../apis/apiProfile";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,13 +25,13 @@ function Email() {
 
   const handleChange = () => {
     const params = {
-      email: email
+      data: email
     };
     apiProfile
       .putChangeEmail(params)
       .then((response) => {
         setColor("#2196f3")
-        setMessage("Thay đổi thành công");
+        setMessage("Một email xác nhận đang gửi đến cho bạn");
         getUserProfile();
       })
       .catch((error) => {
@@ -61,16 +61,18 @@ function Email() {
 
           <Stack spacing={2} mt ="10px">
             <Stack
-              sx={{ border: "1px solid darkgrey", borderRadius: "4px" }}
+              sx={{ border: "1px solid darkgrey", borderRadius: "4px", width:350 }}
               direction="row"
               alignItems="center"
               spacing={1}
             >
               <EmailOutlinedIcon sx={{ ml: "6px" }} color="disabled" />
-              <InputBase
+              <TextField
+                sx={{width:310}}
                 placeholder="Nhập email"
                 value={email}
                 onChange={onChangeEmail}
+                size="small"
               />
             </Stack>
             <Box height="25px">

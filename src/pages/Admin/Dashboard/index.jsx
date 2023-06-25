@@ -61,12 +61,12 @@ function Dashboard() {
       {
         label: "Khách hàng",
         data: userPerMonth,
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        backgroundColor: "rgb(144,238,144)",
       },
       {
         label: "Đơn hàng",
         data: orderPerMonth,
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
+        backgroundColor: "rgb(173,216,230)",
       },
     ],
   };

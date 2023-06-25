@@ -18,13 +18,19 @@ import { toast } from "react-hot-toast";
 import apiAttribute from "../../../../apis/apiAttribute";
 import SearchIcon from "@mui/icons-material/Search";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import id from "date-fns/esm/locale/id/index.js";
 
 
 function EditAttribute() {
+    
     const [modalDelete, setModalDelete] = React.useState(false);
+    const openModalDelete = () => {
+      setModalDelete(true)
+  }
     const [listAttributeOption, setListAttributeOption] = useState([])
     const closeModalDelete = () => setModalDelete(false);
     const [attribute, setAttribute] = useState([]);
+    const nav = useNavigate();
 
     const idAttr=useParams().id
     useEffect(() => {
@@ -40,14 +46,24 @@ function EditAttribute() {
         };
         getData();
       }, []);
-
+      const handleDelete = () => {
+        apiAttribute.deleteAttribute(idAttr)
+        .then(res=>{
+            toast.success("Xóa thuộc tính thành công")
+            nav('/admin/attribute')
+        })
+        .catch(error=>{
+        toast.error("Xóa thuộc tính không thành công!")
+        })
+        closeModalDelete()
+      }
   return (
   <Stack direction="row" sx={{ backgroundColor: "#fff" }} p={3} width="100%">
       <Stack spacing={2} width="100%">
         <Stack direction="row" justifyContent="space-between" width="100%">
           <Typography>{attribute.name}</Typography>
           <Button>
-                <Button variant="outlined" pr={2}>Xóa thuộc tính</Button>
+                <Button variant="outlined" onClick={()=>openModalDelete()} pr={2}>Xóa thuộc tính</Button>
             </Button>
         </Stack>
 
@@ -107,22 +123,29 @@ function EditAttribute() {
       </Stack>
 
       <Modal
-        sx={{ overflowY: "scroll" }}
-        open={modalDelete}
-        onClose={closeModalDelete}
-      >
-        <Stack
-          className="modal-info"
-          direction="row"
-          spacing={2}
-          justifyContent="center"
-          width="26rem"
-        >
-          <Stack>
-            <InfoOutlinedIcon color="primary" />
-          </Stack>
-        </Stack>
-      </Modal>
+                        sx={{ overflowY: "scroll" }}
+                        open={modalDelete}
+                        onClose={closeModalDelete}
+                    >
+                        <Stack className="modal-info" direction="row" spacing={2} justifyContent='center' width='26rem' >
+                            <Stack>
+                                <InfoOutlinedIcon color="primary" />
+                            </Stack>
+
+                            <Stack spacing={3}>
+                                <Stack>
+                                    <Typography fontWeight="bold">
+                                        Bạn có chắc muốn xoá thuộc tính?
+                                    </Typography>
+                                </Stack>
+
+                                <Stack direction="row" justifyContent="flex-end" spacing={1}>
+                                    <Button onClick={closeModalDelete} variant="outlined">Hủy</Button>
+                                    <Button variant="contained" onClick={handleDelete}>Xóa bỏ</Button>
+                                </Stack>
+                            </Stack>
+                        </Stack>
+                    </Modal>
     </Stack>
   );
 }

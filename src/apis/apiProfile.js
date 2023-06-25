@@ -4,7 +4,7 @@ const apiProfile = {
 
     ///authentication
     putChangeEmail: async (params) => {
-        const res = await axiosClientWithToken.put('/user/profile/changeEmail', params)
+        const res = await axiosClientWithToken.post('/user/verification/email', params);
         return res.data;
     },
     putChangePassword: async (params) => {

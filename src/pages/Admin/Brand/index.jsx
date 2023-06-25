@@ -35,6 +35,8 @@ function Brand() {
       apiBrand.getAllBrand(params)
         .then(res => {
           setBrand(res.data.listBrand);
+        }).catch(err=>{
+          setBrand(null);
         })
     };
     getData();

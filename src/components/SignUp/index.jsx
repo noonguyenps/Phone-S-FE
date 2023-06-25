@@ -50,29 +50,38 @@ function SignUp(props) {
       phone: watch("phoneNumber"),
     };
     const request = await apiAuth.postCheckPhone(param)  
-    return request
+    return request;
   }
 
   const onSubmit = async () => {
+    const regex =
+      /(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/;
+    
     if(loading){
       toast.error("Thao tác đang thực hiện. Vui lòng không thao tác quá nhanh")
       return
     }
     setLoading(true)
-    checkPhone().then((res)=>{
-      if(res.status===302){
-        setInvalidPhone(true);
-        setLoading(false);
-      }
-      if(res.status===200){
-        setInvalidPhone(false);
-        let param = {
-          password: watch("pass"),
-          phone: watch("phoneNumber"),
-        };
-        apiAuth.postRegister(param).then(setIsSuccess(true)).finally(()=>setLoading(false));
-      }
-    })
+    if (regex.test(watch("phoneNumber"))) {
+      checkPhone().then((res)=>{
+        if(res.status===302){
+          setInvalidPhone(true);
+          setLoading(false);
+        }
+        if(res.status===200){
+          setInvalidPhone(false);
+          let param = {
+            password: watch("pass"),
+            phone: watch("phoneNumber"),
+          };
+          
+          apiAuth.postRegister(param).then(setIsSuccess(true)).finally(()=>setLoading(false));
+        }
+      })
+    }else{
+      toast.error('Số điện thoại không hợp lệ')
+      setLoading(false);
+    } 
   };
 
   return (
@@ -144,6 +153,9 @@ function SignUp(props) {
             </FormControl>
 
             <Stack sx={{ marginTop: "5rem" }}>
+              {invalidPhone && (
+                <ErrorAfterSubmit message="Số điện thoại đã được đăng ký" />
+              )}
               {invalidPhone && (
                 <ErrorAfterSubmit message="Số điện thoại đã được đăng ký" />
               )}
