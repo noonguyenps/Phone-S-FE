@@ -20,6 +20,7 @@ function DetailOrder() {
   const [shipperPhone,setShipperPhone] = useState('');
   const [shipperName, setShipperName] = useState('');
   const [shipperID, setShipperID] = useState('');
+  const [refesh, setRefesh] = useState(true);
 
   const [visiable,setVisiable] = useState(false);
 
@@ -50,7 +51,7 @@ function DetailOrder() {
         });
     };
     getData();
-  }, [id]);
+  }, [id, refesh]);
 
   const handleConfirm = () => {
     apiCart
@@ -58,6 +59,7 @@ function DetailOrder() {
       .then((res) => {
         apiCart.createShipping({order:id,shipperID:shipper}).then((res=>{
           toast.success("Xác nhận thành công");
+          setRefesh(!refesh)
         })).catch((error)=>{
           toast.error("Xác nhận không thành công");
         })
@@ -84,9 +86,24 @@ function DetailOrder() {
     return date ;
   }
 
+  const handleExport = () => {
+    apiCart.exportOrder(id)
+    .then((res)=>{
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `shipping_${Date.now()}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+    })
+    .catch(error=>{
+      toast.error("Xuất file không thành công")
+    })
+  }
+
   return (
     <Box>
-      <Stack bgcolor="white" p={2}>
+      <Stack bgcolor="white" p={2} margin={2} justifyContent='space-between' direction='row'>
         <Typography mt={2.5} mx={2} fontSize="22px" fontWeight={300}>
           Chi tiết đơn hàng # {order?.name} {"    -    "}
           <span style={{ fontWeight: 500 }}>{order?.orderStatus===0?"Đang xử lý":(
@@ -94,9 +111,14 @@ function DetailOrder() {
                                 order?.orderStatus===2?"Đã giao hàng":"Đã hủy"
                                 ))}</span>
         </Typography>
-        <Typography sx={{ fontSize: "13px", textAlign: "end" }}>
-          Ngày đặt hàng: {handleDate(order?.createdDate)}
-        </Typography>
+        <Stack justifyContent='center' alignItems="center">
+          {
+            order?.orderStatus===1?(<><Button sx={{background:'green', width:160}} variant="contained" onClick={handleExport}>Xuất đơn hàng</Button></>):(<></>)
+          }
+          <Typography sx={{ fontSize: "13px", textAlign: "end" }}>
+            Ngày đặt hàng: {handleDate(order?.createdDate)}
+          </Typography>
+        </Stack>
       </Stack>
       <Stack
         direction="row"

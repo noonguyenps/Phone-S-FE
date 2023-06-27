@@ -1,6 +1,6 @@
 import axios from 'axios';
 import queryString from 'query-string';
-import { axiosClientWithToken } from "./axiosClient";
+import { axiosClientWithToken, axiosClientWithTokenExcel } from "./axiosClient";
 const baseURL='https://phone-s.herokuapp.com/api/'
 export const axiosClient = axios.create({
     baseURL: baseURL,
@@ -95,7 +95,10 @@ const apiCart = {
     },updatePaymentOrder: async (params)=>{
         const res = await axiosClientWithToken.post(`/user/order/payment/${params.id}?paymentId=${params.paymentId}`);
         return res.data;
-    }
+    },exportOrder : async (id) =>{
+        const res = await axiosClientWithTokenExcel.get(`/manager/shipping/export/pdf/${id}`) 
+        return res;
+    },
     
 }
 export default apiCart;
