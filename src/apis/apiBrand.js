@@ -16,7 +16,7 @@ const apiBrand = {
         return res.data;
     },
     getListBrand : async () =>{
-        const res = await axiosClientWithToken.get(`/admin/brand/all`) 
+        const res = await axiosClientWithToken.get(`/admin/brand/all?page=0&size=100`) 
         return res.data;
     },
     exportBrand : async () =>{

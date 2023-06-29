@@ -38,7 +38,15 @@ const apiHome = {
     getProducts: async (params) => {
         const res = await axiosClient.get('/product/all', {params})
         return res.data;
-    }, 
+    },
+    getProductsFavorite: async (params) => {
+        const res = await axiosClient.get('/product/favorite/all', {params})
+        return res.data;
+    },
+    getProductsRating: async (params) => {
+        const res = await axiosClient.get('/product/rating/all', {params})
+        return res.data;
+    },  
     getCategories: async (params) => {
         const res = await axiosClient.get('/category/root', {params})
         return res.data;

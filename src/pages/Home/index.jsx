@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Home.scss";
 
-import { Grid, Stack, Button, Box } from "@mui/material";
+import { Grid, Stack, Button, Box, Typography } from "@mui/material";
 import CardProduct from "../../components/CardProduct";
 import CardFlashsale from "../../components/CardFlashsale";
 
@@ -20,6 +20,8 @@ import apiProduct from "../../apis/apiProduct";
 
 function Home() {
   const [products, setProducts] = useState([]);
+  const [productsFavorite, setProductsFavorite] = useState([]);
+  const [productsRating, setProductsRating] = useState([]);
   const [loadingShowmore, setLoadingShowmore] = useState(false)
   const [page, setPage] = useState(0);
   const size = 12;
@@ -43,6 +45,33 @@ function Home() {
   const handleLoadMore = () => {
     setPage((page) => page + 1);
   };
+
+  useEffect(() => {
+    const getData = async () => {
+      let param = {
+        page: 0,
+        size: 12,
+      };
+      apiHome.getProductsFavorite(param)
+        .then(res => {
+          setProductsFavorite(res.data.listProduct);
+        })
+    };
+    getData();
+  }, []);
+  useEffect(() => {
+    const getData = async () => {
+      let param = {
+        page: 0,
+        size: 12,
+      };
+      apiHome.getProductsRating(param)
+        .then(res => {
+          setProductsRating(res.data.listProduct);
+        })
+    };
+    getData();
+  }, []);
 
   return (
     <>
@@ -104,9 +133,37 @@ function Home() {
           </Box>
         </Box>
         <Box id="section9">
-          <Box>
-            <Box className="section__heading">
-              <Box>Danh sách sản phẩm</Box>
+          <Box margin='0.5rem'>
+            <Box bgcolor='#ffffff' padding={2}>
+              <Typography>Danh sách sản phẩm được đánh giá cao</Typography>
+            </Box>
+          </Box>
+          <Grid container>
+            {productsRating.map((item) => (
+              <Grid key={`product-${item.id}`} item lg={2} md={4} sm={6} xs={6}>
+                <CardProduct data={item} />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+        <Box id="section9">
+          <Box margin='0.5rem'>
+            <Box bgcolor='#ffffff' padding={2}>
+              <Typography>Danh sách sản phẩm được yêu thích</Typography>
+            </Box>
+          </Box>
+          <Grid container>
+            {productsFavorite.map((item) => (
+              <Grid key={`product-${item.id}`} item lg={2} md={4} sm={6} xs={6}>
+                <CardProduct data={item} />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+        <Box id="section9">
+          <Box margin='0.5rem'>
+            <Box bgcolor='#ffffff' padding={2}>
+              <Typography>Danh sách sản phẩm</Typography>
             </Box>
           </Box>
           <Grid container>
