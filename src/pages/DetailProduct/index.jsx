@@ -611,7 +611,7 @@ function DetailProduct() {
                   <Button disabled='disabled' sx={{
                     width: "100%",
                     height: "20px",
-                  }}>so sánh</Button></Box>):(
+                  }}>So sánh</Button></Box>):(
                     <Box sx={{backgroundColor:'#dcdcdc',width:280, border:'1px solid', borderRadius:3, borderColor:'#dcdcdc',padding:1, margin:0.5}}>
                   <Button sx={{
                     width: "100%",
@@ -620,6 +620,12 @@ function DetailProduct() {
                   onClick={openModalDetail}>So sánh</Button>
                   </Box>)
                 }
+                <Box sx={{backgroundColor:'#dcdcdc',width:280, border:'1px solid', borderRadius:3, borderColor:'#dcdcdc',padding:1, margin:0.5}}>
+                  <Button href='/compare' sx={{
+                    width: "100%",
+                    height: "20px",
+                  }}>Trang so sánh sản phẩm</Button>
+                </Box>
               
               
             </Stack>

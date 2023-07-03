@@ -31,14 +31,6 @@ function App() {
         <CheckAuthentication />
           {isAdmin||isManager ? null : <Header />}
           <ConfigRoute />
-          {isAdmin||isManager||compare.length!=2 ? null : <Fab style={{
-              margin: 0,
-              top: 'auto',
-              right: 20,
-              bottom: 80,
-              left: 'auto',
-              position: 'fixed',
-          }}><a href="/compare"><CompareOutlinedIcon/></a></Fab>}
           {isAdmin||isManager ? null : <Footer />}
           <div><Toaster/></div>
       </BrowserRouter>

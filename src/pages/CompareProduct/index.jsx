@@ -63,12 +63,10 @@ function CompareProduct() {
       dispatch(
         removeCompare(item)
       );
+      navigate('/')
     }
     
   }
-  console.log(array1)
-  console.log(array2)
-  console.log(array3)
 
 
   const handleChangeCartData = (id, quantity, choose) =>{
