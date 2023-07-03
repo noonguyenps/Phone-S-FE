@@ -102,7 +102,7 @@ export default function Rating() {
     }
     apiRating.addNewRating(cart,params)
     .then((res)=>{
-      toast.info("Thêm đánh giá thành công");
+      toast.success("Thêm đánh giá thành công");
       setLoadingShowmore(false)
       setImgUrl([]);
       setComment('');

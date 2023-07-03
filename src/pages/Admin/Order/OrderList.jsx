@@ -28,7 +28,6 @@ import DetailOrder from "./DetailOrder";
 import { numWithCommas } from "../../../constraints/Util";
 
 const listStatus = ["Mã đơn hàng", "Nhãn đơn hàng"]
-const listOrderDate = ["Hôm nay", "7 ngày qua", "30 ngày qua", "Toàn thời gian"]
 const items = [
     { id: 0, label: 'Tất cả'},
     { id: 2, label: 'Đang xử lý'},
@@ -83,10 +82,10 @@ function OrderList() {
         getData();
       }, [page, sort, status]);
 
-    const handleDate = (timestamp) => {
-        let date = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(timestamp)
-        return date ;
-    }
+      const convertDate = (date)=>{
+        var dateNew = new Date(date)
+        return String(dateNew.getDate()+"/"+String(dateNew.getMonth()+1)+'/'+dateNew.getFullYear())
+      };
 
     const handleClickTab = (i) => {
         if (i !== selected)
@@ -282,9 +281,9 @@ function OrderList() {
                 >
                     <TableHead>
                         <TableRow>
-                            <TableCell sx={{ width: "20%", top: "64px" }}>Mã đơn hàng/Ngày đặt hàng</TableCell>
+                            <TableCell sx={{ width: "20%", top: "64px" }}>Mã đơn hàng</TableCell>
                             <TableCell sx={{ width: "15%", top: "64px" }}>Trạng thái&nbsp;</TableCell>
-                            <TableCell align="center" sx={{ width: "20%", top: "64px" }}>Ngày xác nhận/hạn xác nhận&nbsp;</TableCell>
+                            <TableCell align="center" sx={{ width: "20%", top: "64px" }}>Ngày đặt hàng&nbsp;</TableCell>
                             <TableCell align="center" sx={{ width: "20%", top: "64px" }}>Giá trị đơn hàng&nbsp;</TableCell>
                             <TableCell sx={{ width: "15%", top: "64px" }}>Nhãn đơn hàng&nbsp;</TableCell>
                             <TableCell sx={{ width: "10%", top: "64px" }}>Thao tác&nbsp;</TableCell>
@@ -296,13 +295,15 @@ function OrderList() {
                                 key={row.id}
                                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                             >
-                                <TableCell component="th" scope="row">{row.orderId} <br/>/ {handleDate(row.createdDate)}</TableCell>
-                                <TableCell align="left">{row.orderStatus==0?"Đang xử lý":(
-                                    row.orderStatus==1?"Đang vận chuyển":(
-                                        row.orderStatus==2?"Đã giao hàng":"Đã hủy"
+                                <TableCell component="th" scope="row">{row.orderId}</TableCell>
+                                <TableCell align="left">
+                                    {row.orderStatus==0?(<Typography style={{ color: "#0000ff" }}>Đang xử lý</Typography>):(
+                                    row.orderStatus==1?(<Typography style={{ color: "#ffa500" }}>Đang vận chuyển</Typography>):(
+                                        row.orderStatus==2?(<Typography style={{ color: "#008000" }}>Đã giao hàng</Typography>):
+                                        (<Typography style={{ color: "#ff0000" }}>Đã hủy</Typography>)
                                     )
                                 )}</TableCell>
-                                <TableCell align="center">{handleDate(row.createdDate)}/ {handleDate(row.expectedDate)}</TableCell>
+                                <TableCell align="center">{convertDate(row.createdDate)}</TableCell>
                                 <TableCell align="center">{numWithCommas(row.total)} đ</TableCell>
                                 <TableCell align="left">{row.name}</TableCell>
                                 <TableCell align="center">
