@@ -566,7 +566,16 @@ function DetailProduct() {
           <Box sx={{backgroundColor:'#ffffff',width:300, height:'fit-content',padding:1}}>
             <Stack alignItems='center' justifyItems='center'>
               <Typography>Thông số kỹ thuật</Typography>
-              <Box sx={{backgroundColor:'#dcdcdc',width:280, maxHeight:450, border:'1px solid', borderRadius:3, borderColor:'#dcdcdc',padding:1, margin:0.5}}>
+              <Box 
+              sx={{
+                mb: 2,
+                padding:1, margin:0.5,
+                display: "flex",
+                flexDirection: "column",
+                height: 300,
+                overflow: "hidden",
+                overflowY: "scroll",
+              }}>
                 { 
                 product?.attributeDetailEntityList.map((item) => (
                 <Box sx={{backgroundColor:'#ffffff',width:255, maxHeight:350, border:'1px solid', borderRadius:3, borderColor:'#dcdcdc',padding:1, margin:0.5}}spacing='1'>
