@@ -80,56 +80,72 @@ function Home() {
           <SlideKhuyenMai />
         </Box>
         <Box id="section3">
+          
           <Box width="24%">
+            <Link to='/product/08fb28f5-bde2-4836-9f74-58d9d6192b50'>
             <img
               style={{ maxHeight: "160px" }}
               src="https://cdn.hoanghamobile.com/i/home/Uploads/2022/08/11/chuyen-trang-samssung-11.png"
               alt=""
-            />
+            /></Link>
           </Box>
-          <Box width="24%">
-            <img
-              style={{ maxHeight: "160px" }}
-              src="https://cdn.hoanghamobile.com/i/home/Uploads/2022/10/14/sanphamhot.jpg"
-              alt=""
-            />
-          </Box>
-          <Box width="24%">
+          
+          
+            <Box width="24%">
+              <Link to='/product/37e26481-69e9-48b4-9433-d50e1dae6d24'>
+              <img
+                style={{ maxHeight: "160px" }}
+                src="https://cdn.hoanghamobile.com/i/home/Uploads/2022/10/14/sanphamhot.jpg"
+                alt=""
+              />
+              </Link>
+            </Box>
+          
+          
+          <Box  width="24%">
+            <Link to='/product/3c2e0a21-4bb7-4019-adce-eddbdc4da762'>
             <img
               style={{ maxHeight: "160px" }}
               src="https://cdn.hoanghamobile.com/i/home/Uploads/2022/09/20/note-111.jpg"
               alt=""
             />
+              </Link>
           </Box>
           <Box width="24%">
+            <Link to='/product/b1671fc4-55ae-47f0-95a2-edf53ee92808'>
             <img
               style={{ maxHeight: "160px" }}
               src="https://cdn.hoanghamobile.com/i/home/Uploads/2022/10/04/huawei-d14-banner-nho-01.jpg"
               alt=""
             />
+            </Link>
           </Box>
         </Box>
         <Box id="section3">
           <Box width="20%">
+            <Link to='/product/08fb28f5-bde2-4836-9f74-58d9d6192b50'>
             <img
               style={{ maxHeight: "200px" }}
               src="https://cdn.tgdd.vn/2022/11/banner/380-x-200--1--380x200.png"
               alt=""
-            />
+            /></Link>
           </Box>
           <Box width="59%">
+            <Link to='/product/37e26481-69e9-48b4-9433-d50e1dae6d24'>
             <img
               style={{ maxHeight: "200px" }}
               src="https://cdn.tgdd.vn/2022/10/banner/720-220-720x220-250.png"
               alt=""
-            />
+            /></Link>
           </Box>
           <Box width="20%">
+            <Link to='/product/87255541-d641-4c5b-b43b-87d8b334a4e3'>
             <img
               style={{ maxHeight: "200px" }}
               src="https://cdn.tgdd.vn/2022/11/banner/VNPay-Apple-Watch-380x200-1.png"
               alt=""
             />
+            </Link>
           </Box>
         </Box>
         <Box id="section9">

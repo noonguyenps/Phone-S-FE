@@ -264,7 +264,7 @@ function DetailOrder() {
                       placeholder="Chọn người giao hàng"
                     >
                       {
-                        listShipper.map((item)=>(<MenuItem value={item.id}>{item.id}-{item.name}</MenuItem>))
+                        listShipper.map((item)=>(<MenuItem value={item.id}>{item.id}-{item.fullName}</MenuItem>))
                       }
                       
                     </Select>

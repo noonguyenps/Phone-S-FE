@@ -248,7 +248,6 @@ function DetailOrder() {
               size='small'
               value={payment}
               onChange={e=>setPayment(e.target.value)}
-              placeholder="Chọn người giao hàng"
             >
               {
                 listPayment.map((item)=>(<MenuItem value={item.id}>{item.name}</MenuItem>))

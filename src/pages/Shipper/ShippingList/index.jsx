@@ -34,7 +34,7 @@ function ShippingList() {
       }
       fetchData();
     }
-  },[])
+  },[page])
   const handleView= (id) => {
     navigate(`detail/${id.id}`);
   }
@@ -118,6 +118,15 @@ function ShippingList() {
                     </Table>
         </Stack>
       </Stack>
+      <Stack direction='row' spacing={2} justifyContent="center">
+          {
+            page==0?(<></>):(<Button sx={{backgroundColor:'#EEEEEE', color:'red'}} onClick={() => { setPage(page-1) }}>Trước</Button>)
+          }
+          <Button sx={{backgroundColor:'#EEEEEE'}}>Trang {page+1}</Button>
+          {
+            listShipping?.length<10?(<></>):(<Button sx={{backgroundColor:'#EEEEEE', color:'red'} } onClick={() => { setPage(page+1) }}>Sau</Button>)
+          }
+        </Stack>
     </Box>
   </>
   )
