@@ -133,8 +133,10 @@ function PaymentPending() {
       }
       apiCart.insertOrder(params)
       .then((res)=>{
-        if(payment === '1')
-          toast.error('Đặt hàng thành công');
+        if(payment === '1'){
+          toast.success('Đặt hàng thành công');
+          navigate('/customer/order/history');
+        }
         else
           window.location.replace(res.data.url);
       })
@@ -155,8 +157,10 @@ function PaymentPending() {
       }
       apiCart.insertOrder(params)
       .then((res)=>{
-        if(payment === '1')
-          toast.error('Đặt hàng thành công');
+        if(payment === '1'){
+          toast.success('Đặt hàng thành công');
+          navigate('/customer/order/history');
+        }
         else{
           window.location.replace(res.data.url);
         }

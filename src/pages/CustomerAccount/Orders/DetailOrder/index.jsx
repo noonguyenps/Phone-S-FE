@@ -135,8 +135,8 @@ function DetailOrder() {
                 {order.shipOrder?.shipType} : {numWithCommas(order.shipOrder.shipPrice)}đ
               </Typography>
               <Stack direction='row'>
-                {order?.paymentStatus?(<Typography style={{ color: "#008000" }}>Đã thanh toán
-                </Typography>):(<Typography style={{ color: "#fda223" }}> Chưa thanh toán
+                {order?.paymentStatus?(<Typography style={{ color: "#008000" }}>{order?.paymentOrder.paymentName} : Đã thanh toán
+                </Typography>):(<Typography style={{ color: "#fda223" }}>{order?.paymentOrder.paymentName} : Chưa thanh toán
                 </Typography>)}
               </Stack>
                 </>):(<></>)}

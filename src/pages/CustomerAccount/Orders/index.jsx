@@ -98,7 +98,7 @@ function Orders() {
           break;
         }
         default: {
-          setSort("product_id");
+          setSort("order_id");
           setPage(0);
           setStatus(4);
           break;
