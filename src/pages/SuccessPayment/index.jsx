@@ -39,11 +39,15 @@ function SuccessPayment() {
         <Stack height="400px" justifyContent={'center'} alignItems='center'>
             <Stack alignItems='center' spacing={2}>
                 {
+                    success?(<>
+                    {
                     success===true?(<><Typography>Thanh toán thành công</Typography>
                     <img src="https://res.cloudinary.com/duk2lo18t/image/upload/v1672657257/OIP__1_-removebg-preview_bqamdw.png" width='200px' height='200px'></img></>)
                     :(<>
                     <Typography>Thanh toán không thành công</Typography>
                     <img src="https://res.cloudinary.com/duk2lo18t/image/upload/v1672657456/OIP__2_-removebg-preview_zvbzt2.png" width='200px' height='200px'></img></>)
+                    }
+                    </>):(<></>)
                 }
                 <Link to={`/customer/order/detail/${id}`}>Chuyển đến thông tin đơn hàng trong {count} giây</Link>
             </Stack>

@@ -109,7 +109,10 @@ function DetailOrder() {
   }
 
   return (
+    
     <Box>
+      { 
+      order?(<>
       <Stack bgcolor="white" p={2} margin={2} justifyContent='space-between'>
       <Stack justifyContent='center' alignItems='center'>
           <Typography mt={2.5} mx={2} fontSize="22px" fontWeight={300}>
@@ -167,8 +170,8 @@ function DetailOrder() {
               {order.shipOrder?.shipType} : {numWithCommas(order.shipOrder.shipPrice)}đ
             </Typography>
             <Stack direction='row'>
-              {order?.paymentStatus?(<Typography style={{ color: "#008000" }}>{order?.paymentOrder.paymentName} : Đã thanh toán
-              </Typography>):(<Typography style={{ color: "#fda223" }}>{order?.paymentOrder.paymentName} : Chưa thanh toán
+              {order?.paymentStatus?(<Typography style={{ color: "#008000" }}> Đã thanh toán
+              </Typography>):(<Typography style={{ color: "#fda223" }}> Chưa thanh toán
               </Typography>)}
             </Stack>
               </>):(<></>)}
@@ -286,7 +289,7 @@ function DetailOrder() {
                 ):(
                   <></>
       )}
-      {order?.orderStatus<2?(
+      {order?.orderStatus<2||order.paymentStatus?(
         <>
         <Button
                     variant="outlined"
@@ -334,8 +337,11 @@ function DetailOrder() {
                         </Stack>
                     </Stack>
                 </Stack>
-            </Modal>
+            </Modal></>):(<></>)
+      
+    }
     </Box>
+                
   );
 }
 
